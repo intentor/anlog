@@ -27,6 +27,11 @@ namespace Anlog.Sinks.SingleFile
         /// Text writer.
         /// </summary>
         private TextWriter writer;
+
+        /// <summary>
+        /// Allows blocking of actions in a thread.
+        /// </summary>
+        private readonly object locker = new object();
         
         /// <summary>
         /// Initializes a new instance of <see cref="SingleFileSink"/>.
@@ -54,8 +59,12 @@ namespace Anlog.Sinks.SingleFile
         /// <inheritdoc />
         public void Dispose()
         {
-            writer.Dispose();
-            outputStream.Dispose();
+            lock (locker)
+            {
+                WriteQueue();
+                writer.Dispose();
+                outputStream.Dispose();
+            }
         }
         
         /// <inheritdoc />
@@ -71,7 +80,18 @@ namespace Anlog.Sinks.SingleFile
         {
             while (true)
             {
-                if (queue.Count > 0)
+                WriteQueue();
+            }
+        }
+
+        /// <summary>
+        /// If there's any log in the queue, writes to the writer.
+        /// </summary>
+        private void WriteQueue()
+        {
+            if (queue.Count > 0)
+            {
+                lock (locker)
                 {
                     while (queue.TryDequeue(out string value))
                     {

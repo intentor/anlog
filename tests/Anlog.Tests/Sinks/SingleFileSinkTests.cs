@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Threading;
 using Anlog.Sinks.SingleFile;
 using Anlog.Tests.TestObjects;
 using Xunit;
@@ -20,7 +21,7 @@ namespace Anlog.Tests.Sinks
 
                 using (var sink = new SingleFileSink(path))
                 {
-                    sink.Write(GenericLog);   
+                    sink.Write(GenericLog);
                 }
 
                 var contents = File.ReadAllLines(path);
@@ -37,12 +38,12 @@ namespace Anlog.Tests.Sinks
 
                 using (var sink = new SingleFileSink(path))
                 {
-                    sink.Write(GenericLog + "1");   
+                    sink.Write(GenericLog + "1");
                 }
 
                 using (var sink = new SingleFileSink(path))
                 {
-                    sink.Write(GenericLog + "2");   
+                    sink.Write(GenericLog + "2");
                 }
 
                 var contents = File.ReadAllLines(path);
