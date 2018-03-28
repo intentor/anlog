@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
+using System.Threading;
 
 namespace Anlog.Sinks.SingleFile
 {
@@ -13,16 +16,6 @@ namespace Anlog.Sinks.SingleFile
     public sealed class SingleFileSink : ILogSink, IDisposable
     {
         /// <summary>
-        /// Timer to perform a flush (milisseconds).
-        /// </summary>
-        private int bufferTimer;
-    
-        /// <summary>
-        /// Stopwatch to count time for flusing.
-        /// </summary>
-        private Stopwatch stopwatch;
-        
-        /// <summary>
         /// Internal output stream.
         /// </summary>
         private Stream outputStream;
@@ -31,6 +24,9 @@ namespace Anlog.Sinks.SingleFile
         /// Text writer.
         /// </summary>
         private TextWriter writer;
+
+        private ConcurrentQueue<string> queue;
+        private Thread writerThread;
         
         /// <summary>
         /// Object used to perform thread lock.
@@ -47,7 +43,7 @@ namespace Anlog.Sinks.SingleFile
         public SingleFileSink(string logFilePath, Encoding encoding = null, int bufferSize = 4096, 
             int bufferTimer = 1000)
         {
-            this.bufferTimer = bufferTimer;
+            queue = new ConcurrentQueue<string>();
             locker = new object();
             
             var directory = Path.GetDirectoryName(logFilePath);
@@ -59,7 +55,8 @@ namespace Anlog.Sinks.SingleFile
             outputStream = new FileStream(logFilePath, FileMode.Append, FileAccess.Write, FileShare.Read, bufferSize);
             writer = new StreamWriter(outputStream, encoding ?? new UTF8Encoding());
             
-            stopwatch = Stopwatch.StartNew();
+            writerThread = new Thread(Writer);
+            writerThread.Start();
         }
 
         /// <inheritdoc />
@@ -75,14 +72,24 @@ namespace Anlog.Sinks.SingleFile
         /// <inheritdoc />
         public void Write(string log)
         {
-            lock (locker)
-            {
-                writer.WriteLine(log);
+            queue.Enqueue(log);
+        }
 
-                if (stopwatch.ElapsedMilliseconds > bufferTimer)
+        /// <summary>
+        /// Writer thread executor.
+        /// </summary>
+        private void Writer()
+        {
+            while (true)
+            {
+                if (queue.Count > 0)
                 {
+                    while (queue.TryDequeue(out string value))
+                    {
+                        writer.WriteLine(value);
+                    }
+                    
                     writer.Flush();
-                    stopwatch.Reset();
                 }
             }
         }
