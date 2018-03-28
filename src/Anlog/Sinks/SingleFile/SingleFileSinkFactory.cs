@@ -24,15 +24,14 @@ namespace Anlog.Sinks.SingleFile
         /// <param name="bufferTimer">Timer to perform a flush (milisseconds). The default is 1000 ms.</param>
         /// <returns>Logger factory.</returns>
         public static LoggerFactory SingleFile(this LogSinksFactory sinksFactory, 
-            string logFilePath = null, Encoding encoding = null, int bufferSize = 4096, 
-            int bufferTimer = 1000)
+            string logFilePath = null, Encoding encoding = null, int bufferSize = 4096)
         {
             if (string.IsNullOrEmpty(logFilePath))
             {
                 logFilePath = DefaultLogFilePath;
             }
             
-            sinksFactory.Sinks.Add(new SingleFileSink(logFilePath, encoding, bufferSize, bufferTimer));
+            sinksFactory.Sinks.Add(new SingleFileSink(logFilePath, encoding, bufferSize));
             return sinksFactory.Factory;
         }
     }

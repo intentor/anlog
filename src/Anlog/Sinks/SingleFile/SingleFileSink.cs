@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Text;
-using System.Threading;
+using System.Threading.Tasks;
 
 namespace Anlog.Sinks.SingleFile
 {
@@ -16,6 +14,11 @@ namespace Anlog.Sinks.SingleFile
     public sealed class SingleFileSink : ILogSink, IDisposable
     {
         /// <summary>
+        /// Log queue.
+        /// </summary>
+        private ConcurrentQueue<string> queue;
+        
+        /// <summary>
         /// Internal output stream.
         /// </summary>
         private Stream outputStream;
@@ -24,14 +27,6 @@ namespace Anlog.Sinks.SingleFile
         /// Text writer.
         /// </summary>
         private TextWriter writer;
-
-        private ConcurrentQueue<string> queue;
-        private Thread writerThread;
-        
-        /// <summary>
-        /// Object used to perform thread lock.
-        /// </summary>
-        private object locker;
         
         /// <summary>
         /// Initializes a new instance of <see cref="SingleFileSink"/>.
@@ -40,11 +35,9 @@ namespace Anlog.Sinks.SingleFile
         /// <param name="encoding">File encoding. The default is UTF8.</param>
         /// <param name="bufferSize">Buffer size to be used. The default is 4096.</param>
         /// <param name="bufferTimer">Timer to perform a flush (milisseconds). The default is 1000 ms.</param>
-        public SingleFileSink(string logFilePath, Encoding encoding = null, int bufferSize = 4096, 
-            int bufferTimer = 1000)
+        public SingleFileSink(string logFilePath, Encoding encoding = null, int bufferSize = 4096)
         {
             queue = new ConcurrentQueue<string>();
-            locker = new object();
             
             var directory = Path.GetDirectoryName(logFilePath);
             if (!Directory.Exists(directory))
@@ -54,19 +47,15 @@ namespace Anlog.Sinks.SingleFile
             
             outputStream = new FileStream(logFilePath, FileMode.Append, FileAccess.Write, FileShare.Read, bufferSize);
             writer = new StreamWriter(outputStream, encoding ?? new UTF8Encoding());
-            
-            writerThread = new Thread(Writer);
-            writerThread.Start();
+
+            Task.Run(() => Writer());
         }
 
         /// <inheritdoc />
         public void Dispose()
         {
-            lock (locker)
-            {
-                writer.Dispose();
-                outputStream.Dispose();
-            }
+            writer.Dispose();
+            outputStream.Dispose();
         }
         
         /// <inheritdoc />
@@ -76,7 +65,7 @@ namespace Anlog.Sinks.SingleFile
         }
 
         /// <summary>
-        /// Writer thread executor.
+        /// Writer task executor.
         /// </summary>
         private void Writer()
         {
