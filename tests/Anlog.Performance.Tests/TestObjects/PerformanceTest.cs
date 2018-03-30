@@ -4,6 +4,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using Anlog.Factories;
+using Anlog.Sinks.Console;
 using Anlog.Sinks.SingleFile;
 using Anlog.Tests.TestObjects;
 using Serilog;

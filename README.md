@@ -14,6 +14,7 @@ A fast and lightweight key/value pair logger for .NET Core projects.
 ```cs
 using Anlog;
 using Anlog.Factories;
+using Anlog.Sinks.Console;
 
 namespace QuickStart
 {
@@ -23,16 +24,17 @@ namespace QuickStart
         {
             // Creates the logger.
             Log.Logger = new LoggerFactory()
+                .WriteTo.Console()
                 .CreateLogger();
             
-            // Writes a log.
+            // Writes the log to console.
             Log.Append("key", "value").Info();
         }
     }
 }
 ```
 
-Log written: `2018-03-28 00:00:00.000 [INF] c=Program.Main:15 key=value`
+Log written: `2018-03-29 22:22:07.656 [INF] c=Program.Main:17 key=value`
 
 ## <a id="features"></a>Features
 

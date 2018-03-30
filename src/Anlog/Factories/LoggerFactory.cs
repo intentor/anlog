@@ -57,7 +57,7 @@ namespace Anlog.Factories
             }
             
             logger.Formatter = FormatAs.Formatter;
-            logger.Sinks = WriteTo.CreateSinks();
+            logger.Sinks = WriteTo.Sinks;
 
             return logger;
         }

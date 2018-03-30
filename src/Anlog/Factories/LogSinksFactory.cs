@@ -29,19 +29,5 @@ namespace Anlog.Factories
             Factory = factory;
             Sinks = new List<ILogSink>();
         }
-        
-        /// <summary>
-        /// Creates the sinks.
-        /// </summary>
-        /// <returns>Created sinks.</returns>
-        public List<ILogSink> CreateSinks()
-        {
-            if (Sinks.Count == 0)
-            {
-                Sinks.Add(new SingleFileSink(SingleFileSinkFactory.DefaultLogFilePath));
-            }
-            
-            return Sinks;
-        }
     }
 }

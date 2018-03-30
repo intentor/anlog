@@ -21,6 +21,10 @@ EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anlog.Performance.Tests", "tests\Anlog.Performance.Tests\Anlog.Performance.Tests.csproj", "{A4080D4A-7428-4B6A-AA4D-45831EFEC052}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Demo", "Demo", "{030172C9-F5EB-4A87-812F-F4E04AE60336}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anlog.Demo", "demo\Anlog.Demo\Anlog.Demo.csproj", "{AA21CE8C-A8D3-4DE8-98EA-201CA5E59D4C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,10 @@ Global
 		{A4080D4A-7428-4B6A-AA4D-45831EFEC052}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4080D4A-7428-4B6A-AA4D-45831EFEC052}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A4080D4A-7428-4B6A-AA4D-45831EFEC052}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA21CE8C-A8D3-4DE8-98EA-201CA5E59D4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA21CE8C-A8D3-4DE8-98EA-201CA5E59D4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA21CE8C-A8D3-4DE8-98EA-201CA5E59D4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA21CE8C-A8D3-4DE8-98EA-201CA5E59D4C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -46,5 +54,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{CBB15F5F-7E81-4E98-B3CE-CE710126C62E} = {40E0AB13-EA4C-4098-A12C-C328E9DB71F4}
 		{A4080D4A-7428-4B6A-AA4D-45831EFEC052} = {40E0AB13-EA4C-4098-A12C-C328E9DB71F4}
+		{AA21CE8C-A8D3-4DE8-98EA-201CA5E59D4C} = {030172C9-F5EB-4A87-812F-F4E04AE60336}
 	EndGlobalSection
 EndGlobal

@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Anlog.Loggers
 {
     /// <summary>
     /// Default logger.
     /// </summary>
-    public class DefaultLogger : ILogger
+    public sealed class DefaultLogger : ILogger, IDisposable
     {
         /// <inheritdoc />
         public LogFormatter Formatter { get; set; }
@@ -19,6 +20,15 @@ namespace Anlog.Loggers
         public DefaultLogger()
         {
             Sinks = new List<ILogSink>();
+        }
+
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            foreach (var sink in Sinks)
+            {
+                (sink as IDisposable)?.Dispose();
+            }
         }
 
         /// <inheritdoc />
