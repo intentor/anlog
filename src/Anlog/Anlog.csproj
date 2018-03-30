@@ -22,7 +22,7 @@
         <Exec Command="dotnet pack --include-symbols -c Release -o $(NugetPackagesFolder)" />
     </Target>
     <Target Name="PublishNuget" DependsOnTargets="PublishLocal">
-        <Exec Command="dotnet nuget push $(NugetPackagesFolder)/$(AssemblyName).$(Version).nupkg -s http://nuget/api/v2/package -k $(NugetApiKey)" />
+        <Exec Command="dotnet nuget push $(NugetPackagesFolder)/$(AssemblyName).$(Version).nupkg -s https://api.nuget.org/v3/index.json -k $(NugetApiKey)" />
         <Exec Command="git tag v$(Version)" />
         <Exec Command="git push --tags" />
     </Target>
