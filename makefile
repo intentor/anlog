@@ -11,3 +11,9 @@ build:
 
 test:
 	dotnet test
+	
+local:
+	dotnet msbuild "$(MAIN_PROJECT_FOLDER)" -t:PublishLocal
+	
+publish:
+	dotnet msbuild "$(MAIN_PROJECT_FOLDER)" -t:PublishNuget
