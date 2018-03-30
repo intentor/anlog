@@ -2,6 +2,8 @@
 
 **Another .NET Logger**
 
+[![NuGet Version](http://img.shields.io/nuget/v/Anlog.svg?style=flat)](https://www.nuget.org/packages/Anlog/)
+
 Fast and lightweight key/value pair logger for .NET Core projects.
 
 ## Contents
