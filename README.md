@@ -13,6 +13,14 @@ Fast and lightweight key/value pair logger for .NET Core projects.
 
 ## Quick start
 
+Install *Anlog* from the NuGet Gallery:
+
+```
+Install-Package Anlog
+```
+
+Create a console application and configure the logger:
+
 ```cs
 using Anlog;
 using Anlog.Factories;
