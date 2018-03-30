@@ -21,7 +21,6 @@ namespace Anlog.Sinks.SingleFile
         /// <param name="logFilePath">Log file path.</param>
         /// <param name="encoding">File encoding. The default is UTF8.</param>
         /// <param name="bufferSize">Buffer size to be used. The default is 4096.</param>
-        /// <param name="bufferTimer">Timer to perform a flush (milisseconds). The default is 1000 ms.</param>
         /// <returns>Logger factory.</returns>
         public static LoggerFactory SingleFile(this LogSinksFactory sinksFactory, 
             string logFilePath = null, Encoding encoding = null, int bufferSize = 4096)

@@ -2,7 +2,7 @@
 
 **Another .NET Logger**
 
-A fast and lightweight key/value pair logger for .NET Core projects.
+Fast and lightweight key/value pair logger for .NET Core projects.
 
 ## Contents
 1. <a href="#quick-start">Quick start</a>

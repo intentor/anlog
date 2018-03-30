@@ -242,8 +242,8 @@ namespace Anlog.Formatters.CompactKeyValue
         /// Writes the log to the logger.
         /// </summary>
         /// <param name="level">Log level.</param>
-        /// <param name="key">Log message key.</param>
         /// <param name="message">Log message.</param>
+        /// <param name="e">Log message.</param>
         private void Write(LogLevel level, string message, Exception e)
         {
             if (!string.IsNullOrEmpty(message))
