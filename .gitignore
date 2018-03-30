@@ -21,7 +21,7 @@ project.lock.json
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/
-[Nn]get
+[Nn]uget
 x64/
 x86/
 build/
