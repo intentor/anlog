@@ -5,9 +5,9 @@
 Fast and lightweight key/value pair logger for .NET Core projects.
 
 ## Contents
-1. [Quick start](##quick-start)
-1. [Features](##features)
-1. [License](##license)
+1. [Quick start](#quick-start)
+1. [Features](#features)
+1. [License](#license)
 
 ## Quick start
 
