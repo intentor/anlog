@@ -45,4 +45,4 @@ Log written: `2018-03-29 22:22:07.656 [INF] c=Program.Main:17 key=value`
 
 ## License
 
-Licensed under the [The MIT License (MIT)](http://opensource.org/licenses/MIT). Please see [LICENSE](LICENSE) for more information.
+Licensed under the [The MIT License (MIT)](http://opensource.org/licenses/MIT). Please see [LICENSE](https://raw.githubusercontent.com/intentor/anlog/master/LICENSE) for more information.
