@@ -1,7 +1,7 @@
 ﻿using Anlog.Formatters;
-using Anlog.Tests.TestObjects;
 using Moq;
 using Xunit;
+using static Anlog.Tests.TestObjects.TestConstants;
 
 namespace Anlog.Tests.Formatters
 {
@@ -18,14 +18,14 @@ namespace Anlog.Tests.Formatters
         [Fact]
         public void GivenType_FillGetters()
         {
-            var typeInfo = new TypeGettersInfo(TestConstants.TestModelType);
-            typeInfo.Append(TestConstants.TestModelInstance, mockFormatter.Object);
+            var typeInfo = new TypeGettersInfo(TestModelType);
+            typeInfo.Append(TestModelInstance, mockFormatter.Object);
 
-            mockFormatter.Verify(m => m.Append("int", TestConstants.TestModelInstance.IntValue));
-            mockFormatter.Verify(m => m.Append("double", TestConstants.TestModelInstance.DoubleValue));
-            mockFormatter.Verify(m => m.Append("text", (object) TestConstants.TestModelInstance.Text));
-            mockFormatter.Verify(m => m.Append("date", TestConstants.TestModelInstance.Date));
-            mockFormatter.Verify(m => m.Append("shorts", (object) TestConstants.TestModelInstance.ShortValues));
+            mockFormatter.Verify(m => m.Append("int", TestModelInstance.IntValue));
+            mockFormatter.Verify(m => m.Append("double", TestModelInstance.DoubleValue));
+            mockFormatter.Verify(m => m.Append("text", (object) TestModelInstance.Text));
+            mockFormatter.Verify(m => m.Append("date", TestModelInstance.Date));
+            mockFormatter.Verify(m => m.Append("shorts", (object) TestModelInstance.ShortValues));
         }
     }
 }

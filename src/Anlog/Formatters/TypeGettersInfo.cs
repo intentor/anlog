@@ -35,11 +35,36 @@ namespace Anlog.Formatters
         {
             relatedType = type;
             
+            FillFieldsGetters();
             FillPropertiesGetters();
         }
 
         /// <summary>
-        /// Fill property getters.
+        /// Fill fields getters.
+        /// </summary>
+        private void FillFieldsGetters()
+        {
+            foreach (var field in relatedType.GetFields(BindingFlags.Instance | BindingFlags.Public))
+            {
+                var key = field.Name;
+                var dataMemberAttibute = field.GetCustomAttribute<DataMemberAttribute>();
+                if (dataMemberAttibute != null)
+                {
+                    key = dataMemberAttibute.Name;
+                }
+                
+                var objectParameter = Expression.Parameter(ObjectType);
+                var getExpression = Expression.Lambda<Func<object, object>>(
+                    Expression.Convert(
+                        Expression.Field(Expression.Convert(objectParameter, relatedType), field), ObjectType),
+                    objectParameter);
+                
+                getters.Add(key, getExpression.Compile());
+            }
+        }
+
+        /// <summary>
+        /// Fill properties getters.
         /// </summary>
         private void FillPropertiesGetters()
         {

@@ -12,14 +12,14 @@ namespace Anlog.Tests.TestObjects
         /// <summary>
         /// Some int value.
         /// </summary>
-        [DataMember(Name = "int")]
-        public int IntValue { get; set; }
-        
+        [DataMember(Name = "int")] 
+        public int IntValue;
+
         /// <summary>
         /// Some double value.
         /// </summary>
-        [DataMember(Name = "double")]
-        public double DoubleValue { get; set; }
+        [DataMember(Name = "double")] 
+        public double DoubleValue;
         
         /// <summary>
         /// Some text value.
