@@ -115,7 +115,7 @@ Formats the key/value entries. All formatters include class, method name and lin
 
 Formats the key/value entries using a compact approach.
 
-Example: `2018-03-29 22:22:07.656 [INF] c=Program.Main:17 key=value`.
+`2018-03-29 22:22:07.656 [INF] c=Program.Main:17 key=value`.
 
 This is the default formatter.
 
