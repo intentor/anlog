@@ -1,30 +1,30 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <TargetFramework>netcoreapp2.0</TargetFramework>
-        <Version>1.0.0-beta2</Version>
-        <AssemblyName>Anlog</AssemblyName>
-        <RootNamespace>Anlog</RootNamespace>
-        <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-        <Authors>André "Intentor" Martins</Authors>
-        <Description>Fast and lightweight key/value pair logger for .NET Core projects.</Description>
-        <PackageId>Anlog</PackageId>
-        <PackageTags>anlog;log;logger;logging;appender</PackageTags>
-        <PackageIconUrl>http://static.intentor.com.br/anlog/anlog-nuget-icon.png</PackageIconUrl>
-        <PackageProjectUrl>https://github.com/intentor/anlog</PackageProjectUrl>
-        <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
-        <RepositoryUrl>https://github.com/intentor/anlog</RepositoryUrl>
-        <RepositoryType>git</RepositoryType>
-        <NugetPackagesFolder>../../nuget</NugetPackagesFolder>
-        <NugetApiKey>-</NugetApiKey>
-    </PropertyGroup>
-    <Target Name="PublishLocal">
-        <Exec Command="dotnet pack --include-symbols -c Release -o $(NugetPackagesFolder)" />
-    </Target>
-    <Target Name="PublishNuget" DependsOnTargets="PublishLocal">
-        <Exec Command="dotnet nuget push $(NugetPackagesFolder)/$(AssemblyName).$(Version).nupkg -s https://api.nuget.org/v3/index.json -k $(NugetApiKey)" />
-        <Exec Command="git tag v$(Version)" />
-        <Exec Command="git push --tags" />
-    </Target>
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <Version>1.0.0-beta2</Version>
+    <AssemblyName>Anlog</AssemblyName>
+    <RootNamespace>Anlog</RootNamespace>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <Authors>André "Intentor" Martins</Authors>
+    <Description>Fast and lightweight key/value pair logger for .NET Core projects.</Description>
+    <PackageId>Anlog</PackageId>
+    <PackageTags>anlog;log;logger;logging;appender</PackageTags>
+    <PackageIconUrl>http://static.intentor.com.br/anlog/anlog-nuget-icon.png</PackageIconUrl>
+    <PackageProjectUrl>https://github.com/intentor/anlog</PackageProjectUrl>
+    <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
+    <RepositoryUrl>https://github.com/intentor/anlog</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <NugetPackagesFolder>../../nuget</NugetPackagesFolder>
+    <NugetApiKey>-</NugetApiKey>
+  </PropertyGroup>
+  <Target Name="PublishLocal">
+    <Exec Command="dotnet pack --include-symbols -c Release -o $(NugetPackagesFolder)" />
+  </Target>
+  <Target Name="PublishNuget" DependsOnTargets="PublishLocal">
+    <Exec Command="dotnet nuget push $(NugetPackagesFolder)/$(AssemblyName).$(Version).nupkg -s https://api.nuget.org/v3/index.json -k $(NugetApiKey)" />
+    <Exec Command="git tag v$(Version)" />
+    <Exec Command="git push --tags" />
+  </Target>
 </Project>

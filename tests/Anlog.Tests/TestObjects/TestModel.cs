@@ -10,6 +10,13 @@ namespace Anlog.Tests.TestObjects
     public class TestModel
     {
         /// <summary>
+        /// Some int value to be ignored when writing logs.
+        /// </summary>
+        [DataMember(Name = "ignore_int")] 
+        [LogIgnore]
+        public int IgnoreIntValue;
+        
+        /// <summary>
         /// Some int value.
         /// </summary>
         [DataMember(Name = "int")] 
@@ -20,6 +27,13 @@ namespace Anlog.Tests.TestObjects
         /// </summary>
         [DataMember(Name = "double")] 
         public double DoubleValue;
+        
+        /// <summary>
+        /// Some text value to be ignored when writing logs.
+        /// </summary>
+        [DataMember(Name = "ignore_text")] 
+        [LogIgnore]
+        public int IgnoreText { get; set; }
         
         /// <summary>
         /// Some text value.

@@ -46,6 +46,11 @@ namespace Anlog.Formatters
         {
             foreach (var field in relatedType.GetFields(BindingFlags.Instance | BindingFlags.Public))
             {
+                if (field.GetCustomAttribute<LogIgnoreAttribute>() != null)
+                {
+                    continue;
+                }
+                
                 var key = field.Name;
                 var dataMemberAttibute = field.GetCustomAttribute<DataMemberAttribute>();
                 if (dataMemberAttibute != null)
@@ -70,6 +75,11 @@ namespace Anlog.Formatters
         {
             foreach (var property in relatedType.GetProperties(BindingFlags.Instance | BindingFlags.Public))
             {
+                if (property.GetCustomAttribute<LogIgnoreAttribute>() != null)
+                {
+                    continue;
+                }
+                
                 var key = property.Name;
                 var dataMemberAttibute = property.GetCustomAttribute<DataMemberAttribute>();
                 if (dataMemberAttibute != null)
