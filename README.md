@@ -1,6 +1,6 @@
 # ![Anlog](https://user-images.githubusercontent.com/5340818/38121535-4b734df8-33a6-11e8-98aa-e9b8d7234de0.png)
 
-**Another .NET Logger**
+**(Yet) Another .NET Logger**
 
 [![NuGet Version](http://img.shields.io/nuget/v/Anlog.svg?style=flat)](https://www.nuget.org/packages/Anlog/)
 
