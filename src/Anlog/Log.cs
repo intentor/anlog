@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace Anlog
 {
@@ -27,6 +28,26 @@ namespace Anlog
             [CallerLineNumber] int callerLineNumber = 0)
         {
             return Logger.Append(key, value, callerFilePath, callerMemberName, callerLineNumber);
+        }
+
+        /// <summary>
+        /// Gets a sink from the <see cref="Logger"/>.
+        /// </summary>
+        /// <typeparam name="T">Sink type.</typeparam>
+        /// <returns>Sink or null if no sink is found.</returns>
+        public static T GetSink<T>() where T : ILogSink
+        {
+            return (T) GetSink(typeof(T));
+        }
+
+        /// <summary>
+        /// Gets a sink from the <see cref="Logger"/>.
+        /// </summary>
+        /// <param name="type">Sink type.</param>
+        /// <returns>Sink or null if no sink is found.</returns>
+        public static ILogSink GetSink(Type type)
+        {
+            return Logger?.Sinks.Find(s => s.GetType() == type);
         }
     }
 }

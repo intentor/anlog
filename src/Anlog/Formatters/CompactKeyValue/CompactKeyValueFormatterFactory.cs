@@ -18,8 +18,8 @@ namespace Anlog.Formatters.CompactKeyValue
         /// Sets the log formatter as compact key/value pair.
         /// </summary>
         /// <param name="formatterFactory">Formatter factory.</param>
-        /// <param name="culture">Culture to be used.</param>
-        /// <param name="dateTimeFormat">Date/time log format.</param>
+        /// <param name="culture">Culture to be used. The default is <see cref="CultureInfo.InvariantCulture"/>.</param>
+        /// <param name="dateTimeFormat">Date/time log format. The default format is "yyyy-MM-dd HH:mm:ss.fff".</param>
         /// <returns>Logger factory.</returns>
         public static LoggerFactory CompactKeyValue(this LogFormatterFactory formatterFactory, 
             CultureInfo culture = null,
