@@ -77,6 +77,17 @@ namespace Anlog.Formatters.CompactKeyValue
             WriteValue(value);
             return this;
         }
+
+        /// <inheritdoc />
+        public ILogFormatter Append<T>(T obj) where T : class
+        {
+            var type = obj?.GetType();
+            if (type != null && Getters.ContainsKey(type))
+            {
+                Getters[type].Append(obj, this);
+            }
+            return this;
+        }
         
         /// <inheritdoc />
         public ILogFormatter Append<T>(string key, T[] values)

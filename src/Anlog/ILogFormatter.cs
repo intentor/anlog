@@ -25,6 +25,15 @@ namespace Anlog
         ILogFormatter Append(string key, object value);
         
         /// <summary>
+        /// Appends an object entry to the log.
+        /// <para />
+        /// The object fields and/or properties will be added as key value pairs to the log.
+        /// </summary>
+        /// <param name="obj">Entry value.</param>
+        /// <returns>Reference to this log writer.</returns>
+        ILogFormatter Append<T>(T obj) where T : class;
+        
+        /// <summary>
         /// Appends an entry to the log.
         /// </summary>
         /// <param name="key">Entry key.</param>

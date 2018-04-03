@@ -57,14 +57,22 @@ namespace Anlog.Tests.Formatters
                 new object[] { TestEnumerableInt.Key, TestEnumerableInt.Value, "listInt=[11,24,69,666]" },
                 new object[] { TestEnumerableDouble.Key, TestEnumerableDouble.Value, "listDouble=[11.1,24.2,69.3,666.4]" },
                 new object[] { TestEnumerableObject.Key, TestEnumerableObject.Value, "listObj=[{int=24 double=666.11 text=LogTest date=2018-03-25 23:00:00.000 shorts=[1,2,3,4,5]},{int=24 double=666.11 text=LogTest date=2018-03-25 23:00:00.000 shorts=[1,2,3,4,5]},{int=24 double=666.11 text=LogTest date=2018-03-25 23:00:00.000 shorts=[1,2,3,4,5]}]" },
-                new object[] { TestEmptyEnumerable.Key, TestEmptyEnumerable.Value, "emptyListObj=[]" }
+                new object[] { TestEmptyEnumerable.Key, TestEmptyEnumerable.Value, "emptyListObj=[]" },
+                new object[] { null, TestObject.Value, "int=24 double=666.11 text=LogTest date=2018-03-25 23:00:00.000 shorts=[1,2,3,4,5]" }
             };
 
         [Theory]
         [MemberData(nameof(LogData))]
         public void WhenAppending_WritesCompactKeyValue(string key, object value, string expected)
         {
-            formatter.Append(key, value).Info();
+            if (key == null)
+            {
+                formatter.Append(value).Info();
+            }
+            else
+            {
+                formatter.Append(key, value).Info();
+            }
 
             var log = sink.GetLogs();
             
