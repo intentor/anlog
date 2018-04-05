@@ -43,19 +43,6 @@ namespace Anlog
             int callerLineNumber);
         
         /// <summary>
-        /// Appends an object entry to the log.
-        /// <para />
-        /// The object fields and/or properties will be added as key value pairs to the log.
-        /// </summary>
-        /// <param name="obj">Entry value.</param>
-        /// <param name="callerFilePath">Caller class file path that originated the log.</param>
-        /// <param name="callerMemberName">Caller class member name that originated the log.</param>
-        /// <param name="callerLineNumber">Caller line number that originated the log.</param>
-        /// <returns>Log writer, for chaining.</returns>
-        ILogFormatter Append<T>(T obj, string callerFilePath, string callerMemberName, int callerLineNumber)
-            where T : class;
-        
-        /// <summary>
         /// Appends an entry to the log.
         /// </summary>
         /// <param name="key">Entry key.</param>
