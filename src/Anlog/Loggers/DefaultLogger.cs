@@ -32,6 +32,14 @@ namespace Anlog.Loggers
         }
 
         /// <inheritdoc />
+        public ILogFormatter Append(string key, string value, string callerFilePath, string callerMemberName, 
+            int callerLineNumber)
+        {
+            return Formatter(this, callerFilePath, callerMemberName, callerLineNumber)
+                .Append(key, value);
+        }
+
+        /// <inheritdoc />
         public ILogFormatter Append(string key, object value, string callerFilePath, string callerMemberName, 
             int callerLineNumber)
         {

@@ -63,6 +63,14 @@ namespace Anlog.Formatters.CompactKeyValue
         }
         
         /// <inheritdoc />
+        public ILogFormatter Append(string key, string value)
+        {
+            WriteKey(key);
+            WriteValue(value);
+            return this;
+        }
+        
+        /// <inheritdoc />
         public ILogFormatter Append(string key, object value)
         {
             WriteKey(key);

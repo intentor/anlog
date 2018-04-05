@@ -27,6 +27,18 @@ namespace Anlog
         /// <param name="callerMemberName">Caller class member name that originated the log.</param>
         /// <param name="callerLineNumber">Caller line number that originated the log.</param>
         /// <returns>Log writer, for chaining.</returns>
+        ILogFormatter Append(string key, string value, string callerFilePath, string callerMemberName, 
+            int callerLineNumber);
+        
+        /// <summary>
+        /// Appends an entry to the log.
+        /// </summary>
+        /// <param name="key">Entry key.</param>
+        /// <param name="value">Entry value.</param>
+        /// <param name="callerFilePath">Caller class file path that originated the log.</param>
+        /// <param name="callerMemberName">Caller class member name that originated the log.</param>
+        /// <param name="callerLineNumber">Caller line number that originated the log.</param>
+        /// <returns>Log writer, for chaining.</returns>
         ILogFormatter Append(string key, object value, string callerFilePath, string callerMemberName, 
             int callerLineNumber);
         
