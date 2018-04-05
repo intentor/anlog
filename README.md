@@ -69,11 +69,6 @@ Log.Logger = new LoggerFactory()
     .CreateLogger();
 ```
 
-#### Settings
-
-- *async*: true if write to the console should be asynchronous, otherwise false. The default is false.
-
-
 ### SingleFile
 
 Writes the log to a single file with unlimited size.
@@ -138,6 +133,32 @@ Log.Logger = new LoggerFactory()
 
 - *culture*: culture to be used. The default is `CultureInfo.InvariantCulture`.
 - *dateTimeFormat*: date/time log format. The default format is "yyyy-MM-dd HH:mm:ss.fff".
+
+## Object logging
+
+### Ignoring fields/properties
+
+If some field/property in an object needs to be ignored for logging, use the `LogIgnore` atribute:
+
+```cs
+public class Model
+{
+    [LogIgnore]
+    public int IgnoreProperty { get; set; }
+}
+```
+
+### Caching
+
+Any object with a `DataContract` attribute will be cached for logging during initialization:
+
+```cs
+[DataContract]
+public class Model
+{
+    ...
+}
+```
 
 ## License
 
