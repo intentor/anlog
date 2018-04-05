@@ -32,24 +32,6 @@ namespace Anlog
         }
         
         /// <summary>
-        /// Appends an object entry to the log.
-        /// <para />
-        /// The object fields and/or properties will be added as key value pairs to the log.
-        /// </summary>
-        /// <param name="obj">Entry value.</param>
-        /// <param name="callerFilePath">Caller class file path that originated the log.</param>
-        /// <param name="callerMemberName">Caller class member name that originated the log.</param>
-        /// <param name="callerLineNumber">Caller line number that originated the log.</param>
-        /// <returns>Log writer, for chaining.</returns>
-        public static ILogFormatter Append<T>(T obj,
-            [CallerFilePath] string callerFilePath = null,
-            [CallerMemberName] string callerMemberName = null,
-            [CallerLineNumber] int callerLineNumber = 0) where T : class
-        {
-            return Logger.Append(obj, callerFilePath, callerMemberName, callerLineNumber);
-        }
-        
-        /// <summary>
         /// Appends an entry to the log.
         /// </summary>
         /// <param name="key">Entry key.</param>
