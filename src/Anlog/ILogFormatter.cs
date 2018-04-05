@@ -7,15 +7,7 @@ namespace Anlog
     /// Provides formatting to a log entry.
     /// </summary>
     public interface ILogFormatter
-    {
-        /// <summary>
-        /// Appends an entry to the log.
-        /// </summary>
-        /// <param name="key">Entry key.</param>
-        /// <param name="value">Entry value.</param>
-        /// <returns>Reference to this log writer.</returns>
-        ILogFormatter Append(string key, string value);
-        
+    {   
         /// <summary>
         /// Appends an entry to the log.
         /// </summary>

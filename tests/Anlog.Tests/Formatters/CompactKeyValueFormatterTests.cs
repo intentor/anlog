@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Anlog.Formatters;
 using Anlog.Formatters.CompactKeyValue;
 using Anlog.Sinks.InMemory;
@@ -35,9 +36,9 @@ namespace Anlog.Tests.Formatters
         }
         
         /// <summary>
-        /// Log data used in tests.
+        /// Log append data used in tests.
         /// </summary>
-        public static IEnumerable<object[]> LogData  =>
+        public static IEnumerable<object[]> LogAppendData  =>
             new List<object[]>
             {
                 new object[] { TestString.Key, TestString.Value, "string=value" },
@@ -62,7 +63,7 @@ namespace Anlog.Tests.Formatters
             };
 
         [Theory]
-        [MemberData(nameof(LogData))]
+        [MemberData(nameof(LogAppendData))]
         public void WhenAppending_WritesCompactKeyValue(string key, object value, string expected)
         {
             if (key == null)
@@ -77,6 +78,85 @@ namespace Anlog.Tests.Formatters
             var log = sink.GetLogs();
             
             Assert.Equal(LogPrefix + expected, log.Substring(24));
+        }
+
+        [Theory]
+        [InlineData("", "")]
+        [InlineData(null, "")]
+        [InlineData("Some debug message", "d=Some debug message")]
+        public void WhenLoggingDebug_WritesCompactKeyValue(string message, string expected)
+        {
+            formatter.Debug(message);
+
+            var log = sink.GetLogs();
+            
+            Assert.True(log.Substring(24, 5).Equals("[DBG]"));
+            Assert.Equal(expected, log.Length > 47 ? log.Substring(47) : "");
+        }
+
+        [Theory]
+        [InlineData("", "")]
+        [InlineData(null, "")]
+        [InlineData("Some info message", "i=Some info message")]
+        public void WhenLoggingInfo_WritesCompactKeyValue(string message, string expected)
+        {
+            formatter.Info(message);
+
+            var log = sink.GetLogs();
+            
+            Assert.True(log.Substring(24, 5).Equals("[INF]"));
+            Assert.Equal(expected, log.Length > 47 ? log.Substring(47) : "");
+        }
+
+        [Theory]
+        [InlineData("", "")]
+        [InlineData(null, "")]
+        [InlineData("Some warning message", "w=Some warning message")]
+        public void WhenLoggingWarning_WritesCompactKeyValue(string message, string expected)
+        {
+            formatter.Warning(message);
+
+            var log = sink.GetLogs();
+            
+            Assert.True(log.Substring(24, 5).Equals("[WRN]"));
+            Assert.Equal(expected, log.Length > 47 ? log.Substring(47) : "");
+        }
+
+        [Theory]
+        [InlineData("", "")]
+        [InlineData(null, "")]
+        [InlineData("Some error message", "e=Some error message")]
+        public void WhenLoggingError_WritesCompactKeyValue(string message, string expected)
+        {
+            formatter.Error(message);
+
+            var log = sink.GetLogs();
+            
+            Assert.True(log.Substring(24, 5).Equals("[ERR]"));
+            Assert.Equal(expected, log.Length > 47 ? log.Substring(47) : "");
+        }
+
+        [Fact]
+        public void WhenLoggingExceptionWithMessage_WritesCompactKeyValue()
+        {
+            formatter.Error(new ArgumentException("Param invalid", "Param"));
+
+            var log = sink.GetLogs();
+            
+            Assert.True(log.Substring(24, 5).Equals("[ERR]"));
+            Assert.Equal("\nSystem.ArgumentException: Param invalid\nParameter name: Param", log.Substring(46));
+        }
+
+        [Fact]
+        public void WhenLoggingExceptionWithoutMessage_WritesCompactKeyValue()
+        {
+            formatter.Error("Some error message", new ArgumentException("Param invalid", "Param"));
+
+            var log = sink.GetLogs();
+            
+            Assert.True(log.Substring(24, 5).Equals("[ERR]"));
+            Assert.Equal(" e=Some error message\nSystem.ArgumentException: Param invalid\nParameter name: Param", 
+                log.Substring(46));
         }
     }
 }

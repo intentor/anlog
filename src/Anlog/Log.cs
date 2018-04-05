@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 namespace Anlog
@@ -22,12 +23,157 @@ namespace Anlog
         /// <param name="callerMemberName">Caller class member name that originated the log.</param>
         /// <param name="callerLineNumber">Caller line number that originated the log.</param>
         /// <returns>Log writer, for chaining.</returns>
-        public static ILogFormatter Append(string key, string value,
+        public static ILogFormatter Append(string key, object value,
             [CallerFilePath] string callerFilePath = null,
             [CallerMemberName] string callerMemberName = null,
             [CallerLineNumber] int callerLineNumber = 0)
         {
             return Logger.Append(key, value, callerFilePath, callerMemberName, callerLineNumber);
+        }
+        
+        /// <summary>
+        /// Appends an object entry to the log.
+        /// <para />
+        /// The object fields and/or properties will be added as key value pairs to the log.
+        /// </summary>
+        /// <param name="obj">Entry value.</param>
+        /// <param name="callerFilePath">Caller class file path that originated the log.</param>
+        /// <param name="callerMemberName">Caller class member name that originated the log.</param>
+        /// <param name="callerLineNumber">Caller line number that originated the log.</param>
+        /// <returns>Log writer, for chaining.</returns>
+        public static ILogFormatter Append<T>(T obj,
+            [CallerFilePath] string callerFilePath = null,
+            [CallerMemberName] string callerMemberName = null,
+            [CallerLineNumber] int callerLineNumber = 0) where T : class
+        {
+            return Logger.Append(obj, callerFilePath, callerMemberName, callerLineNumber);
+        }
+        
+        /// <summary>
+        /// Appends an entry to the log.
+        /// </summary>
+        /// <param name="key">Entry key.</param>
+        /// <param name="values">Entry values.</param>
+        /// <param name="callerFilePath">Caller class file path that originated the log.</param>
+        /// <param name="callerMemberName">Caller class member name that originated the log.</param>
+        /// <param name="callerLineNumber">Caller line number that originated the log.</param>
+        /// <typeparam name="T">Object type.</typeparam>
+        /// <returns>Log writer, for chaining.</returns>
+        public static ILogFormatter Append<T>(string key, T[] values,
+            [CallerFilePath] string callerFilePath = null,
+            [CallerMemberName] string callerMemberName = null,
+            [CallerLineNumber] int callerLineNumber = 0)
+        {
+            return Logger.Append(key, values, callerFilePath, callerMemberName, callerLineNumber);
+        }
+        
+        /// <summary>
+        /// Appends an entry to the log.
+        /// </summary>
+        /// <param name="key">Entry key.</param>
+        /// <param name="values">Entry values.</param>
+        /// <param name="callerFilePath">Caller class file path that originated the log.</param>
+        /// <param name="callerMemberName">Caller class member name that originated the log.</param>
+        /// <param name="callerLineNumber">Caller line number that originated the log.</param>
+        /// <typeparam name="T">Object type.</typeparam>
+        /// <returns>Log writer, for chaining.</returns>
+        public static ILogFormatter Append<T>(string key, IEnumerable<T> values,
+            [CallerFilePath] string callerFilePath = null,
+            [CallerMemberName] string callerMemberName = null,
+            [CallerLineNumber] int callerLineNumber = 0)
+        {
+            return Logger.Append(key, values, callerFilePath, callerMemberName, callerLineNumber);
+        }
+
+        /// <summary>
+        /// Writes the log as debug.
+        /// </summary>
+        /// <param name="message">Log message.</param>
+        /// <param name="callerFilePath">Caller class file path that originated the log.</param>
+        /// <param name="callerMemberName">Caller class member name that originated the log.</param>
+        /// <param name="callerLineNumber">Caller line number that originated the log.</param>
+        public static void Debug(string message = null,
+            [CallerFilePath] string callerFilePath = null,
+            [CallerMemberName] string callerMemberName = null,
+            [CallerLineNumber] int callerLineNumber = 0)
+        {
+            Logger.Debug(message, callerFilePath, callerMemberName, callerLineNumber);
+        }
+        
+        /// <summary>
+        /// Writes the log as information.
+        /// </summary>
+        /// <param name="message">Log message.</param>
+        /// <param name="callerFilePath">Caller class file path that originated the log.</param>
+        /// <param name="callerMemberName">Caller class member name that originated the log.</param>
+        /// <param name="callerLineNumber">Caller line number that originated the log.</param>
+        public static void Info(string message = null,
+            [CallerFilePath] string callerFilePath = null,
+            [CallerMemberName] string callerMemberName = null,
+            [CallerLineNumber] int callerLineNumber = 0)
+        {
+            Logger.Info(message, callerFilePath, callerMemberName, callerLineNumber);
+        }
+
+        /// <summary>
+        /// Writes the log as warning.
+        /// </summary>
+        /// <param name="message">Log message.</param>
+        /// <param name="callerFilePath">Caller class file path that originated the log.</param>
+        /// <param name="callerMemberName">Caller class member name that originated the log.</param>
+        /// <param name="callerLineNumber">Caller line number that originated the log.</param>
+        public static void Warning(string message = null,
+            [CallerFilePath] string callerFilePath = null,
+            [CallerMemberName] string callerMemberName = null,
+            [CallerLineNumber] int callerLineNumber = 0)
+        {
+            Logger.Warning(message, callerFilePath, callerMemberName, callerLineNumber);
+        }
+
+        /// <summary>
+        /// Writes the log as error.
+        /// </summary>
+        /// <param name="message">Log message.</param>
+        /// <param name="callerFilePath">Caller class file path that originated the log.</param>
+        /// <param name="callerMemberName">Caller class member name that originated the log.</param>
+        /// <param name="callerLineNumber">Caller line number that originated the log.</param>
+        public static void Error(string message = null,
+            [CallerFilePath] string callerFilePath = null,
+            [CallerMemberName] string callerMemberName = null,
+            [CallerLineNumber] int callerLineNumber = 0)
+        {
+            Logger.Error(message, callerFilePath, callerMemberName, callerLineNumber);
+        }
+
+        /// <summary>
+        /// Writes the log as error.
+        /// </summary>
+        /// <param name="e">Exception details.</param>
+        /// <param name="callerFilePath">Caller class file path that originated the log.</param>
+        /// <param name="callerMemberName">Caller class member name that originated the log.</param>
+        /// <param name="callerLineNumber">Caller line number that originated the log.</param>
+        public static void Error(Exception e,
+            [CallerFilePath] string callerFilePath = null,
+            [CallerMemberName] string callerMemberName = null,
+            [CallerLineNumber] int callerLineNumber = 0)
+        {
+            Logger.Error(e, callerFilePath, callerMemberName, callerLineNumber);
+        }
+        
+        /// <summary>
+        /// Writes the log as error.
+        /// </summary>
+        /// <param name="message">Log message.</param>
+        /// <param name="e">Exception details.</param>
+        /// <param name="callerFilePath">Caller class file path that originated the log.</param>
+        /// <param name="callerMemberName">Caller class member name that originated the log.</param>
+        /// <param name="callerLineNumber">Caller line number that originated the log.</param>
+        public static void Error(string message, Exception e,
+            [CallerFilePath] string callerFilePath = null,
+            [CallerMemberName] string callerMemberName = null,
+            [CallerLineNumber] int callerLineNumber = 0)
+        {
+            Logger.Error(message, e, callerFilePath, callerMemberName, callerLineNumber);
         }
 
         /// <summary>
