@@ -11,11 +11,10 @@ namespace Anlog.Sinks.Console
         /// Writes the output to the console.
         /// </summary>
         /// <param name="sinksFactory">Sinks factory.</param>
-        /// <param name="async">True if write to the console should be asynchronous, otherwise false.</param>
         /// <returns>Logger factory.</returns>
-        public static LoggerFactory Console(this LogSinksFactory sinksFactory, bool async = false)
+        public static LoggerFactory Console(this LogSinksFactory sinksFactory)
         {
-            sinksFactory.Sinks.Add(async ? (ILogSink) new AsyncConsoleSink() : new ConsoleSink());
+            sinksFactory.Sinks.Add(new ConsoleSink());
             return sinksFactory.Factory;
         }
     }

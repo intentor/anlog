@@ -10,11 +10,6 @@ namespace Anlog.Sinks.SingleFile
     public sealed class SingleFileSink : ILogSink, IDisposable
     {
         /// <summary>
-        /// Log async writer.
-        /// </summary>
-        private AsyncWriter asyncWriter;
-        
-        /// <summary>
         /// Internal output stream.
         /// </summary>
         private Stream outputStream;
@@ -26,7 +21,7 @@ namespace Anlog.Sinks.SingleFile
         
         /// <summary>
         /// Initializes a new instance of <see cref="SingleFileSink"/>.
-        /// </summary>
+        /// </summary>ØØ
         /// <param name="logFilePath">Log file path.</param>
         /// <param name="encoding">File encoding. The default is UTF8.</param>
         /// <param name="bufferSize">Buffer size to be used. The default is 4096.</param>
@@ -40,14 +35,11 @@ namespace Anlog.Sinks.SingleFile
             
             outputStream = new FileStream(logFilePath, FileMode.Append, FileAccess.Write, FileShare.Read, bufferSize);
             writer = new StreamWriter(outputStream, encoding ?? new UTF8Encoding());
-            
-            asyncWriter = new AsyncWriter(writer.WriteLine);
         }
 
         /// <inheritdoc />
         public void Dispose()
         {
-            asyncWriter.Dispose();
             writer.Dispose();
             outputStream.Dispose();
         }
@@ -55,7 +47,8 @@ namespace Anlog.Sinks.SingleFile
         /// <inheritdoc />
         public void Write(string log)
         { 
-            asyncWriter.Enqueue(log);
+            writer.WriteLine(log);
+            writer.Flush();
         }
     }
 }
