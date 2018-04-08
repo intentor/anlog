@@ -20,6 +20,11 @@ namespace Anlog.Sinks.SingleFile
         private TextWriter writer;
         
         /// <summary>
+        /// Async writer.
+        /// </summary>
+        private AsyncWriter asyncWriter;
+        
+        /// <summary>
         /// Initializes a new instance of <see cref="SingleFileSink"/>.
         /// </summary>ØØ
         /// <param name="logFilePath">Log file path.</param>
@@ -35,6 +40,13 @@ namespace Anlog.Sinks.SingleFile
             
             outputStream = new FileStream(logFilePath, FileMode.Append, FileAccess.Write, FileShare.Read, bufferSize);
             writer = new StreamWriter(outputStream, encoding ?? new UTF8Encoding());
+            
+            asyncWriter = new AsyncWriter(log =>
+            {
+                writer.WriteLine(log);
+                writer.Flush();
+            });
+            asyncWriter.Start();
         }
 
         /// <inheritdoc />
@@ -47,8 +59,7 @@ namespace Anlog.Sinks.SingleFile
         /// <inheritdoc />
         public void Write(string log)
         { 
-            writer.WriteLine(log);
-            writer.Flush();
+            asyncWriter.Enqueue(log);  
         }
     }
 }
