@@ -20,6 +20,7 @@ namespace Anlog.Sinks.Console
         public AsyncConsoleSink()
         {
             asyncWriter = new AsyncWriter(System.Console.WriteLine);
+            asyncWriter.Start();
         }
 
         /// <inheritdoc />

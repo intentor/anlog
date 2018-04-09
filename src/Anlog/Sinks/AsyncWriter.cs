@@ -33,7 +33,10 @@ namespace Anlog.Sinks
         {
             this.writer = writer;
             queue = new ConcurrentQueue<string>();
-            worker = new BackgroundWorker();
+            worker = new BackgroundWorker()
+            {
+                WorkerSupportsCancellation = true
+            };
         }
 
         /// <summary>
@@ -43,7 +46,7 @@ namespace Anlog.Sinks
         {
             worker.DoWork += (sender, args) =>
             {
-                while (true)
+                while (!worker.CancellationPending)
                 {
                     WriteQueue();
                     Thread.Sleep(1);
@@ -55,6 +58,7 @@ namespace Anlog.Sinks
         /// <inheritdoc />
         public void Dispose()
         {
+            worker.CancelAsync();
             worker.Dispose();
             WriteQueue();
         }
