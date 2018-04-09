@@ -6,7 +6,7 @@ namespace Anlog.Loggers
     /// <summary>
     /// Default logger.
     /// </summary>
-    public sealed class DefaultLogger : ILogger, IDisposable
+    public sealed class DefaultLogger : ILogger
     {
         /// <inheritdoc />
         public LogFormatter Formatter { get; set; }
