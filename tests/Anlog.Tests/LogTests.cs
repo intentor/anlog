@@ -2,6 +2,7 @@
 using Anlog.Factories;
 using Anlog.Sinks;
 using Anlog.Sinks.InMemory;
+using Anlog.Tests.TestObjects;
 using Xunit;
 
 namespace Anlog.Tests
@@ -22,6 +23,16 @@ namespace Anlog.Tests
         public void Dispose()
         {
             Log.Logger = null;
+        }
+        
+        [Fact]
+        public void WhenLoggingFromConstructor_LogCorrectMembersNames()
+        {
+            var model = new TestConstructorLogModel();
+
+            var log = Log.GetSink<InMemorySink>()?.GetLogs();
+            
+            Assert.Equal("c=TestConstructorLogModel.Constructor:13 key=value", log?.Substring(30));
         }
         
         [Fact]

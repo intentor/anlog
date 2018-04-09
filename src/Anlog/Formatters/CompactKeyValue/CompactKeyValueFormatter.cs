@@ -14,6 +14,16 @@ namespace Anlog.Formatters.CompactKeyValue
     public class CompactKeyValueFormatter : ILogFormatter
     {
         /// <summary>
+        /// Constructor caller name when receiving as input.
+        /// </summary>
+        private const string ConstructorCallerInputName = ".ctor";
+
+        /// <summary>
+        /// Constructor name to output.
+        /// </summary>
+        private const string ConstructorCallerOutputName = "Constructor";
+
+        /// <summary>
         /// Date/time format.
         /// </summary>
         internal static string DateTimeFormat { get; set; } = "yyyy-MM-dd HH:mm:ss.fff";
@@ -54,6 +64,11 @@ namespace Anlog.Formatters.CompactKeyValue
             var caller = UnknownCallerValue;
             if (!string.IsNullOrEmpty(callerFilePath))
             {
+                if (callerMemberName == ConstructorCallerInputName)
+                {
+                    callerMemberName = ConstructorCallerOutputName;
+                }
+                
                 caller = string.Concat(Path.GetFileNameWithoutExtension(callerFilePath), CallerMembersSeparator, 
                     callerMemberName, CallerLineNumberSeparator, callerLineNumber);
             }

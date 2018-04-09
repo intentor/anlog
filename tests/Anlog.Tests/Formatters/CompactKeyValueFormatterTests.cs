@@ -90,7 +90,7 @@ namespace Anlog.Tests.Formatters
 
             var log = sink.GetLogs();
             
-            Assert.True(log.Substring(24, 5).Equals("[DBG]"));
+            Assert.Equal(log.Substring(24, 5).Equals());
             Assert.Equal(expected, log.Length > 47 ? log.Substring(47) : "");
         }
 

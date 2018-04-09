@@ -7,7 +7,7 @@ namespace Anlog.Tests.TestObjects
     /// A test value object.
     /// </summary>
     [DataContract]
-    public class TestModel
+    public sealed class TestModel
     {
         /// <summary>
         /// Some int value to be ignored when writing logs.
