@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Anlog.Tests.TestObjects
+namespace Anlog.Tests.TestObjects.Models
 {
     /// <summary>
-    /// A test value object.
+    /// A test value object model with <see cref="DataContractAttribute"/>.
     /// </summary>
     [DataContract]
-    public sealed class TestModel
+    public sealed class TestDataContractModel
     {
         /// <summary>
         /// Some int value to be ignored when writing logs.
@@ -54,9 +54,9 @@ namespace Anlog.Tests.TestObjects
         public short[] ShortValues { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="TestModel"/>.
+        /// Initializes a new instance of <see cref="TestDataContractModel"/>.
         /// </summary>
-        public TestModel()
+        public TestDataContractModel()
         {
             var random = new Random();
 

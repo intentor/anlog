@@ -41,6 +41,8 @@ namespace Anlog.Tests.Formatters
         public static IEnumerable<object[]> LogAppendData  =>
             new List<object[]>
             {
+                new object[] { "key", null, "key=null" },
+                new object[] { "key", string.Empty, "key=" },
                 new object[] { TestString.Key, TestString.Value, "string=value" },
                 new object[] { TestShort.Key, TestShort.Value, "short=24" },
                 new object[] { TestInt.Key, TestInt.Value, "int=69" },

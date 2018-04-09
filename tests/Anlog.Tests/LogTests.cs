@@ -3,6 +3,7 @@ using Anlog.Factories;
 using Anlog.Sinks;
 using Anlog.Sinks.InMemory;
 using Anlog.Tests.TestObjects;
+using Anlog.Tests.TestObjects.Models;
 using Xunit;
 
 namespace Anlog.Tests
@@ -34,7 +35,7 @@ namespace Anlog.Tests
             
             Assert.Equal("c=TestConstructorLogModel.Constructor:13 key=value", log?.Substring(30));
         }
-        
+
         [Fact]
         public void WhenAddingSink_GetByGenerics()
         {

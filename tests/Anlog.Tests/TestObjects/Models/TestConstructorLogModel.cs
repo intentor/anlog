@@ -1,4 +1,4 @@
-﻿namespace Anlog.Tests.TestObjects
+﻿namespace Anlog.Tests.TestObjects.Models
 {
     /// <summary>
     /// Writes a log from a constructor.

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Anlog.Tests.TestObjects.Models;
 
 namespace Anlog.Tests.TestObjects
 {
@@ -11,12 +12,12 @@ namespace Anlog.Tests.TestObjects
         /// <summary>
         /// Test model type.
         /// </summary>
-        public static readonly Type TestModelType = typeof(TestModel);
+        public static readonly Type TestModelType = typeof(TestDataContractModel);
 
         /// <summary>
         /// Test model instance.
         /// </summary>
-        public static readonly TestModel TestModelInstance = new TestModel()
+        public static readonly TestDataContractModel TestModelInstance = new TestDataContractModel()
         {
             IntValue = 24,
             DoubleValue = 666.11d,
@@ -80,8 +81,8 @@ namespace Anlog.Tests.TestObjects
         /// <summary>
         /// Test object key/value pair.
         /// </summary>
-        public static readonly KeyValuePair<string, TestModel> TestObject = 
-            new KeyValuePair<string, TestModel>("obj", TestModelInstance);
+        public static readonly KeyValuePair<string, TestDataContractModel> TestObject = 
+            new KeyValuePair<string, TestDataContractModel>("obj", TestModelInstance);
         
         /// <summary>
         /// Test enumeration key/value pair.
@@ -106,15 +107,15 @@ namespace Anlog.Tests.TestObjects
         /// <summary>
         /// Test object array key/value pair.
         /// </summary>
-        public static readonly KeyValuePair<string, TestModel[]> TestArrayObject = 
-            new KeyValuePair<string, TestModel[]>("arrObj", 
-                new TestModel[] { TestModelInstance, TestModelInstance, TestModelInstance });
+        public static readonly KeyValuePair<string, TestDataContractModel[]> TestArrayObject = 
+            new KeyValuePair<string, TestDataContractModel[]>("arrObj", 
+                new TestDataContractModel[] { TestModelInstance, TestModelInstance, TestModelInstance });
         
         /// <summary>
         /// Test object empty array key/value pair.
         /// </summary>
-        public static readonly KeyValuePair<string, TestModel[]> TestEmptyArray = 
-            new KeyValuePair<string, TestModel[]>("emptyArrObj", new TestModel[0]);
+        public static readonly KeyValuePair<string, TestDataContractModel[]> TestEmptyArray = 
+            new KeyValuePair<string, TestDataContractModel[]>("emptyArrObj", new TestDataContractModel[0]);
         
         /// <summary>
         /// Test int enumeration key/value pair.
@@ -133,14 +134,14 @@ namespace Anlog.Tests.TestObjects
         /// <summary>
         /// Test object enumeration key/value pair.
         /// </summary>
-        public static readonly KeyValuePair<string, IEnumerable<TestModel>> TestEnumerableObject = 
-            new KeyValuePair<string, IEnumerable<TestModel>>("listObj", 
-                new List<TestModel>() { TestModelInstance, TestModelInstance, TestModelInstance });
+        public static readonly KeyValuePair<string, IEnumerable<TestDataContractModel>> TestEnumerableObject = 
+            new KeyValuePair<string, IEnumerable<TestDataContractModel>>("listObj", 
+                new List<TestDataContractModel>() { TestModelInstance, TestModelInstance, TestModelInstance });
         
         /// <summary>
         /// Test object empty enumeration key/value pair.
         /// </summary>
-        public static readonly KeyValuePair<string, IEnumerable<TestModel>> TestEmptyEnumerable = 
-            new KeyValuePair<string, IEnumerable<TestModel>>("emptyListObj", new List<TestModel>());
+        public static readonly KeyValuePair<string, IEnumerable<TestDataContractModel>> TestEmptyEnumerable = 
+            new KeyValuePair<string, IEnumerable<TestDataContractModel>>("emptyListObj", new List<TestDataContractModel>());
     }
 }
