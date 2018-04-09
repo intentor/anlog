@@ -2,12 +2,12 @@
 using System.IO;
 using System.Text;
 
-namespace Anlog.Sinks.SingleFile
+namespace Anlog.Sinks
 {
     /// <summary>
-    /// Writes output to a single file.
+    /// Writes data to a file.
     /// </summary>
-    public sealed class SingleFileSink : ILogSink, IDisposable
+    public sealed class FileSink : ILogSink, IDisposable
     {
         /// <summary>
         /// Internal output stream.
@@ -18,19 +18,19 @@ namespace Anlog.Sinks.SingleFile
         /// Text writer.
         /// </summary>
         private TextWriter writer;
-        
+
         /// <summary>
-        /// Async writer.
+        /// Allows blocking of actions in a thread.
         /// </summary>
-        private AsyncWriter asyncWriter;
+        private readonly object locker = new object();
         
         /// <summary>
-        /// Initializes a new instance of <see cref="SingleFileSink"/>.
+        /// Initializes a new instance of <see cref="FileSink"/>.
         /// </summary>ØØ
         /// <param name="logFilePath">Log file path.</param>
         /// <param name="encoding">File encoding. The default is UTF8.</param>
         /// <param name="bufferSize">Buffer size to be used. The default is 4096.</param>
-        public SingleFileSink(string logFilePath, Encoding encoding = null, int bufferSize = 4096)
+        public FileSink(string logFilePath, Encoding encoding = null, int bufferSize = 4096)
         {
             var directory = Path.GetDirectoryName(logFilePath);
             if (!Directory.Exists(directory))
@@ -40,13 +40,6 @@ namespace Anlog.Sinks.SingleFile
             
             outputStream = new FileStream(logFilePath, FileMode.Append, FileAccess.Write, FileShare.Read, bufferSize);
             writer = new StreamWriter(outputStream, encoding ?? new UTF8Encoding());
-            
-            asyncWriter = new AsyncWriter(log =>
-            {
-                writer.WriteLine(log);
-                writer.Flush();
-            });
-            asyncWriter.Start();
         }
 
         /// <inheritdoc />
@@ -55,11 +48,18 @@ namespace Anlog.Sinks.SingleFile
             writer.Dispose();
             outputStream.Dispose();
         }
-        
-        /// <inheritdoc />
+
+        /// <summary>
+        /// Writes a log to a file.
+        /// </summary>
+        /// <param name="log">Log to write.</param>
         public void Write(string log)
-        { 
-            asyncWriter.Enqueue(log);  
+        {
+            lock (locker)
+            {
+                writer.WriteLine(log);
+                writer.Flush();
+            }
         }
     }
 }

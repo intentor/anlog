@@ -1,7 +1,7 @@
 ﻿using System;
 using Anlog.Factories;
+using Anlog.Sinks;
 using Anlog.Sinks.InMemory;
-using Anlog.Sinks.SingleFile;
 using Xunit;
 
 namespace Anlog.Tests
@@ -39,7 +39,7 @@ namespace Anlog.Tests
         [Fact]
         public void WhenHavingNoSink_ReturnNull()
         {
-            Assert.Null(Log.GetSink(typeof(SingleFileSink)));
+            Assert.Null(Log.GetSink(typeof(FileSink)));
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System.IO;
-using System.Threading;
-using Anlog.Sinks.SingleFile;
+using Anlog.Sinks;
 using Anlog.Tests.TestObjects;
 using Xunit;
 using static Anlog.Tests.TestObjects.TestConstants;
@@ -8,9 +7,9 @@ using static Anlog.Tests.TestObjects.TestConstants;
 namespace Anlog.Tests.Sinks
 {
     /// <summary>
-    /// Tests for <see cref="SingleFileSink"/>.
+    /// Tests for <see cref="FileSink"/>.
     /// </summary>
-    public class SingleFileSinkTests
+    public class FileSinkTests
     {
         [Fact]
         public void WhenWritingToNewFile_CreateFile()
@@ -19,7 +18,7 @@ namespace Anlog.Tests.Sinks
             {
                 var path = temp.GetLogFilePath();
 
-                using (var sink = new SingleFileSink(path))
+                using (var sink = new FileSink(path))
                 {
                     sink.Write(GenericLog);
                 }
@@ -36,12 +35,12 @@ namespace Anlog.Tests.Sinks
             {
                 var path = temp.GetLogFilePath();
 
-                using (var sink = new SingleFileSink(path))
+                using (var sink = new FileSink(path))
                 {
                     sink.Write(GenericLog + "1");
                 }
 
-                using (var sink = new SingleFileSink(path))
+                using (var sink = new FileSink(path))
                 {
                     sink.Write(GenericLog + "2");
                 }

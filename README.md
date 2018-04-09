@@ -69,6 +69,10 @@ Log.Logger = new LoggerFactory()
     .CreateLogger();
 ```
 
+#### Settings
+
+- *async*: True if write to the console should be asynchronous, otherwise false. Provides fast writing to console, however due to run in a separated thread, the last log(s) in case of a crash may not be written. The default is false.
+
 ### SingleFile
 
 Writes the log to a single file with unlimited size.
@@ -81,7 +85,8 @@ Log.Logger = new LoggerFactory()
 
 #### Settings
 
-- *logFilePath*: log file path. 
+- *logFilePath*: log file path.
+- *async*: True if write to the console should be asynchronous, otherwise false. Provides fast writing to console, however due to run in a separated thread, the last log(s) in case of a crash may not be written. The default is false.
 - *encoding*: file encoding. The default is UTF8.
 - *bufferSize*: buffer size to be used. The default is 4096.
 

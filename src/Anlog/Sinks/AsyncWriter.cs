@@ -16,11 +16,6 @@ namespace Anlog.Sinks
         private ConcurrentQueue<string> queue;
 
         /// <summary>
-        /// Allows blocking of actions in a thread.
-        /// </summary>
-        private readonly object locker = new object();
-
-        /// <summary>
         /// Writing action.
         /// </summary>
         private Action<string> writer;
@@ -80,12 +75,9 @@ namespace Anlog.Sinks
         {
             if (queue.Count > 0)
             {
-                lock (locker)
+                while (queue.TryDequeue(out string value))
                 {
-                    while (queue.TryDequeue(out string value))
-                    {
-                        writer(value);
-                    }
+                    writer(value);
                 }
             }
         }

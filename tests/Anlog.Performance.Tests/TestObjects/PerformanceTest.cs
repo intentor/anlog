@@ -48,7 +48,7 @@ namespace Anlog.Performance.Tests.TestObjects
             if (Log.Logger == null)
             {
                 Log.Logger = new LoggerFactory()
-                    .WriteTo.SingleFile(Path.Combine(tempFolder.GetLogFilePath("anlog.txt")))
+                    .WriteTo.SingleFile(Path.Combine(tempFolder.GetLogFilePath("anlog.txt")), true)
                     .CreateLogger();
             }
         }
