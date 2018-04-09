@@ -90,7 +90,7 @@ namespace Anlog.Tests.Formatters
 
             var log = sink.GetLogs();
             
-            Assert.Equal(log.Substring(24, 5).Equals());
+            Assert.Equal("[DBG]", log.Substring(24, 5));
             Assert.Equal(expected, log.Length > 47 ? log.Substring(47) : "");
         }
 
@@ -104,7 +104,7 @@ namespace Anlog.Tests.Formatters
 
             var log = sink.GetLogs();
             
-            Assert.True(log.Substring(24, 5).Equals("[INF]"));
+            Assert.Equal("[INF]", log.Substring(24, 5));
             Assert.Equal(expected, log.Length > 47 ? log.Substring(47) : "");
         }
 
@@ -118,7 +118,7 @@ namespace Anlog.Tests.Formatters
 
             var log = sink.GetLogs();
             
-            Assert.True(log.Substring(24, 5).Equals("[WRN]"));
+            Assert.Equal("[WRN]", log.Substring(24, 5));
             Assert.Equal(expected, log.Length > 47 ? log.Substring(47) : "");
         }
 
@@ -132,7 +132,7 @@ namespace Anlog.Tests.Formatters
 
             var log = sink.GetLogs();
             
-            Assert.True(log.Substring(24, 5).Equals("[ERR]"));
+            Assert.Equal("[ERR]", log.Substring(24, 5));
             Assert.Equal(expected, log.Length > 47 ? log.Substring(47) : "");
         }
 
@@ -143,7 +143,7 @@ namespace Anlog.Tests.Formatters
 
             var log = sink.GetLogs();
             
-            Assert.True(log.Substring(24, 5).Equals("[ERR]"));
+            Assert.Equal("[ERR]", log.Substring(24, 5));
             Assert.Equal("\nSystem.ArgumentException: Param invalid\nParameter name: Param", log.Substring(46));
         }
 
@@ -154,7 +154,7 @@ namespace Anlog.Tests.Formatters
 
             var log = sink.GetLogs();
             
-            Assert.True(log.Substring(24, 5).Equals("[ERR]"));
+            Assert.Equal("[ERR]", log.Substring(24, 5));
             Assert.Equal(" e=Some error message\nSystem.ArgumentException: Param invalid\nParameter name: Param", 
                 log.Substring(46));
         }
