@@ -1,10 +1,17 @@
-﻿namespace Anlog.Formatters.CompactKeyValue
+﻿using System;
+
+namespace Anlog.Formatters.CompactKeyValue
 {
     /// <summary>
     /// Constants for the <see cref="CompactKeyValueFormatter"/>.
     /// </summary>
     internal static class CompactKeyValueFormatterConstants
     {
+        /// <summary>
+        /// String type.
+        /// </summary>
+        internal static readonly Type StringType = typeof(string);
+        
         /// <summary>
         /// Log entries separator.
         /// </summary>
@@ -84,6 +91,11 @@
         /// Empty value text.
         /// </summary>
         internal const string EmptyValue = "";
+
+        /// <summary>
+        /// Generic key for a value that there's no key.
+        /// </summary>
+        internal const string GenericValueKey = "value";
 
         /// <summary>
         /// Log levels details.

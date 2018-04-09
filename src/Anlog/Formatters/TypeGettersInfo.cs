@@ -86,6 +86,12 @@ namespace Anlog.Formatters
                 {
                     key = dataMemberAttibute.Name;
                 }
+
+                // Indexed properties are ignored.
+                if (property.GetIndexParameters().Length > 0)
+                {
+                    continue;
+                }
                 
                 var objectParameter = Expression.Parameter(ObjectType);
                 var getExpression = Expression.Lambda<Func<object, object>>(
@@ -95,6 +101,15 @@ namespace Anlog.Formatters
                 
                 getters.Add(key, getExpression.Compile());
             }
+        }
+
+        /// <summary>
+        /// Indicates whether this type has getters.
+        /// </summary>
+        /// <returns>True if there's getters available, otherwise false.</returns>
+        public bool HasGetters()
+        {
+            return getters.Count > 0;
         }
 
         /// <summary>

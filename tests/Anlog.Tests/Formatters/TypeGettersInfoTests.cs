@@ -19,23 +19,23 @@ namespace Anlog.Tests.Formatters
         public void GivenType_FillGettersNotIgnored()
         {
             var typeInfo = new TypeGettersInfo(TestModelType);
-            typeInfo.Append(TestModelInstance, mockFormatter.Object);
+            typeInfo.Append(TestDataContractModelInstance, mockFormatter.Object);
 
-            mockFormatter.Verify(m => m.Append("int", TestModelInstance.IntValue));
-            mockFormatter.Verify(m => m.Append("double", TestModelInstance.DoubleValue));
-            mockFormatter.Verify(m => m.Append("text", (object) TestModelInstance.Text));
-            mockFormatter.Verify(m => m.Append("date", TestModelInstance.Date));
-            mockFormatter.Verify(m => m.Append("shorts", (object) TestModelInstance.ShortValues));
+            mockFormatter.Verify(m => m.Append("int", TestDataContractModelInstance.IntValue));
+            mockFormatter.Verify(m => m.Append("double", TestDataContractModelInstance.DoubleValue));
+            mockFormatter.Verify(m => m.Append("text", (object) TestDataContractModelInstance.Text));
+            mockFormatter.Verify(m => m.Append("date", TestDataContractModelInstance.Date));
+            mockFormatter.Verify(m => m.Append("shorts", (object) TestDataContractModelInstance.ShortValues));
         }
 
         [Fact]
         public void GivenType_DontFillIgnoredGetters()
         {
             var typeInfo = new TypeGettersInfo(TestModelType);
-            typeInfo.Append(TestModelInstance, mockFormatter.Object);
+            typeInfo.Append(TestDataContractModelInstance, mockFormatter.Object);
 
-            mockFormatter.Verify(m => m.Append("ignore_int", TestModelInstance.IgnoreIntValue), Times.Never);
-            mockFormatter.Verify(m => m.Append("ignore_text", TestModelInstance.IgnoreText), Times.Never);
+            mockFormatter.Verify(m => m.Append("ignore_int", TestDataContractModelInstance.IgnoreIntValue), Times.Never);
+            mockFormatter.Verify(m => m.Append("ignore_text", TestDataContractModelInstance.IgnoreText), Times.Never);
         }
     }
 }

@@ -87,10 +87,32 @@ namespace Anlog.Formatters.CompactKeyValue
         public ILogFormatter Append<T>(T obj) where T : class
         {
             var type = obj?.GetType();
-            if (type != null && Getters.ContainsKey(type))
+            if (type == null)
+            {
+                return this;
+            }
+
+            if (type == StringType)
+            {
+                Append(GenericValueKey, obj.ToString());
+                return this;
+            }
+                
+            if (!Getters.ContainsKey(type))
+            {
+                Getters.Add(type, new TypeGettersInfo(type));
+            }
+
+            var gettersInfo = Getters[type];
+            if (gettersInfo.HasGetters())
             {
                 Getters[type].Append(obj, this);
             }
+            else
+            {
+                Append(GenericValueKey, obj.ToString());
+            }
+        
             return this;
         }
         
@@ -244,23 +266,33 @@ namespace Anlog.Formatters.CompactKeyValue
             
                     WriteValue(ListClosing, writeEntrySeparator);
                 }
-                else if (Getters.ContainsKey(value.GetType()))
-                {
-                    builder.Append(ObjectOpening);
-                    Getters[value.GetType()].Append(value, this);
-                    builder.Length--; // Removes the last space.
-                    WriteValue(ObjectClosing, writeEntrySeparator);
-                }
                 else
                 {
-                    var stringValue = value.ToString();
-                    
-                    if (string.IsNullOrEmpty(stringValue))
+                    var valueType = value.GetType();
+                    if (!Getters.ContainsKey(valueType))
                     {
-                        WriteValue(EmptyValue, writeEntrySeparator);
+                        Getters.Add(valueType, new TypeGettersInfo(valueType));
                     }
                     
-                    WriteValue(stringValue, writeEntrySeparator);
+                    var gettersInfo = Getters[valueType];
+                    if (gettersInfo.HasGetters())
+                    {
+                        builder.Append(ObjectOpening);
+                        Getters[valueType].Append(value, this);
+                        builder.Length--; // Removes the last space.
+                        WriteValue(ObjectClosing, writeEntrySeparator);
+                    }
+                    else
+                    {
+                        var stringValue = value.ToString();
+                    
+                        if (string.IsNullOrEmpty(stringValue))
+                        {
+                            WriteValue(EmptyValue, writeEntrySeparator);
+                        }
+                    
+                        WriteValue(stringValue, writeEntrySeparator);
+                    }
                 }
             }
         }

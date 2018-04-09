@@ -2,9 +2,9 @@
 using Anlog.Factories;
 using Anlog.Sinks;
 using Anlog.Sinks.InMemory;
-using Anlog.Tests.TestObjects;
 using Anlog.Tests.TestObjects.Models;
 using Xunit;
+using static Anlog.Tests.TestObjects.TestConstants;
 
 namespace Anlog.Tests
 {
@@ -34,6 +34,16 @@ namespace Anlog.Tests
             var log = Log.GetSink<InMemorySink>()?.GetLogs();
             
             Assert.Equal("c=TestConstructorLogModel.Constructor:13 key=value", log?.Substring(30));
+        }
+
+        [Fact]
+        public void WhenAppendingNonDataContractModel_LogCorrectData()
+        {
+            Log.Append("model", TestNonDataContractModelInstance).Info();
+
+            var log = Log.GetSink<InMemorySink>()?.GetLogs();
+            
+            Assert.Equal("model={int=69 double=24.11 text=LogTest date=2018-03-25 23:00:00.000 shorts=[1,2,3,4,5]}", log?.Substring(93));
         }
 
         [Fact]
