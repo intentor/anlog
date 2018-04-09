@@ -48,6 +48,9 @@ namespace QuickStart
             
             // Writes the log to console.
             Log.Append("key", "value").Info();
+            
+            // If possible, when the application ends, dispose the logger to ensure all logs are written.
+            Log.Dispose();
         }
     }
 }

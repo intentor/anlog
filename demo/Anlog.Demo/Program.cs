@@ -10,12 +10,15 @@ namespace Anlog.Demo
         {
             // Creates the logger.
             Log.Logger = new LoggerFactory()
-                .WriteTo.Console()
-                .WriteTo.SingleFile()
+                .WriteTo.Console(async: true)
+                .WriteTo.SingleFile(async: true)
                 .CreateLogger();
             
             // Writes a log.
             Log.Append("key", "value").Info();
+            
+            // If possible, when the application ends, dispose the logger to ensure all logs are written.
+            Log.Dispose();
         }
     }
 }

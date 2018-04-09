@@ -13,6 +13,14 @@ namespace Anlog
         /// Logger to write the logs to.
         /// </summary>
         public static ILogger Logger;
+
+        /// <summary>
+        /// Disposes the logging system.
+        /// </summary>
+        public static void Dispose()
+        {
+            Logger?.Dispose();
+        }
         
         /// <summary>
         /// Appends an entry to the log.
