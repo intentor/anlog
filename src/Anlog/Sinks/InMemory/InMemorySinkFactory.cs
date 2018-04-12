@@ -13,10 +13,15 @@ namespace Anlog.Sinks.InMemory
         /// Please use <see cref="InMemorySink.GetLogs"/> to read the logs.
         /// </summary>
         /// <param name="sinksFactory">Sinks factory.</param>
+        /// <param name="appendNewLine">Indicates whether a new line should be appended at the end of each log.
+        /// The default is true.</param>
         /// <returns>Logger factory.</returns>
-        public static LoggerFactory InMemory(this LogSinksFactory sinksFactory)
+        public static LoggerFactory InMemory(this LogSinksFactory sinksFactory, bool appendNewLine = true)
         {
-            sinksFactory.Sinks.Add(new InMemorySink());
+            sinksFactory.Sinks.Add(new InMemorySink()
+            {
+                AppendNewLine = appendNewLine
+            });
             return sinksFactory.Factory;
         }
     }

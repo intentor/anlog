@@ -16,7 +16,7 @@ namespace Anlog.Tests
         public LogTests()
         {
             Log.Logger = new LoggerFactory()
-                .WriteTo.InMemory()
+                .WriteTo.InMemory(false)
                 .CreateLogger();
         }
         

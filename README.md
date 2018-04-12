@@ -109,6 +109,9 @@ To get the written logs, use `Log.GetSink()`:
 ```cs
 var logs = Log.GetSink<InMemorySink>()?.GetLogs();
 ```
+#### Settings
+
+- *appendNewLine*: Indicates whether a new line should be appended at the end of each log. The default is true.
 
 ## Formatters
 

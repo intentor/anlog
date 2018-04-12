@@ -11,6 +11,11 @@ namespace Anlog.Sinks.InMemory
     public class InMemorySink : ILogSink
     {
         /// <summary>
+        /// Indicates whether a new line should be appended at the end of each log. The default is true.
+        /// </summary>
+        public bool AppendNewLine { get; set; } = true;
+        
+        /// <summary>
         /// Log buffer.
         /// </summary>
         private StringBuilder buffer;
@@ -27,7 +32,11 @@ namespace Anlog.Sinks.InMemory
         public void Write(string log)
         {
             buffer.Append(log);
-            buffer.Append(Environment.NewLine);
+
+            if (AppendNewLine)
+            {
+                buffer.Append(Environment.NewLine);
+            }
         }
 
         /// <summary>
