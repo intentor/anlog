@@ -9,6 +9,7 @@ Fast and lightweight key/value pair logger for .NET Core projects.
 ## Contents
 1. [Features](#features)
 1. [Quick start](#quick-start)
+1. [Why Anlog?](#why-anlog)
 1. [Sinks](#sinks)
 1. [Formatters](#formatters)
 1. [Minimum log level](#minimum-log-level)
@@ -60,6 +61,16 @@ namespace QuickStart
 ```
 
 Log written: `2018-03-29 22:22:07.656 [INF] c=Program.Main:17 key=value`
+
+## Why *Anlog*?
+
+Keeping logs standardized for an entire application is no easy task. The idea of **Anlog** is to help make logs follow a default convention by using key/value pairs and default formats for different kinds of values.
+
+Key/value pairs also offer an easy and compact way to analyze system logs, making it easier to read, find and standardize.
+
+### History
+
+**Anlog** started as an extension of the great (and widely used) [Serilog](https://serilog.net/) (that’s why it bears some resemblance!). However, due to difficulties of actually implementing it as planned, the project deviated from its original intention and began growing as a full-fledged component.
 
 ## Sinks
 
