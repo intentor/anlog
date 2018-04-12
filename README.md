@@ -43,7 +43,8 @@ namespace QuickStart
         {
             // Creates the logger.
             Log.Logger = new LoggerFactory()
-                .WriteTo.Console()
+                .MinimumLevel.Info() // Minimum log level to write. In this case, Information.
+                .WriteTo.Console() // Write to the console.
                 .CreateLogger();
             
             // Writes the log to console.
@@ -144,6 +145,31 @@ Log.Logger = new LoggerFactory()
 
 - *culture*: culture to be used. The default is `CultureInfo.InvariantCulture`.
 - *dateTimeFormat*: date/time log format. The default format is "yyyy-MM-dd HH:mm:ss.fff".
+
+## Minimum log level
+
+It's possible to set the minimum log level to write to sinks by using the `MinimumLevel` property in the `LoggerFactory`:
+
+```cs
+Log.Logger = new LoggerFactory()
+    .MinimumLevel.Info()
+    .CreateLogger();
+```
+
+It's also possible to set the log level by using the `LogLevel` enumeration:
+
+```cs
+Log.Logger = new LoggerFactory()
+    .MinimumLevel.Set(LogLevel.Info)
+    .CreateLogger();
+```
+
+### Available log levels
+
+1. Debug: internal system logs that are usually intented for developers.
+2. Info: general informative logs.
+3. Warn: the system may not be behaving as expected.
+4. Error: an unexpected issue occured.
 
 ## Object logging
 
