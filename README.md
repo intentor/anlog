@@ -173,7 +173,7 @@ Log.Logger = new LoggerFactory()
 3. *Warn*: the system may not be behaving as expected.
 4. *Error*: an unexpected issue occured.
 
-The default minimum log level is *Information*.
+The default minimum log level is *Info*.
 
 ## Object logging
 
