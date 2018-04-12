@@ -18,7 +18,7 @@
         /// <summary>
         /// Warning log level.
         /// </summary>
-        LogLevelName Warning { get; }
+        LogLevelName Warn { get; }
         
         /// <summary>
         /// Error log level.

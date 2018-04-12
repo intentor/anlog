@@ -195,14 +195,14 @@ namespace Anlog.Formatters.CompactKeyValue
         }
 
         /// <inheritdoc />
-        public void Warning(string message = null)
+        public void Warn(string message = null)
         {
-            if (minimumLevel > LogLevel.Warning)
+            if (minimumLevel > LogLevel.Warn)
             {
                 return;
             }
             
-            Write(CompactKeyValueFormatterConstants.LogLevelName.Warning, message, null);
+            Write(CompactKeyValueFormatterConstants.LogLevelName.Warn, message, null);
         }
 
         /// <inheritdoc />

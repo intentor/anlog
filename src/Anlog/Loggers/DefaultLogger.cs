@@ -73,10 +73,10 @@ namespace Anlog.Loggers
         }
 
         /// <inheritdoc />
-        public void Warning(string message, string callerFilePath, string callerMemberName, int callerLineNumber)
+        public void Warn(string message, string callerFilePath, string callerMemberName, int callerLineNumber)
         {
             Formatter(MinimumLevel, this, callerFilePath, callerMemberName, callerLineNumber)
-                .Warning(message);
+                .Warn(message);
         }
 
         /// <inheritdoc />

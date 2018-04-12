@@ -61,9 +61,9 @@
         /// Sets the minimum level as Warning.
         /// </summary>
         /// <returns>Logger factory.</returns>
-        public LoggerFactory Warning()
+        public LoggerFactory Warn()
         {
-            Set(LogLevel.Warning);
+            Set(LogLevel.Warn);
             return Factory;
         }
 

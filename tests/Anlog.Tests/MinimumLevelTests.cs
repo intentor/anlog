@@ -30,7 +30,7 @@ namespace Anlog.Tests
             
             WriteLogs();
 
-            AssertLogs(4, logLevelName.Debug, logLevelName.Info, logLevelName.Warning, logLevelName.Error);
+            AssertLogs(4, logLevelName.Debug, logLevelName.Info, logLevelName.Warn, logLevelName.Error);
         }
         
         [Fact]
@@ -40,17 +40,17 @@ namespace Anlog.Tests
             
             WriteLogs();
 
-            AssertLogs(3, logLevelName.Info, logLevelName.Warning, logLevelName.Error);
+            AssertLogs(3, logLevelName.Info, logLevelName.Warn, logLevelName.Error);
         }
         
         [Fact]
-        public void WhenMinimumLevelSetToWarning_WriteAbove()
+        public void WhenMinimumLevelSetToWarn_WriteAbove()
         {
-            CreateLogger(LogLevel.Warning);
+            CreateLogger(LogLevel.Warn);
             
             WriteLogs();
 
-            AssertLogs(2, logLevelName.Warning, logLevelName.Error);
+            AssertLogs(2, logLevelName.Warn, logLevelName.Error);
         }
         
         [Fact]
@@ -82,7 +82,7 @@ namespace Anlog.Tests
         {
             Log.Append(TestString.Key, TestString.Value).Debug();
             Log.Append(TestString.Key, TestString.Value).Info();
-            Log.Append(TestString.Key, TestString.Value).Warning();
+            Log.Append(TestString.Key, TestString.Value).Warn();
             Log.Append(TestString.Key, TestString.Value).Error();
         }
 

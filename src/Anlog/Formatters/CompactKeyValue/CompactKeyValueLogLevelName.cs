@@ -12,7 +12,7 @@
         public LogLevelName Info { get; }
         
         /// <inheritdoc />
-        public LogLevelName Warning { get; }
+        public LogLevelName Warn { get; }
         
         /// <inheritdoc />
         public LogLevelName Error { get; }
@@ -32,7 +32,7 @@
                 Entry = "INF",
                 Key = "i"
             };
-            Warning = new LogLevelName()
+            Warn = new LogLevelName()
             {
                 Entry = "WRN",
                 Key = "w"

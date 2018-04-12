@@ -16,7 +16,7 @@
         /// <summary>
         /// Warning level.
         /// </summary>
-        Warning = 3,
+        Warn = 3,
         /// <summary>
         /// Error level.
         /// </summary>

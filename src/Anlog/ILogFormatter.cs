@@ -66,7 +66,7 @@ namespace Anlog
         /// Writes the log as warning.
         /// </summary>
         /// <param name="message">Log message.</param>
-        void Warning(string message = null);
+        void Warn(string message = null);
 
         /// <summary>
         /// Writes the log as error.

@@ -98,7 +98,7 @@ namespace Anlog
         /// <param name="callerFilePath">Caller class file path that originated the log.</param>
         /// <param name="callerMemberName">Caller class member name that originated the log.</param>
         /// <param name="callerLineNumber">Caller line number that originated the log.</param>
-        void Warning(string message, string callerFilePath, string callerMemberName, int callerLineNumber);
+        void Warn(string message, string callerFilePath, string callerMemberName, int callerLineNumber);
 
         /// <summary>
         /// Writes the log as error.

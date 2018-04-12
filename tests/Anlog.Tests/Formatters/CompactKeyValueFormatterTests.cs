@@ -121,9 +121,9 @@ namespace Anlog.Tests.Formatters
         [InlineData("", "")]
         [InlineData(null, "")]
         [InlineData("Some warning message", "w=Some warning message")]
-        public void WhenLoggingWarning_WritesCompactKeyValue(string message, string expected)
+        public void WhenLoggingWarn_WritesCompactKeyValue(string message, string expected)
         {
-            formatter.Warning(message);
+            formatter.Warn(message);
 
             var log = sink.GetLogs();
             

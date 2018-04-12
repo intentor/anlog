@@ -129,12 +129,12 @@ namespace Anlog
         /// <param name="callerFilePath">Caller class file path that originated the log.</param>
         /// <param name="callerMemberName">Caller class member name that originated the log.</param>
         /// <param name="callerLineNumber">Caller line number that originated the log.</param>
-        public static void Warning(string message = null,
+        public static void Warn(string message = null,
             [CallerFilePath] string callerFilePath = null,
             [CallerMemberName] string callerMemberName = null,
             [CallerLineNumber] int callerLineNumber = 0)
         {
-            Logger.Warning(message, callerFilePath, callerMemberName, callerLineNumber);
+            Logger.Warn(message, callerFilePath, callerMemberName, callerLineNumber);
         }
 
         /// <summary>
