@@ -62,7 +62,7 @@ namespace QuickStart
 
 Log written: `2018-03-29 22:22:07.656 [INF] c=Program.Main:17 key=value`
 
-## Why *Anlog*?
+## Why Anlog?
 
 Keeping logs standardized for an entire application is no easy task. The idea of **Anlog** is to help make logs follow a default convention by using key/value pairs and default formats for different kinds of values.
 
