@@ -168,10 +168,10 @@ Log.Logger = new LoggerFactory()
 
 ### Available log levels
 
-1. Debug: internal system logs that are usually intented for developers.
-2. Info: general informative logs.
-3. Warn: the system may not be behaving as expected.
-4. Error: an unexpected issue occured.
+1. *Debug*: internal system logs that are usually intented for developers.
+2. *Info*: general informative logs.
+3. *Warn*: the system may not be behaving as expected.
+4. *Error*: an unexpected issue occured.
 
 ## Object logging
 
