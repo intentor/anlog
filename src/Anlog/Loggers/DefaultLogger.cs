@@ -15,7 +15,7 @@ namespace Anlog.Loggers
         public List<ILogSink> Sinks { get; set; } = new List<ILogSink>();
 
         /// <inheritdoc />
-        public LogLevel MinimumLevel { get; set; } = LogLevel.Debug;
+        public LogLevel MinimumLevel { get; set; } = LogLevel.Info;
 
         /// <inheritdoc />
         public void Dispose()

@@ -22,8 +22,7 @@
         public MinimumLevelFactory(LoggerFactory factory)
         {
             Factory = factory;
-
-            Level = LogLevel.Debug;
+            Level = LogLevel.Info;
         }
 
         /// <summary>

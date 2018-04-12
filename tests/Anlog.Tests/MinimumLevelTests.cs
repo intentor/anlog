@@ -10,17 +10,28 @@ namespace Anlog.Tests
     /// <summary>
     /// Tests for minimum level configuration.
     /// </summary>
-    public sealed class MinimumLevelTests : IDisposable
+    public sealed class MinimumLevelTests
     {
+        /// <summary>
+        /// Logger object.
+        /// </summary>
+        private ILogger logger;
+        
         /// <summary>
         /// Log levels names.
         /// </summary>
         private ILogLevelName logLevelName = new CompactKeyValueLogLevelName();
-        
-        /// <inheritdoc />
-        public void Dispose()
+            
+        [Fact]
+        public void WhenInDefaultLevel_WriteFromInfo()
         {
-            Log.Logger = null;
+            logger = new LoggerFactory()
+                .WriteTo.InMemory()
+                .CreateLogger();
+            
+            WriteLogs();
+
+            AssertLogs(3, logLevelName.Info, logLevelName.Warn, logLevelName.Error);
         }
             
         [Fact]
@@ -69,7 +80,7 @@ namespace Anlog.Tests
         /// <param name="level">Level of writing.</param>
         private void CreateLogger(LogLevel level)
         {
-            Log.Logger = new LoggerFactory()
+            logger = new LoggerFactory()
                 .MinimumLevel.Set(level)
                 .WriteTo.InMemory()
                 .CreateLogger();
@@ -80,10 +91,10 @@ namespace Anlog.Tests
         /// </summary>
         private void WriteLogs()
         {
-            Log.Append(TestString.Key, TestString.Value).Debug();
-            Log.Append(TestString.Key, TestString.Value).Info();
-            Log.Append(TestString.Key, TestString.Value).Warn();
-            Log.Append(TestString.Key, TestString.Value).Error();
+            logger.Append(TestString.Key, TestString.Value).Debug();
+            logger.Append(TestString.Key, TestString.Value).Info();
+            logger.Append(TestString.Key, TestString.Value).Warn();
+            logger.Append(TestString.Key, TestString.Value).Error();
         }
 
         /// <summary>
@@ -93,7 +104,7 @@ namespace Anlog.Tests
         /// <param name="levels">Levels in the logs</param>
         private void AssertLogs(int quantity, params LogLevelName[] levels)
         {
-            var logs = Log.GetSink<InMemorySink>()?.GetLogs().Split(Environment.NewLine);
+            var logs = logger.GetSink<InMemorySink>()?.GetLogs().Split(Environment.NewLine);
             
             Assert.NotNull(logs);
             Assert.Equal(string.Empty, logs[logs.Length - 1]);

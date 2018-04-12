@@ -45,7 +45,7 @@ namespace QuickStart
         {
             // Creates the logger.
             Log.Logger = new LoggerFactory()
-                .MinimumLevel.Info() // Minimum log level to write. In this case, Information.
+                .MinimumLevel.Debug() // Minimum log level to write. In this case, Information.
                 .WriteTo.Console() // Write to the console.
                 .CreateLogger();
             
@@ -154,7 +154,7 @@ It's possible to set the minimum log level to write to sinks by using the `Minim
 
 ```cs
 Log.Logger = new LoggerFactory()
-    .MinimumLevel.Info()
+    .MinimumLevel.Warn()
     .CreateLogger();
 ```
 
@@ -172,6 +172,8 @@ Log.Logger = new LoggerFactory()
 2. *Info*: general informative logs.
 3. *Warn*: the system may not be behaving as expected.
 4. *Error*: an unexpected issue occured.
+
+The default minimum log level is *Information*.
 
 ## Object logging
 
