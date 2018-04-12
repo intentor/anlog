@@ -25,6 +25,18 @@ namespace Anlog.Loggers
                 (sink as IDisposable)?.Dispose();
             }
         }
+        
+        /// <inheritdoc />
+        public T GetSink<T>() where T : ILogSink
+        {
+            return (T) GetSink(typeof(T));
+        }
+
+        /// <inheritdoc />
+        public ILogSink GetSink(Type type)
+        {
+            return Sinks.Find(s => s.GetType() == type);
+        }
 
         /// <inheritdoc />
         public ILogFormatter Append(string key, string value, string callerFilePath, string callerMemberName, 

@@ -22,6 +22,20 @@ namespace Anlog
         /// Minimum level for the logger. The default is Debug.
         /// </summary>
         LogLevel MinimumLevel { get; set; }
+
+        /// <summary>
+        /// Gets a sink.
+        /// </summary>
+        /// <typeparam name="T">Sink type.</typeparam>
+        /// <returns>Sink or null if no sink is found.</returns>
+        T GetSink<T>() where T : ILogSink;
+
+        /// <summary>
+        /// Gets a sink.
+        /// </summary>
+        /// <param name="type">Sink type.</param>
+        /// <returns>Sink or null if no sink is found.</returns>
+        ILogSink GetSink(Type type);
         
         /// <summary>
         /// Appends an entry to the log.

@@ -39,11 +39,15 @@ namespace Anlog.Tests
         [Fact]
         public void WhenAppendingNonDataContractModel_LogCorrectData()
         {
-            Log.Append("model", TestNonDataContractModelInstance).Info();
-
-            var log = Log.GetSink<InMemorySink>()?.GetLogs();
+            var logger = new LoggerFactory()
+                .WriteTo.InMemory(false)
+                .CreateLogger();;
             
-            Assert.Equal("model={int=69 double=24.11 text=LogTest date=2018-03-25 23:00:00.000 shorts=[1,2,3,4,5]}", log?.Substring(93));
+            logger.Append("model", TestNonDataContractModelInstance, null, null, 0).Info();
+
+            var log = logger.GetSink<InMemorySink>()?.GetLogs();
+            
+            Assert.Equal("model={int=69 double=24.11 text=LogTest date=2018-03-25 23:00:00.000 shorts=[1,2,3,4,5]}", log?.Substring(40));
         }
 
         [Fact]

@@ -188,9 +188,9 @@ namespace Anlog
         /// </summary>
         /// <typeparam name="T">Sink type.</typeparam>
         /// <returns>Sink or null if no sink is found.</returns>
-        public static T GetSink<T>() where T : ILogSink
+        public static T GetSink<T>() where T : class, ILogSink
         {
-            return (T) GetSink(typeof(T));
+            return Logger?.GetSink<T>();
         }
 
         /// <summary>
@@ -200,7 +200,7 @@ namespace Anlog
         /// <returns>Sink or null if no sink is found.</returns>
         public static ILogSink GetSink(Type type)
         {
-            return Logger?.Sinks.Find(s => s.GetType() == type);
+            return Logger?.GetSink(type);
         }
     }
 }
