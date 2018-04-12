@@ -46,8 +46,8 @@ namespace Anlog
         /// <param name="callerMemberName">Caller class member name that originated the log.</param>
         /// <param name="callerLineNumber">Caller line number that originated the log.</param>
         /// <returns>Log writer, for chaining.</returns>
-        ILogFormatter Append(string key, string value, string callerFilePath, string callerMemberName, 
-            int callerLineNumber);
+        ILogFormatter Append(string key, string value, string callerFilePath = null, string callerMemberName = null, 
+            int callerLineNumber = 0);
         
         /// <summary>
         /// Appends an entry to the log.
@@ -58,8 +58,8 @@ namespace Anlog
         /// <param name="callerMemberName">Caller class member name that originated the log.</param>
         /// <param name="callerLineNumber">Caller line number that originated the log.</param>
         /// <returns>Log writer, for chaining.</returns>
-        ILogFormatter Append(string key, object value, string callerFilePath, string callerMemberName, 
-            int callerLineNumber);
+        ILogFormatter Append(string key, object value, string callerFilePath = null, string callerMemberName = null, 
+            int callerLineNumber = 0);
         
         /// <summary>
         /// Appends an entry to the log.
@@ -71,8 +71,8 @@ namespace Anlog
         /// <param name="callerLineNumber">Caller line number that originated the log.</param>
         /// <typeparam name="T">Object type.</typeparam>
         /// <returns>Log writer, for chaining.</returns>
-        ILogFormatter Append<T>(string key, T[] values, string callerFilePath, string callerMemberName, 
-            int callerLineNumber);
+        ILogFormatter Append<T>(string key, T[] values, string callerFilePath = null, string callerMemberName = null, 
+            int callerLineNumber = 0);
         
         /// <summary>
         /// Appends an entry to the log.
@@ -84,8 +84,8 @@ namespace Anlog
         /// <param name="callerLineNumber">Caller line number that originated the log.</param>
         /// <typeparam name="T">Object type.</typeparam>
         /// <returns>Log writer, for chaining.</returns>
-        ILogFormatter Append<T>(string key, IEnumerable<T> values, string callerFilePath, string callerMemberName, 
-            int callerLineNumber);
+        ILogFormatter Append<T>(string key, IEnumerable<T> values, string callerFilePath = null, 
+            string callerMemberName = null, int callerLineNumber = 0);
 
         /// <summary>
         /// Writes the log as debug.
@@ -94,7 +94,8 @@ namespace Anlog
         /// <param name="callerFilePath">Caller class file path that originated the log.</param>
         /// <param name="callerMemberName">Caller class member name that originated the log.</param>
         /// <param name="callerLineNumber">Caller line number that originated the log.</param>
-        void Debug(string message, string callerFilePath, string callerMemberName, int callerLineNumber);
+        void Debug(string message, string callerFilePath = null, string callerMemberName = null, 
+            int callerLineNumber = 0);
         
         /// <summary>
         /// Writes the log as information.
@@ -103,7 +104,8 @@ namespace Anlog
         /// <param name="callerFilePath">Caller class file path that originated the log.</param>
         /// <param name="callerMemberName">Caller class member name that originated the log.</param>
         /// <param name="callerLineNumber">Caller line number that originated the log.</param>
-        void Info(string message, string callerFilePath, string callerMemberName, int callerLineNumber);
+        void Info(string message, string callerFilePath = null, string callerMemberName = null, 
+            int callerLineNumber = 0);
 
         /// <summary>
         /// Writes the log as warning.
@@ -112,7 +114,8 @@ namespace Anlog
         /// <param name="callerFilePath">Caller class file path that originated the log.</param>
         /// <param name="callerMemberName">Caller class member name that originated the log.</param>
         /// <param name="callerLineNumber">Caller line number that originated the log.</param>
-        void Warn(string message, string callerFilePath, string callerMemberName, int callerLineNumber);
+        void Warn(string message, string callerFilePath = null, string callerMemberName = null, 
+            int callerLineNumber = 0);
 
         /// <summary>
         /// Writes the log as error.
@@ -121,7 +124,8 @@ namespace Anlog
         /// <param name="callerFilePath">Caller class file path that originated the log.</param>
         /// <param name="callerMemberName">Caller class member name that originated the log.</param>
         /// <param name="callerLineNumber">Caller line number that originated the log.</param>
-        void Error(string message, string callerFilePath, string callerMemberName, int callerLineNumber);
+        void Error(string message, string callerFilePath = null, string callerMemberName = null, 
+            int callerLineNumber = 0);
 
         /// <summary>
         /// Writes the log as error.
@@ -130,7 +134,7 @@ namespace Anlog
         /// <param name="callerFilePath">Caller class file path that originated the log.</param>
         /// <param name="callerMemberName">Caller class member name that originated the log.</param>
         /// <param name="callerLineNumber">Caller line number that originated the log.</param>
-        void Error(Exception e, string callerFilePath, string callerMemberName, int callerLineNumber);
+        void Error(Exception e, string callerFilePath = null, string callerMemberName = null, int callerLineNumber = 0);
         
         /// <summary>
         /// Writes the log as error.
@@ -140,6 +144,7 @@ namespace Anlog
         /// <param name="callerFilePath">Caller class file path that originated the log.</param>
         /// <param name="callerMemberName">Caller class member name that originated the log.</param>
         /// <param name="callerLineNumber">Caller line number that originated the log.</param>
-        void Error(string message, Exception e, string callerFilePath, string callerMemberName, int callerLineNumber);
+        void Error(string message, Exception e, string callerFilePath = null, string callerMemberName = null, 
+            int callerLineNumber = 0);
     }
 }

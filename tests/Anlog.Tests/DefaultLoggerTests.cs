@@ -1,5 +1,4 @@
-﻿using System;
-using Anlog.Factories;
+﻿using Anlog.Factories;
 using Anlog.Sinks;
 using Anlog.Sinks.InMemory;
 using Anlog.Tests.TestObjects.Models;
@@ -9,26 +8,29 @@ using static Anlog.Tests.TestObjects.TestConstants;
 namespace Anlog.Tests
 {
     /// <summary>
-    /// Tests for <see cref="Log"/>.
+    /// Tests for the default logger.
     /// </summary>
-    public sealed class LogTests : IDisposable
+    public sealed class DefaultLoggerTests
     {
-        public LogTests()
+        /// <summary>
+        /// Object to test.
+        /// </summary>
+        private ILogger logger;
+        
+        public DefaultLoggerTests()
         {
-            Log.Logger = new LoggerFactory()
+            logger = new LoggerFactory()
                 .WriteTo.InMemory(false)
                 .CreateLogger();
-        }
-        
-        /// <inheritdoc />
-        public void Dispose()
-        {
-            Log.Logger = null;
         }
         
         [Fact]
         public void WhenLoggingFromConstructor_LogCorrectMembersNames()
         {
+            Log.Logger = new LoggerFactory()
+                .WriteTo.InMemory(false)
+                .CreateLogger();
+            
             var model = new TestConstructorLogModel();
 
             var log = Log.GetSink<InMemorySink>()?.GetLogs();
@@ -39,11 +41,7 @@ namespace Anlog.Tests
         [Fact]
         public void WhenAppendingNonDataContractModel_LogCorrectData()
         {
-            var logger = new LoggerFactory()
-                .WriteTo.InMemory(false)
-                .CreateLogger();;
-            
-            logger.Append("model", TestNonDataContractModelInstance, null, null, 0).Info();
+            logger.Append("model", TestNonDataContractModelInstance).Info();
 
             var log = logger.GetSink<InMemorySink>()?.GetLogs();
             
@@ -53,19 +51,19 @@ namespace Anlog.Tests
         [Fact]
         public void WhenAddingSink_GetByGenerics()
         {
-            Assert.NotNull(Log.GetSink<InMemorySink>());
+            Assert.NotNull(logger.GetSink<InMemorySink>());
         }
         
         [Fact]
         public void WhenAddingSink_GetByType()
         {
-            Assert.NotNull(Log.GetSink(typeof(InMemorySink)));
+            Assert.NotNull(logger.GetSink(typeof(InMemorySink)));
         }
         
         [Fact]
         public void WhenHavingNoSink_ReturnNull()
         {
-            Assert.Null(Log.GetSink(typeof(FileSink)));
+            Assert.Null(logger.GetSink(typeof(FileSink)));
         }
     }
 }
