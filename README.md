@@ -11,6 +11,8 @@ Fast and lightweight key/value pair logger for .NET Core projects.
 1. [Quick start](#quick-start)
 1. [Sinks](#sinks)
 1. [Formatters](#formatters)
+1. [Minimum log level](#minimum-log-level)
+1. [Object logging](#object-logging)
 1. [License](#license)
 
 ## Features
