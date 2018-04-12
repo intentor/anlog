@@ -10,6 +10,11 @@ namespace Anlog.Factories
     public sealed class LoggerFactory
     {
         /// <summary>
+        /// Sets the minimum level for a log.
+        /// </summary>
+        public MinimumLevelFactory MinimumLevel { get; }
+        
+        /// <summary>
         /// Formats the logs with the given formatter.
         /// </summary>
         public LogFormatterFactory FormatAs { get; }
@@ -38,7 +43,8 @@ namespace Anlog.Factories
         public LoggerFactory(Type loggerType)
         {
             this.loggerType = loggerType;
-            
+
+            MinimumLevel = new MinimumLevelFactory(this);
             FormatAs = new LogFormatterFactory(this);
             WriteTo = new LogSinksFactory(this);
         }
@@ -55,7 +61,8 @@ namespace Anlog.Factories
             {
                 FormatAs.CompactKeyValue();
             }
-            
+
+            logger.MinimumLevel = MinimumLevel.Level;
             logger.Formatter = FormatAs.Formatter;
             logger.Sinks = WriteTo.Sinks;
 

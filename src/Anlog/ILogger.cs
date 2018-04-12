@@ -19,6 +19,11 @@ namespace Anlog
         List<ILogSink> Sinks { get; set; }
         
         /// <summary>
+        /// Minimum level for the logger. The default is Debug.
+        /// </summary>
+        LogLevel MinimumLevel { get; set; }
+        
+        /// <summary>
         /// Appends an entry to the log.
         /// </summary>
         /// <param name="key">Entry key.</param>

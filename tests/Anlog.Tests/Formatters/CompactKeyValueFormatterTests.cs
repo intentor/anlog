@@ -12,7 +12,7 @@ namespace Anlog.Tests.Formatters
     /// <summary>
     /// Tests for <see cref="CompactKeyValueFormatter"/>
     /// </summary>
-    public class CompactKeyValueFormatterTests
+    public sealed class CompactKeyValueFormatterTests
     {
         /// <summary>
         /// Prefix for the log displayed in tests.
@@ -33,7 +33,7 @@ namespace Anlog.Tests.Formatters
         {
             sink = new InMemorySink();
             CompactKeyValueFormatterFactory.PrepareFormatter();
-            formatter = new CompactKeyValueFormatter(sink, "/opt/test/Class.cs", "Test", 666);
+            formatter = new CompactKeyValueFormatter(LogLevel.Debug, sink, "/opt/test/Class.cs", "Test", 666);
         }
         
         /// <summary>

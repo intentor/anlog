@@ -11,8 +11,8 @@ namespace Anlog.Formatters.CompactKeyValue
         /// <summary>
         /// Logger factory.
         /// </summary>
-        internal static LogFormatter Factory => (sink, path, name, number) =>
-            new CompactKeyValueFormatter(sink, path, name, number);
+        internal static LogFormatter Factory => (minimumLevel, sink, path, name, number) =>
+            new CompactKeyValueFormatter(minimumLevel, sink, path, name, number);
 
         /// <summary>
         /// Sets the log formatter as compact key/value pair.

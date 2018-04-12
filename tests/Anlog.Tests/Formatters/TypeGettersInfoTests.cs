@@ -8,7 +8,7 @@ namespace Anlog.Tests.Formatters
     /// <summary>
     /// Tests for <see cref="TypeGettersInfo"/>.
     /// </summary>
-    public class TypeGettersInfoTests
+    public sealed class TypeGettersInfoTests
     {
         /// <summary>
         /// Log formatter mock.

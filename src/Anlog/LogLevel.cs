@@ -1,18 +1,25 @@
 ﻿namespace Anlog
 {
     /// <summary>
-    /// Provides details for a log level.
+    /// Log level.
     /// </summary>
-    public class LogLevel
+    public enum LogLevel
     {
         /// <summary>
-        /// Log level name.
+        /// Debug level.
         /// </summary>
-        public string Name { get; set; }
-
+        Debug = 0,
         /// <summary>
-        /// Log level entry key.
+        /// Information level.
         /// </summary>
-        public string Key { get; set; }
+        Info = 1,
+        /// <summary>
+        /// Warning level.
+        /// </summary>
+        Warning = 3,
+        /// <summary>
+        /// Error level.
+        /// </summary>
+        Error = 4
     }
 }

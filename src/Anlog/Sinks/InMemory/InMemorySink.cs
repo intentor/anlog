@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 
 namespace Anlog.Sinks.InMemory
 {
@@ -26,6 +27,7 @@ namespace Anlog.Sinks.InMemory
         public void Write(string log)
         {
             buffer.Append(log);
+            buffer.Append(Environment.NewLine);
         }
 
         /// <summary>

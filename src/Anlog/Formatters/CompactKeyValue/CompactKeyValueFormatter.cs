@@ -27,6 +27,11 @@ namespace Anlog.Formatters.CompactKeyValue
         /// Available Getters.
         /// </summary>
         internal static Dictionary<Type, TypeGettersInfo> Getters { get; set; }
+
+        /// <summary>
+        /// Minimum level to write the log to.
+        /// </summary>
+        private LogLevel minimumLevel;
         
         /// <summary>
         /// Sink to write the log to.
@@ -41,13 +46,15 @@ namespace Anlog.Formatters.CompactKeyValue
         /// <summary>
         /// Initilizaes a new instance of <see cref="CompactKeyValueFormatter"/>.
         /// </summary>
+        /// <param name="minimumLevel">Minimum level to write the log to.</param>
         /// <param name="sink">Logger sinker.</param>
         /// <param name="callerFilePath">caller class file path that originated the log.</param>
         /// <param name="callerMemberName">caller class member name that originated the log.</param>
         /// <param name="callerLineNumber">caller line number that originated the log.</param>
-        public CompactKeyValueFormatter(ILogSink sink, string callerFilePath, 
+        public CompactKeyValueFormatter(LogLevel minimumLevel, ILogSink sink, string callerFilePath, 
             string callerMemberName, int callerLineNumber)
         {
+            this.minimumLevel = minimumLevel;
             this.sink = sink;
             builder = new StringBuilder();
             
@@ -168,37 +175,52 @@ namespace Anlog.Formatters.CompactKeyValue
         /// <inheritdoc />
         public void Debug(string message = null)
         {
-            Write(LogLevels.Debug, message, null);
+            if (minimumLevel > LogLevel.Debug)
+            {
+                return;
+            }
+            
+            Write(CompactKeyValueFormatterConstants.LogLevelName.Debug, message, null);
         }
 
         /// <inheritdoc />
         public void Info(string message = null)
         {
-            Write(LogLevels.Info, message, null);
+            if (minimumLevel > LogLevel.Info)
+            {
+                return;
+            }
+            
+            Write(CompactKeyValueFormatterConstants.LogLevelName.Info, message, null);
         }
 
         /// <inheritdoc />
         public void Warning(string message = null)
         {
-            Write(LogLevels.Warning, message, null);
+            if (minimumLevel > LogLevel.Warning)
+            {
+                return;
+            }
+            
+            Write(CompactKeyValueFormatterConstants.LogLevelName.Warning, message, null);
         }
 
         /// <inheritdoc />
         public void Error(string message = null)
         {
-            Write(LogLevels.Error, message, null);
+            Write(CompactKeyValueFormatterConstants.LogLevelName.Error, message, null);
         }
 
         /// <inheritdoc />
         public void Error(Exception e)
         {
-            Write(LogLevels.Error, null, e);
+            Write(CompactKeyValueFormatterConstants.LogLevelName.Error, null, e);
         }
 
         /// <inheritdoc />
         public void Error(string message, Exception e)
         {
-            Write(LogLevels.Error, message, e);
+            Write(CompactKeyValueFormatterConstants.LogLevelName.Error, message, e);
         }
 
         /// <summary>
@@ -303,7 +325,7 @@ namespace Anlog.Formatters.CompactKeyValue
         /// <param name="level">Log level.</param>
         /// <param name="message">Log message.</param>
         /// <param name="e">Log message.</param>
-        private void Write(LogLevel level, string message, Exception e)
+        private void Write(LogLevelName level, string message, Exception e)
         {
             if (!string.IsNullOrEmpty(message))
             {
@@ -319,7 +341,7 @@ namespace Anlog.Formatters.CompactKeyValue
             }
 
             var log = string.Concat(DateTime.Now.ToString(DateTimeFormat),  
-                EntrySeparator, ListOpening, level.Name, ListClosing, EntrySeparator, builder.ToString());
+                EntrySeparator, ListOpening, level.Entry, ListClosing, EntrySeparator, builder.ToString());
             
             sink.Write(log);
         }

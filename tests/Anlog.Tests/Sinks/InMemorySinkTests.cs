@@ -7,7 +7,7 @@ namespace Anlog.Tests.Sinks
     /// <summary>
     /// Tests for <see cref="InMemorySink"/>.
     /// </summary>
-    public class InMemorySinkTests
+    public sealed class InMemorySinkTests
     {
         /// <summary>
         /// Object to test.

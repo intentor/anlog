@@ -100,6 +100,6 @@ namespace Anlog.Formatters.CompactKeyValue
         /// <summary>
         /// Log levels details.
         /// </summary>
-        internal static readonly ILogLevels LogLevels = new CompactKeyValueLogLevels();
+        internal static readonly ILogLevelName LogLevelName = new CompactKeyValueLogLevelName();
     }
 }

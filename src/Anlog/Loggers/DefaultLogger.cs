@@ -12,15 +12,10 @@ namespace Anlog.Loggers
         public LogFormatter Formatter { get; set; }
         
         /// <inheritdoc />
-        public List<ILogSink> Sinks { get; set; }
+        public List<ILogSink> Sinks { get; set; } = new List<ILogSink>();
 
-        /// <summary>
-        /// Initializes a new instance of <see cref="DefaultLogger"/>.
-        /// </summary>
-        public DefaultLogger()
-        {
-            Sinks = new List<ILogSink>();
-        }
+        /// <inheritdoc />
+        public LogLevel MinimumLevel { get; set; } = LogLevel.Debug;
 
         /// <inheritdoc />
         public void Dispose()
@@ -35,7 +30,7 @@ namespace Anlog.Loggers
         public ILogFormatter Append(string key, string value, string callerFilePath, string callerMemberName, 
             int callerLineNumber)
         {
-            return Formatter(this, callerFilePath, callerMemberName, callerLineNumber)
+            return Formatter(MinimumLevel, this, callerFilePath, callerMemberName, callerLineNumber)
                 .Append(key, value);
         }
 
@@ -43,7 +38,7 @@ namespace Anlog.Loggers
         public ILogFormatter Append(string key, object value, string callerFilePath, string callerMemberName, 
             int callerLineNumber)
         {
-            return Formatter(this, callerFilePath, callerMemberName, callerLineNumber)
+            return Formatter(MinimumLevel, this, callerFilePath, callerMemberName, callerLineNumber)
                 .Append(key, value);
         }
         
@@ -51,7 +46,7 @@ namespace Anlog.Loggers
         public ILogFormatter Append<T>(string key, T[] values, string callerFilePath, string callerMemberName, 
             int callerLineNumber)
         {
-            return Formatter(this, callerFilePath, callerMemberName, callerLineNumber)
+            return Formatter(MinimumLevel, this, callerFilePath, callerMemberName, callerLineNumber)
                 .Append(key, values);
         }
         
@@ -59,42 +54,42 @@ namespace Anlog.Loggers
         public ILogFormatter Append<T>(string key, IEnumerable<T> values, string callerFilePath,
             string callerMemberName, int callerLineNumber)
         {
-            return Formatter(this, callerFilePath, callerMemberName, callerLineNumber)
+            return Formatter(MinimumLevel, this, callerFilePath, callerMemberName, callerLineNumber)
                 .Append(key, values);
         }
 
         /// <inheritdoc />
         public void Debug(string message, string callerFilePath, string callerMemberName, int callerLineNumber)
         {
-            Formatter(this, callerFilePath, callerMemberName, callerLineNumber)
+            Formatter(MinimumLevel, this, callerFilePath, callerMemberName, callerLineNumber)
                 .Debug(message);
         }
         
         /// <inheritdoc />
         public void Info(string message, string callerFilePath, string callerMemberName, int callerLineNumber)
         {
-            Formatter(this, callerFilePath, callerMemberName, callerLineNumber)
+            Formatter(MinimumLevel, this, callerFilePath, callerMemberName, callerLineNumber)
                 .Info(message);
         }
 
         /// <inheritdoc />
         public void Warning(string message, string callerFilePath, string callerMemberName, int callerLineNumber)
         {
-            Formatter(this, callerFilePath, callerMemberName, callerLineNumber)
+            Formatter(MinimumLevel, this, callerFilePath, callerMemberName, callerLineNumber)
                 .Warning(message);
         }
 
         /// <inheritdoc />
         public void Error(string message, string callerFilePath, string callerMemberName, int callerLineNumber)
         {
-            Formatter(this, callerFilePath, callerMemberName, callerLineNumber)
+            Formatter(MinimumLevel, this, callerFilePath, callerMemberName, callerLineNumber)
                 .Error(message);
         }
 
         /// <inheritdoc />
         public void Error(Exception e, string callerFilePath, string callerMemberName, int callerLineNumber)
         {
-            Formatter(this, callerFilePath, callerMemberName, callerLineNumber)
+            Formatter(MinimumLevel, this, callerFilePath, callerMemberName, callerLineNumber)
                 .Error(e);
         }
         
@@ -102,7 +97,7 @@ namespace Anlog.Loggers
         public void Error(string message, Exception e, string callerFilePath, string callerMemberName, 
             int callerLineNumber)
         {
-            Formatter(this, callerFilePath, callerMemberName, callerLineNumber)
+            Formatter(MinimumLevel, this, callerFilePath, callerMemberName, callerLineNumber)
                 .Error(message, e);
         }
 

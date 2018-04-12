@@ -3,26 +3,26 @@
     /// <summary>
     /// Details for log levels.
     /// </summary>
-    public interface ILogLevels
+    public interface ILogLevelName
     {
         /// <summary>
         /// Debug log level.
         /// </summary>
-        LogLevel Debug { get; }
+        LogLevelName Debug { get; }
         
         /// <summary>
         /// Information log level.
         /// </summary>
-        LogLevel Info { get; }
+        LogLevelName Info { get; }
         
         /// <summary>
         /// Warning log level.
         /// </summary>
-        LogLevel Warning { get; }
+        LogLevelName Warning { get; }
         
         /// <summary>
         /// Error log level.
         /// </summary>
-        LogLevel Error { get; }
+        LogLevelName Error { get; }
     }
 }

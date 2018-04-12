@@ -9,7 +9,7 @@ namespace Anlog.Tests.Sinks
     /// <summary>
     /// Tests for <see cref="FileSink"/>.
     /// </summary>
-    public class FileSinkTests
+    public sealed class FileSinkTests
     {
         [Fact]
         public void WhenWritingToNewFile_CreateFile()
