@@ -167,5 +167,42 @@ namespace Anlog.Tests.Formatters
             Assert.Equal(" e=Some error message\nSystem.ArgumentException: Param invalid\nParameter name: Param", 
                 log.Substring(46));
         }
+        
+        [Fact]
+        public void WhenLoggingExceptionWithStackTrace_WritesWithStacktrace()
+        {
+            try
+            {
+                // Throw an exception to generate stack trace.
+                throw new ArgumentException("Param invalid", "Param");
+            }
+            catch (Exception e)
+            {
+                formatter.Error("Some error message", e);
+            }
+
+            var log = sink.GetLogs();
+
+            var l = " e=Some error message\nSystem.ArgumentException: Param invalid\nParameter name: Param\n   at Anlog.Tests.Formatters.CompactKeyValueFormatterTests.WhenLoggingExceptionWithStackTrace_WritesWithStacktrace()".Length;
+            
+            Assert.Equal("[ERR]", log.Substring(24, 5));
+            Assert.True(log.Length > 246);
+            Assert.Equal(" e=Some error message\nSystem.ArgumentException: Param invalid\n" 
+                + "Parameter name: Param\n   at Anlog.Tests.Formatters.CompactKeyValueFormatterTests."
+                + "WhenLoggingExceptionWithStackTrace_WritesWithStacktrace()", 
+                log.Substring(46, 200));
+        }
+        
+        [Fact]
+        public void WhenLoggingExceptionWithNoStackTrace_WritesWithNoStacktrace()
+        {
+            formatter.Error("Some error message", new ArgumentException("Param invalid", "Param"));
+
+            var log = sink.GetLogs();
+            
+            Assert.Equal("[ERR]", log.Substring(24, 5));
+            Assert.Equal(" e=Some error message\nSystem.ArgumentException: Param invalid\nParameter name: Param", 
+                log.Substring(46));
+        }
     }
 }

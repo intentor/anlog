@@ -338,6 +338,11 @@ namespace Anlog.Formatters.CompactKeyValue
             if (e != null)
             {
                 builder.Append(string.Concat(Environment.NewLine, e));
+
+                if (!string.IsNullOrEmpty(e.StackTrace))
+                {
+                    builder.Append(string.Concat(Environment.NewLine, e.StackTrace));
+                }
             }
 
             var log = string.Concat(DateTime.Now.ToString(DateTimeFormat),  
