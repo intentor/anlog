@@ -1,4 +1,5 @@
 ﻿using System;
+using Anlog.Sinks.Console.Renderers;
 using Anlog.Sinks.Console.Themes;
 
 namespace Anlog.Sinks.Console

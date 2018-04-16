@@ -1,6 +1,6 @@
 ﻿using Anlog.Sinks.Console.Themes;
 
-namespace Anlog.Sinks.Console
+namespace Anlog.Sinks.Console.Renderers
 {
     /// <summary>
     /// Console renderer.
@@ -15,7 +15,7 @@ namespace Anlog.Sinks.Console
         /// <summary>
         /// Renders a log for writing.
         /// </summary>
-        /// <param name="log"></param>
+        /// <param name="log">Log to render.</param>
         string Render(string log);
     }
 }
