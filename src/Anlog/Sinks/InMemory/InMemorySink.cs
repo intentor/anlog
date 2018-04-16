@@ -10,6 +10,9 @@ namespace Anlog.Sinks.InMemory
     /// </summary>
     public class InMemorySink : ILogSink
     {
+        /// <inheritdoc />
+        public LogLevel? MinimumLevel { get; set; }
+        
         /// <summary>
         /// Indicates whether a new line should be appended at the end of each log. The default is true.
         /// </summary>
@@ -29,8 +32,13 @@ namespace Anlog.Sinks.InMemory
         }
         
         /// <inheritdoc />
-        public void Write(string log)
+        public void Write(LogLevel level, string log)
         {
+            if (MinimumLevel.HasValue && MinimumLevel > level)
+            {
+                return;
+            }
+            
             buffer.Append(log);
 
             if (AppendNewLine)

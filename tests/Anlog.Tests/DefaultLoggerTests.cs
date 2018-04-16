@@ -1,6 +1,8 @@
 ﻿using Anlog.Factories;
 using Anlog.Sinks;
+using Anlog.Sinks.Console;
 using Anlog.Sinks.InMemory;
+using Anlog.Sinks.SingleFile;
 using Anlog.Tests.TestObjects.Models;
 using Xunit;
 using static Anlog.Tests.TestObjects.TestConstants;
@@ -12,23 +14,11 @@ namespace Anlog.Tests
     /// </summary>
     public sealed class DefaultLoggerTests
     {
-        /// <summary>
-        /// Object to test.
-        /// </summary>
-        private ILogger logger;
-        
-        public DefaultLoggerTests()
-        {
-            logger = new LoggerFactory()
-                .WriteTo.InMemory(false)
-                .CreateLogger();
-        }
-        
         [Fact]
         public void WhenLoggingFromConstructor_LogCorrectMembersNames()
         {
             Log.Logger = new LoggerFactory()
-                .WriteTo.InMemory(false)
+                .WriteTo.InMemory(appendNewLine: false)
                 .CreateLogger();
             
             var model = new TestConstructorLogModel();
@@ -39,8 +29,41 @@ namespace Anlog.Tests
         }
 
         [Fact]
+        public void WhenHavingSinkWithCustomLogLevel_KeepIt()
+        {
+            var logger = new LoggerFactory()
+                .WriteTo.Console()
+                .WriteTo.InMemory(minimumLevel: LogLevel.Warn)
+                .WriteTo.SingleFile(minimumLevel: LogLevel.Error)
+                .CreateLogger();
+            
+            Assert.Equal(LogLevel.Info, logger.MinimumLevel);
+            Assert.Equal(LogLevel.Info, logger.Sinks[0].MinimumLevel);
+            Assert.Equal(LogLevel.Warn, logger.Sinks[1].MinimumLevel);
+            Assert.Equal(LogLevel.Error, logger.Sinks[2].MinimumLevel);
+        }
+
+        [Fact]
+        public void WhenHavingSinksWithCustomLogLevelAndMinimumLevel_KeepIt()
+        {
+            var logger = new LoggerFactory()
+                .MinimumLevel.Debug()
+                .WriteTo.Console()
+                .WriteTo.InMemory(minimumLevel: LogLevel.Warn)
+                .WriteTo.SingleFile(minimumLevel: LogLevel.Error)
+                .CreateLogger();
+            
+            Assert.Equal(LogLevel.Debug, logger.MinimumLevel);
+            Assert.Equal(LogLevel.Debug, logger.Sinks[0].MinimumLevel);
+            Assert.Equal(LogLevel.Warn, logger.Sinks[1].MinimumLevel);
+            Assert.Equal(LogLevel.Error, logger.Sinks[2].MinimumLevel);
+        }
+
+        [Fact]
         public void WhenAppendingNonDataContractModel_LogCorrectData()
         {
+            var logger = CreateDefaultLogger();
+            
             logger.Append("model", TestNonDataContractModelInstance).Info();
 
             var log = logger.GetSink<InMemorySink>()?.GetLogs();
@@ -51,19 +74,30 @@ namespace Anlog.Tests
         [Fact]
         public void WhenAddingSink_GetByGenerics()
         {
-            Assert.NotNull(logger.GetSink<InMemorySink>());
+            Assert.NotNull(CreateDefaultLogger().GetSink<InMemorySink>());
         }
         
         [Fact]
         public void WhenAddingSink_GetByType()
         {
-            Assert.NotNull(logger.GetSink(typeof(InMemorySink)));
+            Assert.NotNull(CreateDefaultLogger().GetSink(typeof(InMemorySink)));
         }
         
         [Fact]
         public void WhenHavingNoSink_ReturnNull()
         {
-            Assert.Null(logger.GetSink(typeof(FileSink)));
+            Assert.Null(CreateDefaultLogger().GetSink(typeof(FileSink)));
+        }
+
+        /// <summary>
+        /// Creates a default logger.
+        /// </summary>
+        /// <returns>A default logger.</returns>
+        private ILogger CreateDefaultLogger()
+        {
+            return new LoggerFactory()
+                .WriteTo.InMemory(appendNewLine: false)
+                .CreateLogger();
         }
     }
 }

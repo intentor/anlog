@@ -10,6 +10,9 @@ namespace Anlog.Sinks.SingleFile
     /// </summary>
     public class AsyncSingleFileSync : ILogSink, IDisposable
     {
+        /// <inheritdoc />
+        public LogLevel? MinimumLevel { get; set; }
+        
         /// <summary>
         /// Internal file sink.
         /// </summary>
@@ -32,7 +35,8 @@ namespace Anlog.Sinks.SingleFile
             
             asyncWriter = new AsyncWriter(log =>
             {
-                sink.Write(log);
+                // Uses the maximum log level because if the log has been enqueued, it should be written.
+                sink.Write(LogLevel.Debug, log);
             });
             asyncWriter.Start();
         }
@@ -45,8 +49,13 @@ namespace Anlog.Sinks.SingleFile
         }
         
         /// <inheritdoc />
-        public void Write(string log)
+        public void Write(LogLevel level, string log)
         { 
+            if (MinimumLevel.HasValue && MinimumLevel > level)
+            {
+                return;
+            }
+            
             asyncWriter.Enqueue(log);  
         }
     }

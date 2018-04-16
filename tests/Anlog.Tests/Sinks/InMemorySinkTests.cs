@@ -17,7 +17,7 @@ namespace Anlog.Tests.Sinks
         [Fact]
         public void WhenWriting_WriteToMemory()
         {
-            sink.Write(GenericLog);
+            sink.Write(LogLevel.Debug, GenericLog);
             
             Assert.Equal(GenericLog, sink.GetLogs());
         }

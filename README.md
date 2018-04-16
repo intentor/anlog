@@ -46,7 +46,7 @@ namespace QuickStart
         {
             // Creates the logger.
             Log.Logger = new LoggerFactory()
-                .MinimumLevel.Debug() // Minimum log level to write. In this case, Information.
+                .MinimumLevel.Debug() // Minimum log level to write. In this case, Debug.
                 .WriteTo.Console() // Write to the console.
                 .CreateLogger();
             
@@ -89,6 +89,7 @@ Log.Logger = new LoggerFactory()
 #### Settings
 
 - *async*: True if write to the console should be asynchronous, otherwise false. Provides fast writing to console, however due to run in a separated thread, the last log(s) in case of a crash may not be written. The default is false.
+- *minimumLevel*: Minimum log level. The default is the logger minimum level.
 
 ### SingleFile
 
@@ -106,6 +107,7 @@ Log.Logger = new LoggerFactory()
 - *async*: True if write to the console should be asynchronous, otherwise false. Provides fast writing to console, however due to run in a separated thread, the last log(s) in case of a crash may not be written. The default is false.
 - *encoding*: file encoding. The default is UTF8.
 - *bufferSize*: buffer size to be used. The default is 4096.
+- *minimumLevel*: Minimum log level. The default is the logger minimum level.
 
 ### InMemory
 
@@ -126,6 +128,7 @@ var logs = Log.GetSink<InMemorySink>()?.GetLogs();
 #### Settings
 
 - *appendNewLine*: Indicates whether a new line should be appended at the end of each log. The default is true.
+- *minimumLevel*: Minimum log level. The default is the logger minimum level.
 
 ## Formatters
 
@@ -176,6 +179,8 @@ Log.Logger = new LoggerFactory()
     .MinimumLevel.Set(LogLevel.Info)
     .CreateLogger();
 ```
+
+Each sink can override the logger minimum level. Please consult the [Sinks](#sinks) topic for settings of each sink.
 
 ### Available log levels
 

@@ -23,9 +23,10 @@ namespace Anlog.Sinks.SingleFile
         /// The default is false.</param>
         /// <param name="encoding">File encoding. The default is UTF8.</param>
         /// <param name="bufferSize">Buffer size to be used. The default is 4096.</param>
+        /// <param name="minimumLevel">Minimum log level. The default is the logger minimum level.</param>
         /// <returns>Logger factory.</returns>
-        public static LoggerFactory SingleFile(this LogSinksFactory sinksFactory, 
-            string logFilePath = null, bool async = false, Encoding encoding = null, int bufferSize = 4096)
+        public static LoggerFactory SingleFile(this LogSinksFactory sinksFactory, string logFilePath = null, 
+            bool async = false, Encoding encoding = null, int bufferSize = 4096, LogLevel? minimumLevel = null)
         {
             if (string.IsNullOrEmpty(logFilePath))
             {
@@ -35,6 +36,7 @@ namespace Anlog.Sinks.SingleFile
             var sink = async
                 ? (ILogSink) new AsyncSingleFileSync(logFilePath, encoding, bufferSize)
                 : new FileSink(logFilePath, encoding, bufferSize);
+            sink.MinimumLevel = minimumLevel;
             
             sinksFactory.Sinks.Add(sink);
             return sinksFactory.Factory;

@@ -9,6 +9,9 @@ namespace Anlog.Sinks
     /// </summary>
     public sealed class FileSink : ILogSink, IDisposable
     {
+        /// <inheritdoc />
+        public LogLevel? MinimumLevel { get; set; } = LogLevel.Info;
+        
         /// <summary>
         /// Internal output stream.
         /// </summary>
@@ -49,12 +52,14 @@ namespace Anlog.Sinks
             outputStream.Dispose();
         }
 
-        /// <summary>
-        /// Writes a log to a file.
-        /// </summary>
-        /// <param name="log">Log to write.</param>
-        public void Write(string log)
+        /// <inheritdoc />
+        public void Write(LogLevel level, string log)
         {
+            if (MinimumLevel.HasValue && MinimumLevel > level)
+            {
+                return;
+            }
+            
             lock (locker)
             {
                 writer.WriteLine(log);

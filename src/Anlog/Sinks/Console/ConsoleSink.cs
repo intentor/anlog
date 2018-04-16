@@ -8,8 +8,16 @@
     public sealed class ConsoleSink : ILogSink
     {
         /// <inheritdoc />
-        public void Write(string log)
+        public LogLevel? MinimumLevel { get; set; }
+        
+        /// <inheritdoc />
+        public void Write(LogLevel level, string log)
         {
+            if (MinimumLevel.HasValue && MinimumLevel > level)
+            {
+                return;
+            }
+            
             System.Console.WriteLine(log);
         }
     }

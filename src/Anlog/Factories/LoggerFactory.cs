@@ -10,8 +10,11 @@ namespace Anlog.Factories
     public sealed class LoggerFactory
     {
         /// <summary>
-        /// Sets the minimum level for a log.
+        /// Sets the minimum level for all sinks.
         /// </summary>
+        /// <remarks>
+        /// Please note that every sink can also have its own minimum level.
+        /// </remarks>
         public MinimumLevelFactory MinimumLevel { get; }
         
         /// <summary>
@@ -62,9 +65,10 @@ namespace Anlog.Factories
                 FormatAs.CompactKeyValue();
             }
 
+            // Add sinks first so minimum level can be set.
+            logger.Sinks = WriteTo.Sinks;
             logger.MinimumLevel = MinimumLevel.Level;
             logger.Formatter = FormatAs.Formatter;
-            logger.Sinks = WriteTo.Sinks;
 
             return logger;
         }

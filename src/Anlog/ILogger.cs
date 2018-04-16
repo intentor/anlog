@@ -17,11 +17,6 @@ namespace Anlog
         /// Log sinks.
         /// </summary>
         List<ILogSink> Sinks { get; set; }
-        
-        /// <summary>
-        /// Minimum level for the logger. The default is Debug.
-        /// </summary>
-        LogLevel MinimumLevel { get; set; }
 
         /// <summary>
         /// Gets a sink.

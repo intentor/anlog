@@ -27,11 +27,6 @@ namespace Anlog.Formatters.CompactKeyValue
         /// Available Getters.
         /// </summary>
         internal static Dictionary<Type, TypeGettersInfo> Getters { get; set; }
-
-        /// <summary>
-        /// Minimum level to write the log to.
-        /// </summary>
-        private LogLevel minimumLevel;
         
         /// <summary>
         /// Sink to write the log to.
@@ -46,15 +41,13 @@ namespace Anlog.Formatters.CompactKeyValue
         /// <summary>
         /// Initilizaes a new instance of <see cref="CompactKeyValueFormatter"/>.
         /// </summary>
-        /// <param name="minimumLevel">Minimum level to write the log to.</param>
         /// <param name="sink">Logger sinker.</param>
         /// <param name="callerFilePath">caller class file path that originated the log.</param>
         /// <param name="callerMemberName">caller class member name that originated the log.</param>
         /// <param name="callerLineNumber">caller line number that originated the log.</param>
-        public CompactKeyValueFormatter(LogLevel minimumLevel, ILogSink sink, string callerFilePath, 
-            string callerMemberName, int callerLineNumber)
+        public CompactKeyValueFormatter(ILogSink sink, string callerFilePath, string callerMemberName, 
+            int callerLineNumber)
         {
-            this.minimumLevel = minimumLevel;
             this.sink = sink;
             builder = new StringBuilder();
             
@@ -175,33 +168,18 @@ namespace Anlog.Formatters.CompactKeyValue
         /// <inheritdoc />
         public void Debug(string message = null)
         {
-            if (minimumLevel > LogLevel.Debug)
-            {
-                return;
-            }
-            
             Write(CompactKeyValueFormatterConstants.LogLevelName.Debug, message, null);
         }
 
         /// <inheritdoc />
         public void Info(string message = null)
         {
-            if (minimumLevel > LogLevel.Info)
-            {
-                return;
-            }
-            
             Write(CompactKeyValueFormatterConstants.LogLevelName.Info, message, null);
         }
 
         /// <inheritdoc />
         public void Warn(string message = null)
         {
-            if (minimumLevel > LogLevel.Warn)
-            {
-                return;
-            }
-            
             Write(CompactKeyValueFormatterConstants.LogLevelName.Warn, message, null);
         }
 
@@ -348,7 +326,7 @@ namespace Anlog.Formatters.CompactKeyValue
             var log = string.Concat(DateTime.Now.ToString(DateTimeFormat),  
                 EntrySeparator, ListOpening, level.Entry, ListClosing, EntrySeparator, builder.ToString());
             
-            sink.Write(log);
+            sink.Write(level.Level, log);
         }
     }
 }

@@ -20,7 +20,7 @@ namespace Anlog.Tests.Sinks
 
                 using (var sink = new FileSink(path))
                 {
-                    sink.Write(GenericLog);
+                    sink.Write(LogLevel.Debug, GenericLog);
                 }
 
                 var contents = File.ReadAllLines(path);
@@ -37,12 +37,12 @@ namespace Anlog.Tests.Sinks
 
                 using (var sink = new FileSink(path))
                 {
-                    sink.Write(GenericLog + "1");
+                    sink.Write(LogLevel.Debug, GenericLog + "1");
                 }
 
                 using (var sink = new FileSink(path))
                 {
-                    sink.Write(GenericLog + "2");
+                    sink.Write(LogLevel.Debug, GenericLog + "2");
                 }
 
                 var contents = File.ReadAllLines(path);

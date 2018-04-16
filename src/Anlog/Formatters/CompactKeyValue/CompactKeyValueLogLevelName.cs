@@ -24,21 +24,25 @@
         {
             Debug = new LogLevelName()
             {
+                Level = LogLevel.Debug,
                 Entry = "DBG",
                 Key = "d"
             };
             Info = new LogLevelName()
             {
+                Level = LogLevel.Info,
                 Entry = "INF",
                 Key = "i"
             };
             Warn = new LogLevelName()
             {
+                Level = LogLevel.Warn,
                 Entry = "WRN",
                 Key = "w"
             };
             Error = new LogLevelName()
             {
+                Level = LogLevel.Error,
                 Entry = "ERR",
                 Key = "e"
             };

@@ -36,7 +36,7 @@ namespace Anlog.Tests.Formatters
                 AppendNewLine = false
             };
             CompactKeyValueFormatterFactory.PrepareFormatter();
-            formatter = new CompactKeyValueFormatter(LogLevel.Debug, sink, "/opt/test/Class.cs", "Test", 666);
+            formatter = new CompactKeyValueFormatter(sink, "/opt/test/Class.cs", "Test", 666);
         }
         
         /// <summary>

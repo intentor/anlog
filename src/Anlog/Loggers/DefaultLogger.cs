@@ -15,7 +15,28 @@ namespace Anlog.Loggers
         public List<ILogSink> Sinks { get; set; } = new List<ILogSink>();
 
         /// <inheritdoc />
-        public LogLevel MinimumLevel { get; set; } = LogLevel.Info;
+        public LogLevel? MinimumLevel
+        {
+            get => minimumLevel;
+            set
+            {
+                if (value == null)
+                {
+                    return;
+                }
+                
+                minimumLevel = value.Value;
+                foreach (var sink in Sinks)
+                {
+                    if (!sink.MinimumLevel.HasValue)
+                    {
+                        sink.MinimumLevel = minimumLevel;
+                    }
+                }
+            }
+        }
+
+        private LogLevel minimumLevel = LogLevel.Info;
 
         /// <inheritdoc />
         public void Dispose()
@@ -42,7 +63,7 @@ namespace Anlog.Loggers
         public ILogFormatter Append(string key, string value, string callerFilePath = null, 
             string callerMemberName = null, int callerLineNumber = 0)
         {
-            return Formatter(MinimumLevel, this, callerFilePath, callerMemberName, callerLineNumber)
+            return Formatter(this, callerFilePath, callerMemberName, callerLineNumber)
                 .Append(key, value);
         }
 
@@ -50,7 +71,7 @@ namespace Anlog.Loggers
         public ILogFormatter Append(string key, object value, string callerFilePath = null, 
             string callerMemberName = null, int callerLineNumber = 0)
         {
-            return Formatter(MinimumLevel, this, callerFilePath, callerMemberName, callerLineNumber)
+            return Formatter(this, callerFilePath, callerMemberName, callerLineNumber)
                 .Append(key, value);
         }
         
@@ -58,7 +79,7 @@ namespace Anlog.Loggers
         public ILogFormatter Append<T>(string key, T[] values, string callerFilePath = null, 
             string callerMemberName = null, int callerLineNumber = 0)
         {
-            return Formatter(MinimumLevel, this, callerFilePath, callerMemberName, callerLineNumber)
+            return Formatter(this, callerFilePath, callerMemberName, callerLineNumber)
                 .Append(key, values);
         }
         
@@ -66,7 +87,7 @@ namespace Anlog.Loggers
         public ILogFormatter Append<T>(string key, IEnumerable<T> values, string callerFilePath = null, 
             string callerMemberName = null, int callerLineNumber = 0)
         {
-            return Formatter(MinimumLevel, this, callerFilePath, callerMemberName, callerLineNumber)
+            return Formatter(this, callerFilePath, callerMemberName, callerLineNumber)
                 .Append(key, values);
         }
 
@@ -74,7 +95,7 @@ namespace Anlog.Loggers
         public void Debug(string message, string callerFilePath = null,  string callerMemberName = null,
             int callerLineNumber = 0)
         {
-            Formatter(MinimumLevel, this, callerFilePath, callerMemberName, callerLineNumber)
+            Formatter(this, callerFilePath, callerMemberName, callerLineNumber)
                 .Debug(message);
         }
         
@@ -82,7 +103,7 @@ namespace Anlog.Loggers
         public void Info(string message, string callerFilePath = null,  string callerMemberName = null,
             int callerLineNumber = 0)
         {
-            Formatter(MinimumLevel, this, callerFilePath, callerMemberName, callerLineNumber)
+            Formatter(this, callerFilePath, callerMemberName, callerLineNumber)
                 .Info(message);
         }
 
@@ -90,7 +111,7 @@ namespace Anlog.Loggers
         public void Warn(string message, string callerFilePath = null,  string callerMemberName = null,
             int callerLineNumber = 0)
         {
-            Formatter(MinimumLevel, this, callerFilePath, callerMemberName, callerLineNumber)
+            Formatter(this, callerFilePath, callerMemberName, callerLineNumber)
                 .Warn(message);
         }
 
@@ -98,7 +119,7 @@ namespace Anlog.Loggers
         public void Error(string message, string callerFilePath = null,  string callerMemberName = null,
             int callerLineNumber = 0)
         {
-            Formatter(MinimumLevel, this, callerFilePath, callerMemberName, callerLineNumber)
+            Formatter(this, callerFilePath, callerMemberName, callerLineNumber)
                 .Error(message);
         }
 
@@ -106,7 +127,7 @@ namespace Anlog.Loggers
         public void Error(Exception e, string callerFilePath = null,  string callerMemberName = null,
             int callerLineNumber = 0)
         {
-            Formatter(MinimumLevel, this, callerFilePath, callerMemberName, callerLineNumber)
+            Formatter(this, callerFilePath, callerMemberName, callerLineNumber)
                 .Error(e);
         }
         
@@ -114,16 +135,16 @@ namespace Anlog.Loggers
         public void Error(string message, Exception e, string callerFilePath = null,  string callerMemberName = null,
             int callerLineNumber = 0)
         {
-            Formatter(MinimumLevel, this, callerFilePath, callerMemberName, callerLineNumber)
+            Formatter(this, callerFilePath, callerMemberName, callerLineNumber)
                 .Error(message, e);
         }
 
         /// <inheritdoc />
-        public void Write(string log)
+        public void Write(LogLevel level, string log)
         {
             for (var sinkIndex = 0; sinkIndex < Sinks.Count; sinkIndex++)
             {
-                Sinks[sinkIndex].Write(log);
+                Sinks[sinkIndex].Write(level, log);
             }
         }
     }

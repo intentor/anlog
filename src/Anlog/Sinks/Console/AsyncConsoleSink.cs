@@ -9,6 +9,9 @@ namespace Anlog.Sinks.Console
     /// </summary>
     public sealed class AsyncConsoleSink : ILogSink, IDisposable
     {
+        /// <inheritdoc />
+        public LogLevel? MinimumLevel { get; set; }
+        
         /// <summary>
         /// Log async writer.
         /// </summary>
@@ -30,8 +33,13 @@ namespace Anlog.Sinks.Console
         }
         
         /// <inheritdoc />
-        public void Write(string log)
+        public void Write(LogLevel level, string log)
         { 
+            if (MinimumLevel.HasValue && MinimumLevel > level)
+            {
+                return;
+            }
+            
             asyncWriter.Enqueue(log);
         }
     }
