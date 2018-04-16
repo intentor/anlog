@@ -1,4 +1,6 @@
-﻿namespace Anlog.Sinks.Console
+﻿using Anlog.Sinks.Console.Themes;
+
+namespace Anlog.Sinks.Console
 {
     /// <summary>
     /// Writes output directly to the console.
@@ -9,6 +11,23 @@
     {
         /// <inheritdoc />
         public LogLevel? MinimumLevel { get; set; }
+
+        /// <summary>
+        /// Output renderer
+        /// </summary>
+        private IConsoleRenderer renderer;
+
+        /// <summary>
+        /// Initiliazes a new instance of <see cref="ConsoleSink"/>.
+        /// </summary>
+        /// <param name="theme">Output theme.</param>
+        public ConsoleSink(IConsoleTheme theme)
+        {
+            if (theme != null)
+            {
+                renderer = new CompactKeyValueRenderer(theme);
+            }
+        }
         
         /// <inheritdoc />
         public void Write(LogLevel level, string log)
@@ -18,7 +37,7 @@
                 return;
             }
             
-            System.Console.WriteLine(log);
+            System.Console.WriteLine(renderer != null ? renderer.Render(log) : log);
         }
     }
 }

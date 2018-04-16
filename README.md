@@ -89,6 +89,7 @@ Log.Logger = new LoggerFactory()
 #### Settings
 
 - *async*: True if write to the console should be asynchronous, otherwise false. Provides fast writing to console, however due to run in a separated thread, the last log(s) in case of a crash may not be written. The default is false.
+- *theme: Output color theme. The default is none.</param>
 - *minimumLevel*: Minimum log level. The default is the logger minimum level.
 
 ### SingleFile

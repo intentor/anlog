@@ -1,4 +1,5 @@
 ﻿using System;
+using Anlog.Sinks.Console.Themes;
 
 namespace Anlog.Sinks.Console
 {
@@ -16,13 +17,27 @@ namespace Anlog.Sinks.Console
         /// Log async writer.
         /// </summary>
         private AsyncWriter asyncWriter;
+
+        /// <summary>
+        /// Output renderer
+        /// </summary>
+        private IConsoleRenderer renderer;
         
         /// <summary>
         /// Initializes a new instance of <see cref="AsyncConsoleSink"/>.
         /// </summary>
-        public AsyncConsoleSink()
+        /// <param name="theme">Output theme.</param>
+        public AsyncConsoleSink(IConsoleTheme theme)
         {
-            asyncWriter = new AsyncWriter(System.Console.WriteLine);
+            if (theme != null)
+            {
+                renderer = new CompactKeyValueRenderer(theme);
+            }
+            
+            asyncWriter = new AsyncWriter(log =>
+            {
+                System.Console.WriteLine(renderer != null ? renderer.Render(log) : log);
+            });
             asyncWriter.Start();
         }
 
