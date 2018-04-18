@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Anlog.Loggers;
 
 namespace Anlog
 {
@@ -12,7 +13,10 @@ namespace Anlog
         /// <summary>
         /// Logger to write the logs to.
         /// </summary>
-        public static ILogger Logger;
+        /// <remarks>
+        /// As default, it's a dummy logger that logs to nothing.
+        /// </remarks>
+        public static ILogger Logger = new DummyLogger();
 
         /// <summary>
         /// Disposes the logging system.

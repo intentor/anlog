@@ -4,6 +4,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using Anlog.Factories;
+using Anlog.Loggers;
 using Anlog.Sinks.Console;
 using Anlog.Sinks.SingleFile;
 using Anlog.Tests.TestObjects;
@@ -45,7 +46,7 @@ namespace Anlog.Performance.Tests.TestObjects
                     .CreateLogger();
             }
 
-            if (Log.Logger == null)
+            if (Log.Logger == null || Log.Logger is DummyLogger)
             {
                 Log.Logger = new LoggerFactory()
                     .WriteTo.SingleFile(Path.Combine(tempFolder.GetLogFilePath("anlog.txt")), async: true)

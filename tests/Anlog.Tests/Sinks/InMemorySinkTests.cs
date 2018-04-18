@@ -12,7 +12,10 @@ namespace Anlog.Tests.Sinks
         /// <summary>
         /// Object to test.
         /// </summary>
-        private InMemorySink sink = new InMemorySink();
+        private InMemorySink sink = new InMemorySink()
+        {
+            AppendNewLine = false
+        };
 
         [Fact]
         public void WhenWriting_WriteToMemory()

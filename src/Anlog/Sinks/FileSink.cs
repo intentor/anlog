@@ -10,7 +10,7 @@ namespace Anlog.Sinks
     public sealed class FileSink : ILogSink, IDisposable
     {
         /// <inheritdoc />
-        public LogLevel? MinimumLevel { get; set; } = LogLevel.Info;
+        public LogLevel? MinimumLevel { get; set; }
         
         /// <summary>
         /// Internal output stream.
