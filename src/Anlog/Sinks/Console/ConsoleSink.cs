@@ -1,5 +1,4 @@
-﻿using Anlog.Sinks.Console.Renderers;
-using Anlog.Sinks.Console.Themes;
+﻿using Anlog.Sinks.Console.Themes;
 
 namespace Anlog.Sinks.Console
 {
@@ -14,20 +13,12 @@ namespace Anlog.Sinks.Console
         public LogLevel? MinimumLevel { get; set; }
 
         /// <summary>
-        /// Output renderer
-        /// </summary>
-        private IConsoleRenderer renderer;
-
-        /// <summary>
         /// Initiliazes a new instance of <see cref="ConsoleSink"/>.
         /// </summary>
         /// <param name="theme">Output theme.</param>
         public ConsoleSink(IConsoleTheme theme)
         {
-            if (theme != null)
-            {
-                renderer = new CompactKeyValueRenderer(theme);
-            }
+            // TODO: implement renderer.
         }
         
         /// <inheritdoc />
@@ -38,7 +29,7 @@ namespace Anlog.Sinks.Console
                 return;
             }
             
-            System.Console.WriteLine(renderer != null ? renderer.Render(log) : log);
+            System.Console.WriteLine(log);
         }
     }
 }

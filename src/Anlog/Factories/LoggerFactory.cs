@@ -60,15 +60,9 @@ namespace Anlog.Factories
         {
             var logger = (ILogger) Activator.CreateInstance(loggerType);
 
-            if (FormatAs.Formatter == null)
-            {
-                FormatAs.CompactKeyValue();
-            }
-
             // Add sinks first so minimum level can be set.
             logger.Sinks = WriteTo.Sinks;
             logger.MinimumLevel = MinimumLevel.Level;
-            logger.Formatter = FormatAs.Formatter;
 
             return logger;
         }

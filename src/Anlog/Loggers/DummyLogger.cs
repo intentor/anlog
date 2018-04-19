@@ -1,21 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using Anlog.Formatters.Dummy;
+using Anlog.Appenders.Dummy;
+using Anlog.Entries;
 
 namespace Anlog.Loggers
 {
     /// <summary>
-    /// Dummy logger that logs to nothing.
+    /// Logs to nothing.
     /// </summary>
     public sealed class DummyLogger : ILogger
     {
         /// <summary>
         /// Dummy formatter instance.
         /// </summary>
-        private static readonly ILogFormatter DummyFormatterInstance = new DummyFormatter();
-            
-        /// <inheritdoc />
-        public LogFormatter Formatter { get; set; }
+        private static readonly ILogAppender DummyAppender = new DummyLogAppender();
         
         /// <inheritdoc />
         public List<ILogSink> Sinks { get; set; }
@@ -42,31 +40,17 @@ namespace Anlog.Loggers
         }
 
         /// <inheritdoc />
-        public ILogFormatter Append(string key, string value, string callerFilePath = null, 
+        public ILogAppender Append(string key, string value, string callerFilePath = null, 
             string callerMemberName = null, int callerLineNumber = 0)
         {
-            return DummyFormatterInstance;
+            return DummyAppender;
         }
 
         /// <inheritdoc />
-        public ILogFormatter Append(string key, object value, string callerFilePath = null, 
+        public ILogAppender Append(string key, object value, string callerFilePath = null, 
             string callerMemberName = null, int callerLineNumber = 0)
         {
-            return DummyFormatterInstance;
-        }
-        
-        /// <inheritdoc />
-        public ILogFormatter Append<T>(string key, T[] values, string callerFilePath = null, 
-            string callerMemberName = null, int callerLineNumber = 0)
-        {
-            return DummyFormatterInstance;
-        }
-        
-        /// <inheritdoc />
-        public ILogFormatter Append<T>(string key, IEnumerable<T> values, string callerFilePath = null, 
-            string callerMemberName = null, int callerLineNumber = 0)
-        {
-            return DummyFormatterInstance;
+            return DummyAppender;
         }
 
         /// <inheritdoc />
@@ -96,25 +80,18 @@ namespace Anlog.Loggers
         {
             // Does nothing.
         }
-
-        /// <inheritdoc />
-        public void Error(Exception e, string callerFilePath = null,  string callerMemberName = null,
-            int callerLineNumber = 0)
-        {
-            // Does nothing.
-        }
         
         /// <inheritdoc />
-        public void Error(string message, Exception e, string callerFilePath = null,  string callerMemberName = null,
+        public void Error(Exception e, string message, string callerFilePath = null,  string callerMemberName = null,
             int callerLineNumber = 0)
         {
             // Does nothing.
         }
 
         /// <inheritdoc />
-        public void Write(LogLevel level, string log)
+        public void Write(LogLevelName level, List<ILogEntry> entries)
         {
-            // Writes to nothing.
+            // Does nothing.
         }
     }
 }

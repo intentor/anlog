@@ -1,5 +1,4 @@
 ﻿using System;
-using Anlog.Sinks.Console.Renderers;
 using Anlog.Sinks.Console.Themes;
 
 namespace Anlog.Sinks.Console
@@ -18,11 +17,6 @@ namespace Anlog.Sinks.Console
         /// Log async writer.
         /// </summary>
         private AsyncWriter asyncWriter;
-
-        /// <summary>
-        /// Output renderer
-        /// </summary>
-        private IConsoleRenderer renderer;
         
         /// <summary>
         /// Initializes a new instance of <see cref="AsyncConsoleSink"/>.
@@ -30,14 +24,9 @@ namespace Anlog.Sinks.Console
         /// <param name="theme">Output theme.</param>
         public AsyncConsoleSink(IConsoleTheme theme)
         {
-            if (theme != null)
-            {
-                renderer = new CompactKeyValueRenderer(theme);
-            }
-            
             asyncWriter = new AsyncWriter(log =>
             {
-                System.Console.WriteLine(renderer != null ? renderer.Render(log) : log);
+                System.Console.WriteLine(log);
             });
             asyncWriter.Start();
         }

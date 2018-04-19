@@ -6,17 +6,17 @@ namespace Anlog
     /// <summary>
     /// Provides logging capabilities.
     /// </summary>
-    public interface ILogger : ILogSink, IDisposable
+    public interface ILogger : ILogEntriesWriter, IDisposable
     {
-        /// <summary>
-        /// Log formatter factory.
-        /// </summary>
-        LogFormatter Formatter { get; set; }
-        
         /// <summary>
         /// Log sinks.
         /// </summary>
         List<ILogSink> Sinks { get; set; }
+        
+        /// <summary>
+        /// Minimum log level to writes the log to.
+        /// </summary>
+        LogLevel? MinimumLevel { get; set; }
 
         /// <summary>
         /// Gets a sink.
@@ -41,7 +41,7 @@ namespace Anlog
         /// <param name="callerMemberName">Caller class member name that originated the log.</param>
         /// <param name="callerLineNumber">Caller line number that originated the log.</param>
         /// <returns>Log writer, for chaining.</returns>
-        ILogFormatter Append(string key, string value, string callerFilePath = null, string callerMemberName = null, 
+        ILogAppender Append(string key, string value, string callerFilePath = null, string callerMemberName = null, 
             int callerLineNumber = 0);
         
         /// <summary>
@@ -53,35 +53,9 @@ namespace Anlog
         /// <param name="callerMemberName">Caller class member name that originated the log.</param>
         /// <param name="callerLineNumber">Caller line number that originated the log.</param>
         /// <returns>Log writer, for chaining.</returns>
-        ILogFormatter Append(string key, object value, string callerFilePath = null, string callerMemberName = null, 
+        ILogAppender Append(string key, object value, string callerFilePath = null, string callerMemberName = null, 
             int callerLineNumber = 0);
         
-        /// <summary>
-        /// Appends an entry to the log.
-        /// </summary>
-        /// <param name="key">Entry key.</param>
-        /// <param name="values">Entry values.</param>
-        /// <param name="callerFilePath">Caller class file path that originated the log.</param>
-        /// <param name="callerMemberName">Caller class member name that originated the log.</param>
-        /// <param name="callerLineNumber">Caller line number that originated the log.</param>
-        /// <typeparam name="T">Object type.</typeparam>
-        /// <returns>Log writer, for chaining.</returns>
-        ILogFormatter Append<T>(string key, T[] values, string callerFilePath = null, string callerMemberName = null, 
-            int callerLineNumber = 0);
-        
-        /// <summary>
-        /// Appends an entry to the log.
-        /// </summary>
-        /// <param name="key">Entry key.</param>
-        /// <param name="values">Entry values.</param>
-        /// <param name="callerFilePath">Caller class file path that originated the log.</param>
-        /// <param name="callerMemberName">Caller class member name that originated the log.</param>
-        /// <param name="callerLineNumber">Caller line number that originated the log.</param>
-        /// <typeparam name="T">Object type.</typeparam>
-        /// <returns>Log writer, for chaining.</returns>
-        ILogFormatter Append<T>(string key, IEnumerable<T> values, string callerFilePath = null, 
-            string callerMemberName = null, int callerLineNumber = 0);
-
         /// <summary>
         /// Writes the log as debug.
         /// </summary>
@@ -126,20 +100,11 @@ namespace Anlog
         /// Writes the log as error.
         /// </summary>
         /// <param name="e">Exception details.</param>
-        /// <param name="callerFilePath">Caller class file path that originated the log.</param>
-        /// <param name="callerMemberName">Caller class member name that originated the log.</param>
-        /// <param name="callerLineNumber">Caller line number that originated the log.</param>
-        void Error(Exception e, string callerFilePath = null, string callerMemberName = null, int callerLineNumber = 0);
-        
-        /// <summary>
-        /// Writes the log as error.
-        /// </summary>
         /// <param name="message">Log message.</param>
-        /// <param name="e">Exception details.</param>
         /// <param name="callerFilePath">Caller class file path that originated the log.</param>
         /// <param name="callerMemberName">Caller class member name that originated the log.</param>
         /// <param name="callerLineNumber">Caller line number that originated the log.</param>
-        void Error(string message, Exception e, string callerFilePath = null, string callerMemberName = null, 
+        void Error(Exception e, string message,  string callerFilePath = null, string callerMemberName = null, 
             int callerLineNumber = 0);
     }
 }

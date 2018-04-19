@@ -7,7 +7,7 @@ using System.Runtime.Serialization;
 namespace Anlog.Formatters
 {
     /// <summary>
-    /// Cached getters info for a type.
+    /// Cached Getters info for a type.
     /// </summary>
     public sealed class TypeGettersInfo
     {
@@ -24,7 +24,7 @@ namespace Anlog.Formatters
         /// <summary>
         /// Getters of the type.
         /// </summary>
-        private readonly Dictionary<string, Func<object, object>> getters
+        public readonly Dictionary<string, Func<object, object>> Getters
             = new Dictionary<string, Func<object, object>>();
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace Anlog.Formatters
         }
 
         /// <summary>
-        /// Fill fields getters.
+        /// Fill fields Getters.
         /// </summary>
         private void FillFieldsGetters()
         {
@@ -64,12 +64,12 @@ namespace Anlog.Formatters
                         Expression.Field(Expression.Convert(objectParameter, relatedType), field), ObjectType),
                     objectParameter);
                 
-                getters.Add(key, getExpression.Compile());
+                Getters.Add(key, getExpression.Compile());
             }
         }
 
         /// <summary>
-        /// Fill properties getters.
+        /// Fill properties Getters.
         /// </summary>
         private void FillPropertiesGetters()
         {
@@ -99,30 +99,17 @@ namespace Anlog.Formatters
                         Expression.Property(Expression.Convert(objectParameter, relatedType), property), ObjectType),
                     objectParameter);
                 
-                getters.Add(key, getExpression.Compile());
+                Getters.Add(key, getExpression.Compile());
             }
         }
 
         /// <summary>
-        /// Indicates whether this type has getters.
+        /// Indicates whether this type has Getters.
         /// </summary>
-        /// <returns>True if there's getters available, otherwise false.</returns>
+        /// <returns>True if there's Getters available, otherwise false.</returns>
         public bool HasGetters()
         {
-            return getters.Count > 0;
-        }
-
-        /// <summary>
-        /// Apeends getters from an instance to a formatter.
-        /// </summary>
-        /// <param name="instance">Object instance to be formatted.</param>
-        /// <param name="formatter">Log formatter to use for formatting.</param>
-        public void Append(object instance, ILogFormatter formatter)
-        {
-            foreach (var getter in getters)
-            {
-                formatter.Append(getter.Key, getter.Value(instance));
-            }
+            return Getters.Count > 0;
         }
     }
 }

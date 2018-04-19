@@ -7,14 +7,14 @@ using System.Runtime.Serialization;
 namespace Anlog.Formatters
 {
     /// <summary>
-    /// Type getters utils.
+    /// Type Getters utils.
     /// </summary>
     public static class TypeGettersUtils
     {
         /// <summary>
-        /// Finds all types that have a <see cref="DataContractAttribute"/> and adds their getters.
+        /// Finds all types that have a <see cref="DataContractAttribute"/> and adds their Getters.
         /// </summary>
-        /// <returns>Available getters.</returns>
+        /// <returns>Available Getters.</returns>
         public static Dictionary<Type, TypeGettersInfo> GetDataContractGetters()
         {
             var getters = new Dictionary<Type, TypeGettersInfo>();

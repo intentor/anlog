@@ -9,12 +9,6 @@ namespace Anlog.Formatters.CompactKeyValue
     public static class CompactKeyValueFormatterFactory
     {
         /// <summary>
-        /// Logger factory.
-        /// </summary>
-        internal static LogFormatter Factory => (sink, path, name, number) =>
-            new CompactKeyValueFormatter(sink, path, name, number);
-
-        /// <summary>
         /// Sets the log formatter as compact key/value pair.
         /// </summary>
         /// <param name="formatterFactory">Formatter factory.</param>
@@ -26,7 +20,6 @@ namespace Anlog.Formatters.CompactKeyValue
             string dateTimeFormat = null)
         {
             PrepareFormatter(culture, dateTimeFormat);
-            formatterFactory.Formatter = Factory;
             return formatterFactory.Factory;
         }
 
@@ -37,10 +30,7 @@ namespace Anlog.Formatters.CompactKeyValue
         /// <param name="dateTimeFormat">Date/time log format.</param>
         public static void PrepareFormatter(CultureInfo culture = null, string dateTimeFormat = null)
         {
-            CompactKeyValueFormatter.Culture =  culture ?? CultureInfo.InvariantCulture;
-            CompactKeyValueFormatter.DateTimeFormat = string.IsNullOrEmpty(dateTimeFormat) ? 
-                "yyyy-MM-dd HH:mm:ss.fff" : dateTimeFormat;
-            CompactKeyValueFormatter.Getters = TypeGettersUtils.GetDataContractGetters();
+            // TODO: to implement.
         }
     }
 }

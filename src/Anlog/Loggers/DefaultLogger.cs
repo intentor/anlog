@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Anlog.Appenders.Default;
+using Anlog.Entries;
+using Anlog.Formatters.CompactKeyValue;
 
 namespace Anlog.Loggers
 {
@@ -8,9 +11,6 @@ namespace Anlog.Loggers
     /// </summary>
     public sealed class DefaultLogger : ILogger
     {
-        /// <inheritdoc />
-        public LogFormatter Formatter { get; set; }
-        
         /// <inheritdoc />
         public List<ILogSink> Sinks { get; set; } = new List<ILogSink>();
 
@@ -60,42 +60,26 @@ namespace Anlog.Loggers
         }
 
         /// <inheritdoc />
-        public ILogFormatter Append(string key, string value, string callerFilePath = null, 
+        public ILogAppender Append(string key, string value, string callerFilePath = null, 
             string callerMemberName = null, int callerLineNumber = 0)
         {
-            return Formatter(this, callerFilePath, callerMemberName, callerLineNumber)
+            return new DefaultLogAppender(this, false, callerFilePath, callerMemberName, callerLineNumber)
                 .Append(key, value);
         }
 
         /// <inheritdoc />
-        public ILogFormatter Append(string key, object value, string callerFilePath = null, 
+        public ILogAppender Append(string key, object value, string callerFilePath = null, 
             string callerMemberName = null, int callerLineNumber = 0)
         {
-            return Formatter(this, callerFilePath, callerMemberName, callerLineNumber)
+            return new DefaultLogAppender(this, false, callerFilePath, callerMemberName, callerLineNumber)
                 .Append(key, value);
-        }
-        
-        /// <inheritdoc />
-        public ILogFormatter Append<T>(string key, T[] values, string callerFilePath = null, 
-            string callerMemberName = null, int callerLineNumber = 0)
-        {
-            return Formatter(this, callerFilePath, callerMemberName, callerLineNumber)
-                .Append(key, values);
-        }
-        
-        /// <inheritdoc />
-        public ILogFormatter Append<T>(string key, IEnumerable<T> values, string callerFilePath = null, 
-            string callerMemberName = null, int callerLineNumber = 0)
-        {
-            return Formatter(this, callerFilePath, callerMemberName, callerLineNumber)
-                .Append(key, values);
         }
 
         /// <inheritdoc />
         public void Debug(string message, string callerFilePath = null,  string callerMemberName = null,
             int callerLineNumber = 0)
         {
-            Formatter(this, callerFilePath, callerMemberName, callerLineNumber)
+            new DefaultLogAppender(this, false, callerFilePath, callerMemberName, callerLineNumber)
                 .Debug(message);
         }
         
@@ -103,7 +87,7 @@ namespace Anlog.Loggers
         public void Info(string message, string callerFilePath = null,  string callerMemberName = null,
             int callerLineNumber = 0)
         {
-            Formatter(this, callerFilePath, callerMemberName, callerLineNumber)
+            new DefaultLogAppender(this, false, callerFilePath, callerMemberName, callerLineNumber)
                 .Info(message);
         }
 
@@ -111,7 +95,7 @@ namespace Anlog.Loggers
         public void Warn(string message, string callerFilePath = null,  string callerMemberName = null,
             int callerLineNumber = 0)
         {
-            Formatter(this, callerFilePath, callerMemberName, callerLineNumber)
+            new DefaultLogAppender(this, false, callerFilePath, callerMemberName, callerLineNumber)
                 .Warn(message);
         }
 
@@ -119,32 +103,27 @@ namespace Anlog.Loggers
         public void Error(string message, string callerFilePath = null,  string callerMemberName = null,
             int callerLineNumber = 0)
         {
-            Formatter(this, callerFilePath, callerMemberName, callerLineNumber)
+            new DefaultLogAppender(this, false, callerFilePath, callerMemberName, callerLineNumber)
                 .Error(message);
-        }
-
-        /// <inheritdoc />
-        public void Error(Exception e, string callerFilePath = null,  string callerMemberName = null,
-            int callerLineNumber = 0)
-        {
-            Formatter(this, callerFilePath, callerMemberName, callerLineNumber)
-                .Error(e);
         }
         
         /// <inheritdoc />
-        public void Error(string message, Exception e, string callerFilePath = null,  string callerMemberName = null,
+        public void Error(Exception e, string message, string callerFilePath = null,  string callerMemberName = null,
             int callerLineNumber = 0)
         {
-            Formatter(this, callerFilePath, callerMemberName, callerLineNumber)
-                .Error(message, e);
+            new DefaultLogAppender(this, false, callerFilePath, callerMemberName, callerLineNumber)
+                .Error(e, message);
         }
 
         /// <inheritdoc />
-        public void Write(LogLevel level, string log)
+        public void Write(LogLevelName level, List<ILogEntry> entries)
         {
+            var formatter = (ILogFormatter) new CompactKeyValueFormatter(entries);
+            var log = formatter.FormatLog(level);
+            
             for (var sinkIndex = 0; sinkIndex < Sinks.Count; sinkIndex++)
             {
-                Sinks[sinkIndex].Write(level, log);
+                Sinks[sinkIndex].Write(level.Level, log);
             }
         }
     }

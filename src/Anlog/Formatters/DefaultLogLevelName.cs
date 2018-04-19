@@ -1,9 +1,9 @@
-﻿namespace Anlog.Formatters.CompactKeyValue
+﻿namespace Anlog.Formatters
 {
     /// <summary>
-    /// Log level details for the <see cref="CompactKeyValueFormatter"/>.
+    /// Default log level details.
     /// </summary>
-    public class CompactKeyValueLogLevelName : ILogLevelName
+    public class DefaultLogLevelName : ILogLevelName
     {
         /// <inheritdoc />
         public LogLevelName Debug { get; }
@@ -18,9 +18,9 @@
         public LogLevelName Error { get; }
         
         /// <summary>
-        /// Initializes a new instance of <see cref="CompactKeyValueLogLevelName"/>.
+        /// Initializes a new instance of <see cref="DefaultLogLevelName"/>.
         /// </summary>
-        public CompactKeyValueLogLevelName()
+        public DefaultLogLevelName()
         {
             Debug = new LogLevelName()
             {

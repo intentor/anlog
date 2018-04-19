@@ -1,332 +1,155 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
 using System.Text;
+using Anlog.Entries;
 using static Anlog.Formatters.CompactKeyValue.CompactKeyValueFormatterConstants;
+using static Anlog.Formatters.DefaultFormattingOptions;
 
 namespace Anlog.Formatters.CompactKeyValue
 {
     /// <summary>
-    /// Formats the output as a compact key/value pair.
+    /// Formats a list of log entries.
     /// </summary>
     public class CompactKeyValueFormatter : ILogFormatter
     {
         /// <summary>
-        /// Date/time format.
+        /// Log entries.
         /// </summary>
-        internal static string DateTimeFormat { get; set; } = "yyyy-MM-dd HH:mm:ss.fff";
-        
-        /// <summary>
-        /// Culture details.
-        /// </summary>
-        internal static CultureInfo Culture { get; set; } = CultureInfo.InvariantCulture;
-
-        /// <summary>
-        /// Available Getters.
-        /// </summary>
-        internal static Dictionary<Type, TypeGettersInfo> Getters { get; set; }
-        
-        /// <summary>
-        /// Sink to write the log to.
-        /// </summary>
-        private ILogSink sink;
+        private List<ILogEntry> entries;
 
         /// <summary>
         /// String builder used to write logs.
         /// </summary>
-        private StringBuilder builder;
-
+        private StringBuilder builder = new StringBuilder();
+        
         /// <summary>
-        /// Initilizaes a new instance of <see cref="CompactKeyValueFormatter"/>.
+        /// Initializes a new instance of <see cref="CompactKeyValueFormatter"/>.
         /// </summary>
-        /// <param name="sink">Logger sinker.</param>
-        /// <param name="callerFilePath">caller class file path that originated the log.</param>
-        /// <param name="callerMemberName">caller class member name that originated the log.</param>
-        /// <param name="callerLineNumber">caller line number that originated the log.</param>
-        public CompactKeyValueFormatter(ILogSink sink, string callerFilePath, string callerMemberName, 
-            int callerLineNumber)
+        /// <param name="entries">Entries to format.</param>
+        public CompactKeyValueFormatter(List<ILogEntry> entries)
         {
-            this.sink = sink;
-            builder = new StringBuilder();
-            
-            var caller = UnknownCallerValue;
-            if (!string.IsNullOrEmpty(callerFilePath))
-            {
-                if (callerMemberName == ConstructorCallerInputName)
-                {
-                    callerMemberName = ConstructorCallerOutputName;
-                }
-                
-                caller = string.Concat(Path.GetFileNameWithoutExtension(callerFilePath), CallerMembersSeparator, 
-                    callerMemberName, CallerLineNumberSeparator, callerLineNumber);
-            }
-            
-            WriteKey(CallerKey);
-            WriteValue(caller);
+            this.entries = entries;
         }
         
-        /// <inheritdoc />
-        public ILogFormatter Append(string key, string value)
+        /// <summary>
+        /// Formats a basic key value log entry.
+        /// <para/>
+        /// If the key is null, writes just the value.
+        /// </summary>
+        /// <param name="entry">Log entry.</param>
+        public void FormatEntry(ILogEntry entry)
         {
-            WriteKey(key);
-            WriteValue(value);
-            return this;
+            if (entry is LogEntry)
+            {
+                FormatEntry((LogEntry) entry);
+            }
+            else if (entry is LogObject)
+            {
+                FormatEntry((LogObject) entry);
+            }
+            else if (entry is LogList)
+            {
+                FormatEntry((LogList) entry);
+            }
         }
         
-        /// <inheritdoc />
-        public ILogFormatter Append(string key, object value)
+        /// <summary>
+        /// Formats a basic key value log entry.
+        /// <para/>
+        /// If the key is null, writes just the value.
+        /// </summary>
+        /// <param name="entry">Log entry.</param>
+        public void FormatEntry(LogEntry entry)
         {
-            WriteKey(key);
-            WriteValue(value);
-            return this;
-        }
-
-        /// <inheritdoc />
-        public ILogFormatter Append<T>(T obj) where T : class
-        {
-            var type = obj?.GetType();
-            if (type == null)
+            if (entry.Key == null)
             {
-                return this;
-            }
-
-            if (type == StringType)
-            {
-                Append(GenericValueKey, obj.ToString());
-                return this;
-            }
-                
-            if (!Getters.ContainsKey(type))
-            {
-                Getters.Add(type, new TypeGettersInfo(type));
-            }
-
-            var gettersInfo = Getters[type];
-            if (gettersInfo.HasGetters())
-            {
-                Getters[type].Append(obj, this);
+                builder.Append(entry.Value);
             }
             else
             {
-                Append(GenericValueKey, obj.ToString());
+                builder.Append(string.Concat(entry.Key, KeyValueSeparator, entry.Value));
             }
-        
-            return this;
-        }
-        
-        /// <inheritdoc />
-        public ILogFormatter Append<T>(string key, T[] values)
-        {
-            if (values == null || values.Length == 0)
-            {
-                return Append(key, EmptyList);
-            }
-            
-            builder.Append(string.Concat(key, KeyValueSeparator, ListOpening));
-
-            for (var index = 0; index < values.Length; index++)
-            {
-                WriteValue(values[index], false);
-                builder.Append(ListItemSeparator);
-            }
-
-            // Removes the last comma.
-            builder.Length--;
-            builder.Append(string.Concat(ListClosing, EntrySeparator));
-            
-            return this;
-        }
-        
-        /// <inheritdoc />
-        public ILogFormatter Append<T>(string key, IEnumerable<T> values)
-        {
-            builder.Append(string.Concat(key, KeyValueSeparator, ListOpening));
-
-            if (values != null)
-            {
-                var hasValues = false;
-                foreach (var value in values)
-                {
-                    hasValues = true;
-                    WriteValue(value, false);
-                    builder.Append(ListItemSeparator);
-                }
-
-                if (hasValues)
-                {
-                    builder.Length--; // Removes the last comma.
-                }
-            }
-            
-            builder.Append(string.Concat(ListClosing, EntrySeparator));
-            
-            return this;
-        }
-
-        /// <inheritdoc />
-        public void Debug(string message = null)
-        {
-            Write(CompactKeyValueFormatterConstants.LogLevelName.Debug, message, null);
-        }
-
-        /// <inheritdoc />
-        public void Info(string message = null)
-        {
-            Write(CompactKeyValueFormatterConstants.LogLevelName.Info, message, null);
-        }
-
-        /// <inheritdoc />
-        public void Warn(string message = null)
-        {
-            Write(CompactKeyValueFormatterConstants.LogLevelName.Warn, message, null);
-        }
-
-        /// <inheritdoc />
-        public void Error(string message = null)
-        {
-            Write(CompactKeyValueFormatterConstants.LogLevelName.Error, message, null);
-        }
-
-        /// <inheritdoc />
-        public void Error(Exception e)
-        {
-            Write(CompactKeyValueFormatterConstants.LogLevelName.Error, null, e);
-        }
-
-        /// <inheritdoc />
-        public void Error(string message, Exception e)
-        {
-            Write(CompactKeyValueFormatterConstants.LogLevelName.Error, message, e);
         }
 
         /// <summary>
-        /// Writes a key.
+        /// Formats a log object entry.
         /// </summary>
-        /// <param name="key">Key to write.</param>
-        private void WriteKey(string key)
+        /// <para/>
+        /// If the key is null, writes just the values.
+        /// <param name="entry">Log entry.</param>
+        public void FormatEntry(LogObject entry)
         {
-            builder.Append(string.Concat(key, KeyValueSeparator));
-        }
-
-        /// <summary>
-        /// Writes a value.
-        /// </summary>
-        /// <param name="value">Value write.</param>
-        /// <param name="writeEntrySeparator">True to write entry separator, otherwise false.</param>
-        private void WriteValue(string value, bool writeEntrySeparator = true)
-        {
-            builder.Append(value);
-
-            if (writeEntrySeparator)
+            if (entry.Key != null)
             {
-                builder.Append(EntrySeparator);
+                builder.Append(string.Concat(entry.Key, KeyValueSeparator));
             }
-        }
-        
-        /// <summary>
-        /// Writes a value.
-        /// </summary>
-        /// <param name="value">Value write.</param>
-        /// <param name="writeEntrySeparator">True to write entry separator, otherwise false.</param>
-        private void WriteValue(object value, bool writeEntrySeparator = true)
-        {
-            if (value == null)
-            {
-                WriteValue(NullValue, writeEntrySeparator);
-            }
-            else
-            {
-                if (value is DateTime)
-                {
-                    WriteValue(((DateTime) value).ToString(DateTimeFormat), writeEntrySeparator);
-                } 
-                else if (value is IConvertible)
-                {
-                    WriteValue(((IConvertible) value).ToString(Culture), writeEntrySeparator);
-                }
-                else if (value is IEnumerable)
-                {
-                    var values = (IEnumerable) value;
-                    builder.Append(ListOpening);
-
-                    var hasValues = false;
-                    foreach (var item in values)
-                    {
-                        hasValues = true;
-                        WriteValue(item, false);
-                        builder.Append(ListItemSeparator);
-                    }
-
-                    if (hasValues)
-                    {
-                        builder.Length--; // Removes the last comma.
-                    }
             
-                    WriteValue(ListClosing, writeEntrySeparator);
-                }
-                else
+            builder.Append(ObjectOpening);
+
+            if (entry.Entries.Count > 0)
+            {
+                foreach (var value in entry.Entries)
                 {
-                    var valueType = value.GetType();
-                    if (!Getters.ContainsKey(valueType))
+                    FormatEntry(value);
+                    builder.Append(EntrySeparator);
+                }
+            
+                builder.Length--; // Removes the last separator.
+            }
+
+            builder.Append(ObjectClosing);
+        }
+
+        /// <summary>
+        /// Formats a log list entry.
+        /// </summary>
+        /// <para/>
+        /// If the key is null, writes just the values.
+        /// <param name="entry">Log entry.</param>
+        public void FormatEntry(LogList entry)
+        {
+            if (entry.Key != null)
+            {
+                builder.Append(string.Concat(entry.Key, KeyValueSeparator));
+            }
+            
+            builder.Append(ListOpening);
+
+            if (entry.Entries.Count > 0)
+            {
+                foreach (var value in entry.Entries)
+                {
+                    if (value is ILogEntry)
                     {
-                        Getters.Add(valueType, new TypeGettersInfo(valueType));
-                    }
-                    
-                    var gettersInfo = Getters[valueType];
-                    if (gettersInfo.HasGetters())
-                    {
-                        builder.Append(ObjectOpening);
-                        Getters[valueType].Append(value, this);
-                        builder.Length--; // Removes the last space.
-                        WriteValue(ObjectClosing, writeEntrySeparator);
+                        FormatEntry((ILogEntry) value);
                     }
                     else
                     {
-                        var stringValue = value.ToString();
-                    
-                        if (string.IsNullOrEmpty(stringValue))
-                        {
-                            WriteValue(EmptyValue, writeEntrySeparator);
-                        }
-                    
-                        WriteValue(stringValue, writeEntrySeparator);
+                        builder.Append(value);
                     }
+
+                    builder.Append(ListItemSeparator);
                 }
+
+                builder.Length--; // Removes the last separator.
             }
+
+            builder.Append(ListClosing);
         }
-
-        /// <summary>
-        /// Writes the log to the logger.
-        /// </summary>
-        /// <param name="level">Log level.</param>
-        /// <param name="message">Log message.</param>
-        /// <param name="e">Log message.</param>
-        private void Write(LogLevelName level, string message, Exception e)
+        
+        /// <inheritdoc />
+        public string FormatLog(LogLevelName levelName)
         {
-            if (!string.IsNullOrEmpty(message))
+            foreach (var entry in entries)
             {
-                WriteKey(level.Key);
-                WriteValue(message);
+                FormatEntry(entry);
+
+                builder.Append(EntrySeparator);
             }
+            builder.Length--; // Removes the last separator.
 
-            builder.Length--; // Removes the last space.
-            
-            if (e != null)
-            {
-                builder.Append(string.Concat(Environment.NewLine, e));
-
-                if (!string.IsNullOrEmpty(e.StackTrace))
-                {
-                    builder.Append(string.Concat(Environment.NewLine, e.StackTrace));
-                }
-            }
-
-            var log = string.Concat(DateTime.Now.ToString(DateTimeFormat),  
-                EntrySeparator, ListOpening, level.Entry, ListClosing, EntrySeparator, builder.ToString());
-            
-            sink.Write(level.Level, log);
+            return string.Concat(DateTime.Now.ToString(DateTimeFormat),  
+                EntrySeparator, ListOpening, levelName.Entry, ListClosing, EntrySeparator, builder.ToString());
         }
     }
 }

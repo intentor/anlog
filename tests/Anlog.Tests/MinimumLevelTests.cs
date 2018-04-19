@@ -1,9 +1,9 @@
 ﻿using System;
 using Anlog.Factories;
-using Anlog.Formatters.CompactKeyValue;
 using Anlog.Sinks.InMemory;
 using Xunit;
 using static Anlog.Tests.TestObjects.TestConstants;
+using static Anlog.Formatters.DefaultFormattingOptions;
 
 namespace Anlog.Tests
 {
@@ -16,11 +16,6 @@ namespace Anlog.Tests
         /// Logger object.
         /// </summary>
         private ILogger logger;
-        
-        /// <summary>
-        /// Log levels names.
-        /// </summary>
-        private ILogLevelName logLevelName = new CompactKeyValueLogLevelName();
             
         [Fact]
         public void WhenInDefaultLevel_WriteFromInfo()
@@ -31,7 +26,7 @@ namespace Anlog.Tests
             
             WriteLogs();
 
-            AssertLogs(3, logLevelName.Info, logLevelName.Warn, logLevelName.Error);
+            AssertLogs(3, LogLevelNames.Info, LogLevelNames.Warn, LogLevelNames.Error);
         }
             
         [Fact]
@@ -41,7 +36,7 @@ namespace Anlog.Tests
             
             WriteLogs();
 
-            AssertLogs(4, logLevelName.Debug, logLevelName.Info, logLevelName.Warn, logLevelName.Error);
+            AssertLogs(4, LogLevelNames.Debug, LogLevelNames.Info, LogLevelNames.Warn, LogLevelNames.Error);
         }
         
         [Fact]
@@ -51,7 +46,7 @@ namespace Anlog.Tests
             
             WriteLogs();
 
-            AssertLogs(3, logLevelName.Info, logLevelName.Warn, logLevelName.Error);
+            AssertLogs(3, LogLevelNames.Info, LogLevelNames.Warn, LogLevelNames.Error);
         }
         
         [Fact]
@@ -61,7 +56,7 @@ namespace Anlog.Tests
             
             WriteLogs();
 
-            AssertLogs(2, logLevelName.Warn, logLevelName.Error);
+            AssertLogs(2, LogLevelNames.Warn, LogLevelNames.Error);
         }
         
         [Fact]
@@ -71,7 +66,7 @@ namespace Anlog.Tests
             
             WriteLogs();
 
-            AssertLogs(1, logLevelName.Error);
+            AssertLogs(1, LogLevelNames.Error);
         }
 
         /// <summary>

@@ -11,11 +11,6 @@
         /// Logger factory.
         /// </summary>
         internal LoggerFactory Factory { get; }
-        
-        /// <summary>
-        /// Log formatter functions.
-        /// </summary>
-        internal LogFormatter Formatter { get; set; }
 
         /// <summary>
         /// Initializes a new instance of <see cref="LogFormatterFactory"/>.
