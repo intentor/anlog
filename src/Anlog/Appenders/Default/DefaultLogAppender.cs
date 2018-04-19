@@ -28,7 +28,7 @@ namespace Anlog.Appenders.Default
         /// <summary>
         /// Log writer to write entries to.
         /// </summary>
-        private ILogEntriesWriter writer;
+        private ILogWriter writer;
         
         /// <summary>
         /// Indicates whether appending should only occur with cached objects.
@@ -44,7 +44,7 @@ namespace Anlog.Appenders.Default
         /// <param name="callerFilePath">caller class file path that originated the log.</param>
         /// <param name="callerMemberName">caller class member name that originated the log.</param>
         /// <param name="callerLineNumber">caller line number that originated the log.</param>
-        public DefaultLogAppender(ILogEntriesWriter writer, bool useOnlyCachedObjects, string callerFilePath, 
+        public DefaultLogAppender(ILogWriter writer, bool useOnlyCachedObjects, string callerFilePath, 
             string callerMemberName, int callerLineNumber)
         {
             this.writer = writer;

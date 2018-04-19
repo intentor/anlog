@@ -6,7 +6,7 @@ namespace Anlog
     /// <summary>
     /// Provides logging capabilities.
     /// </summary>
-    public interface ILogger : ILogEntriesWriter, IDisposable
+    public interface ILogger : ILogWriter, IDisposable
     {
         /// <summary>
         /// Log sinks.

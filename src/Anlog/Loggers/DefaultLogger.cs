@@ -118,12 +118,9 @@ namespace Anlog.Loggers
         /// <inheritdoc />
         public void Write(LogLevelName level, List<ILogEntry> entries)
         {
-            var formatter = (ILogFormatter) new CompactKeyValueFormatter(entries);
-            var log = formatter.FormatLog(level);
-            
             for (var sinkIndex = 0; sinkIndex < Sinks.Count; sinkIndex++)
             {
-                Sinks[sinkIndex].Write(level.Level, log);
+                Sinks[sinkIndex].Write(level, entries);
             }
         }
     }

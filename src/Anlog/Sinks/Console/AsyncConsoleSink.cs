@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using Anlog.Entries;
+using Anlog.Formatters.CompactKeyValue;
+using Anlog.Sinks.Console.Renderers;
 using Anlog.Sinks.Console.Themes;
 
 namespace Anlog.Sinks.Console
@@ -17,6 +21,11 @@ namespace Anlog.Sinks.Console
         /// Log async writer.
         /// </summary>
         private AsyncWriter asyncWriter;
+
+        /// <summary>
+        /// Output theme.
+        /// </summary>
+        private IConsoleTheme theme;
         
         /// <summary>
         /// Initializes a new instance of <see cref="AsyncConsoleSink"/>.
@@ -24,6 +33,8 @@ namespace Anlog.Sinks.Console
         /// <param name="theme">Output theme.</param>
         public AsyncConsoleSink(IConsoleTheme theme)
         {
+            this.theme = theme;
+            
             asyncWriter = new AsyncWriter(log =>
             {
                 System.Console.WriteLine(log);
@@ -38,14 +49,15 @@ namespace Anlog.Sinks.Console
         }
         
         /// <inheritdoc />
-        public void Write(LogLevel level, string log)
+        public void Write(LogLevelName level, List<ILogEntry> entries)
         { 
-            if (MinimumLevel.HasValue && MinimumLevel > level)
+            if (MinimumLevel.HasValue && MinimumLevel > level.Level)
             {
                 return;
             }
             
-            asyncWriter.Enqueue(log);
+            var formatter = new ThemedConsoleRenderer(theme, level, entries);
+            asyncWriter.Enqueue(formatter.Format());
         }
     }
 }

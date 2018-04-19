@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using Anlog.Entries;
 
 namespace Anlog
@@ -9,6 +10,11 @@ namespace Anlog
     interface ILogFormatter
     {
         /// <summary>
+        /// Internal string Builder used to format a log.
+        /// </summary>
+        StringBuilder Builder { get; }
+        
+        /// <summary>
         /// Formats the date/time in the log.
         /// </summary>
         /// <param name="date">Date/time to write to the log.</param>
@@ -17,8 +23,8 @@ namespace Anlog
         /// <summary>
         /// Formats the log level in the log.
         /// </summary>
-        /// <param name="levelName">Log level name details.</param>
-        void FormatLevel(LogLevelName levelName);
+        /// <param name="level">Log level name details.</param>
+        void FormatLevel(LogLevelName level);
 
         /// <summary>
         /// Formats a basic key value log entry.
@@ -55,8 +61,7 @@ namespace Anlog
         /// <summary>
         /// Formats a log.
         /// </summary>
-        /// <param name="levelName">Log level to format to.</param>
         /// <returns>Formatted log.</returns>
-        string FormatLog(LogLevelName levelName);
+        string Format();
     }
 }

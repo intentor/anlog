@@ -13,21 +13,28 @@ namespace Anlog.Formatters.CompactKeyValue
     public class CompactKeyValueFormatter : ILogFormatter
     {
         /// <summary>
+        /// Log level name details.
+        /// </summary>
+        private LogLevelName logLevelName;
+        
+        /// <summary>
         /// Log entries.
         /// </summary>
         private List<ILogEntry> entries;
 
         /// <summary>
-        /// String builder used to write logs.
+        /// String Builder used to write logs.
         /// </summary>
-        private StringBuilder builder = new StringBuilder();
+        public StringBuilder Builder { get; } = new StringBuilder();
         
         /// <summary>
         /// Initializes a new instance of <see cref="CompactKeyValueFormatter"/>.
         /// </summary>
+        /// <param name="level">Log level name details.</param>
         /// <param name="entries">Entries to format.</param>
-        public CompactKeyValueFormatter(List<ILogEntry> entries)
+        public CompactKeyValueFormatter(LogLevelName level, List<ILogEntry> entries)
         {
+            logLevelName = level;
             this.entries = entries;
         }
 
@@ -35,22 +42,22 @@ namespace Anlog.Formatters.CompactKeyValue
         /// Formats the date/time in the log.
         /// </summary>
         /// <param name="date">Date/time to write to the log.</param>
-        public void FormatDate(DateTime date)
+        public virtual void FormatDate(DateTime date)
         {
-            builder.Append(string.Concat(date.ToString(DateTimeFormat), EntrySeparator));
+            Builder.Append(string.Concat(date.ToString(DateTimeFormat), EntrySeparator));
         }
 
         /// <summary>
         /// Formats the log level in the log.
         /// </summary>
-        /// <param name="levelName">Log level name details.</param>
-        public void FormatLevel(LogLevelName levelName)
+        /// <param name="level">Log level name details.</param>
+        public virtual void FormatLevel(LogLevelName level)
         {
-            builder.Append(string.Concat(ListOpening, levelName.Entry, ListClosing, EntrySeparator));
+            Builder.Append(string.Concat(ListOpening, level.Entry, ListClosing, EntrySeparator));
         }
         
         /// <inheritdoc />
-        public void FormatEntry(ILogEntry entry)
+        public virtual void FormatEntry(ILogEntry entry)
         {
             if (entry is LogEntry)
             {
@@ -67,51 +74,51 @@ namespace Anlog.Formatters.CompactKeyValue
         }
         
         /// <inheritdoc />
-        public void FormatEntry(LogEntry entry)
+        public virtual void FormatEntry(LogEntry entry)
         {
             if (entry.Key == null)
             {
-                builder.Append(entry.Value);
+                Builder.Append(entry.Value);
             }
             else
             {
-                builder.Append(string.Concat(entry.Key, KeyValueSeparator, entry.Value));
+                Builder.Append(string.Concat(entry.Key, KeyValueSeparator, entry.Value));
             }
         }
 
         /// <inheritdoc />
-        public void FormatEntry(LogObject entry)
+        public virtual void FormatEntry(LogObject entry)
         {
             if (entry.Key != null)
             {
-                builder.Append(string.Concat(entry.Key, KeyValueSeparator));
+                Builder.Append(string.Concat(entry.Key, KeyValueSeparator));
             }
             
-            builder.Append(ObjectOpening);
+            Builder.Append(ObjectOpening);
 
             if (entry.Entries.Count > 0)
             {
                 foreach (var value in entry.Entries)
                 {
                     FormatEntry(value);
-                    builder.Append(EntrySeparator);
+                    Builder.Append(EntrySeparator);
                 }
             
-                builder.Length--; // Removes the last separator.
+                Builder.Length--; // Removes the last separator.
             }
 
-            builder.Append(ObjectClosing);
+            Builder.Append(ObjectClosing);
         }
 
         /// <inheritdoc />
-        public void FormatEntry(LogList entry)
+        public virtual void FormatEntry(LogList entry)
         {
             if (entry.Key != null)
             {
-                builder.Append(string.Concat(entry.Key, KeyValueSeparator));
+                Builder.Append(string.Concat(entry.Key, KeyValueSeparator));
             }
             
-            builder.Append(ListOpening);
+            Builder.Append(ListOpening);
 
             if (entry.Entries.Count > 0)
             {
@@ -123,33 +130,33 @@ namespace Anlog.Formatters.CompactKeyValue
                     }
                     else
                     {
-                        builder.Append(value);
+                        Builder.Append(value);
                     }
 
-                    builder.Append(ListItemSeparator);
+                    Builder.Append(ListItemSeparator);
                 }
 
-                builder.Length--; // Removes the last separator.
+                Builder.Length--; // Removes the last separator.
             }
 
-            builder.Append(ListClosing);
+            Builder.Append(ListClosing);
         }
         
         /// <inheritdoc />
-        public string FormatLog(LogLevelName levelName)
+        public virtual string Format()
         {
             FormatDate(DateTime.Now);
-            FormatLevel(levelName);
+            FormatLevel(logLevelName);
             
             foreach (var entry in entries)
             {
                 FormatEntry(entry);
 
-                builder.Append(EntrySeparator);
+                Builder.Append(EntrySeparator);
             }
-            builder.Length--; // Removes the last separator.
+            Builder.Length--; // Removes the last separator.
 
-            return builder.ToString();
+            return Builder.ToString();
         }
     }
 }

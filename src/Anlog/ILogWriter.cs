@@ -6,7 +6,7 @@ namespace Anlog
     /// <summary>
     /// Writes a list of log entries.
     /// </summary>
-    public interface ILogEntriesWriter
+    public interface ILogWriter
     {
         /// <summary>
         /// Formats a list of log entries.

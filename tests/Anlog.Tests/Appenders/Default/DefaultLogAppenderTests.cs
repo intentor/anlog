@@ -50,12 +50,12 @@ namespace Anlog.Tests.Appenders.Default
         public void WhenAppending_WritesCompactKeyValue(string key, object value, string expected)
         {
             string log = null;
-            var writer = new Mock<ILogEntriesWriter>();
+            var writer = new Mock<ILogWriter>();
             writer.Setup(m => m.Write(It.IsAny<LogLevelName>(), It.IsAny<List<ILogEntry>>()))
                 .Callback<LogLevelName, List<ILogEntry>>((level, entries) =>
                 {
-                    var formatter = new CompactKeyValueFormatter(entries);
-                    log = formatter.FormatLog(level);
+                    var formatter = new CompactKeyValueFormatter(level, entries);
+                    log = formatter.Format();
                 });
             
             var appender = new DefaultLogAppender(writer.Object, false, "class", "member", 0);

@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Anlog.Entries;
+using Anlog.Formatters.CompactKeyValue;
 
 namespace Anlog.Sinks
 {
@@ -53,16 +56,18 @@ namespace Anlog.Sinks
         }
 
         /// <inheritdoc />
-        public void Write(LogLevel level, string log)
+        public void Write(LogLevelName level, List<ILogEntry> entries)
         {
-            if (MinimumLevel.HasValue && MinimumLevel > level)
+            if (MinimumLevel.HasValue && MinimumLevel > level.Level)
             {
                 return;
             }
             
+            
             lock (locker)
             {
-                writer.WriteLine(log);
+                var formatter = new CompactKeyValueFormatter(level, entries);
+                writer.WriteLine(formatter.Format());
                 writer.Flush();
             }
         }

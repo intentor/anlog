@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
+using Anlog.Entries;
+using Anlog.Formatters.CompactKeyValue;
 
 namespace Anlog.Sinks.SingleFile
 {
@@ -36,7 +39,7 @@ namespace Anlog.Sinks.SingleFile
             asyncWriter = new AsyncWriter(log =>
             {
                 // Uses the maximum log level because if the log has been enqueued, it should be written.
-                sink.Write(LogLevel.Debug, log);
+                //sink.Write(LogLevel.Debug, log);
             });
             asyncWriter.Start();
         }
@@ -49,14 +52,15 @@ namespace Anlog.Sinks.SingleFile
         }
         
         /// <inheritdoc />
-        public void Write(LogLevel level, string log)
+        public void Write(LogLevelName level, List<ILogEntry> entries)
         { 
-            if (MinimumLevel.HasValue && MinimumLevel > level)
+            if (MinimumLevel.HasValue && MinimumLevel > level.Level)
             {
                 return;
             }
             
-            asyncWriter.Enqueue(log);  
+            var formatter = new CompactKeyValueFormatter(level, entries);
+            asyncWriter.Enqueue(formatter.Format());  
         }
     }
 }
