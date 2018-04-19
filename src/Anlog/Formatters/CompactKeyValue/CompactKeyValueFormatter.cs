@@ -30,13 +30,26 @@ namespace Anlog.Formatters.CompactKeyValue
         {
             this.entries = entries;
         }
-        
+
         /// <summary>
-        /// Formats a basic key value log entry.
-        /// <para/>
-        /// If the key is null, writes just the value.
+        /// Formats the date/time in the log.
         /// </summary>
-        /// <param name="entry">Log entry.</param>
+        /// <param name="date">Date/time to write to the log.</param>
+        public void FormatDate(DateTime date)
+        {
+            builder.Append(string.Concat(date.ToString(DateTimeFormat), EntrySeparator));
+        }
+
+        /// <summary>
+        /// Formats the log level in the log.
+        /// </summary>
+        /// <param name="levelName">Log level name details.</param>
+        public void FormatLevel(LogLevelName levelName)
+        {
+            builder.Append(string.Concat(ListOpening, levelName.Entry, ListClosing, EntrySeparator));
+        }
+        
+        /// <inheritdoc />
         public void FormatEntry(ILogEntry entry)
         {
             if (entry is LogEntry)
@@ -53,12 +66,7 @@ namespace Anlog.Formatters.CompactKeyValue
             }
         }
         
-        /// <summary>
-        /// Formats a basic key value log entry.
-        /// <para/>
-        /// If the key is null, writes just the value.
-        /// </summary>
-        /// <param name="entry">Log entry.</param>
+        /// <inheritdoc />
         public void FormatEntry(LogEntry entry)
         {
             if (entry.Key == null)
@@ -71,12 +79,7 @@ namespace Anlog.Formatters.CompactKeyValue
             }
         }
 
-        /// <summary>
-        /// Formats a log object entry.
-        /// </summary>
-        /// <para/>
-        /// If the key is null, writes just the values.
-        /// <param name="entry">Log entry.</param>
+        /// <inheritdoc />
         public void FormatEntry(LogObject entry)
         {
             if (entry.Key != null)
@@ -100,12 +103,7 @@ namespace Anlog.Formatters.CompactKeyValue
             builder.Append(ObjectClosing);
         }
 
-        /// <summary>
-        /// Formats a log list entry.
-        /// </summary>
-        /// <para/>
-        /// If the key is null, writes just the values.
-        /// <param name="entry">Log entry.</param>
+        /// <inheritdoc />
         public void FormatEntry(LogList entry)
         {
             if (entry.Key != null)
@@ -140,6 +138,9 @@ namespace Anlog.Formatters.CompactKeyValue
         /// <inheritdoc />
         public string FormatLog(LogLevelName levelName)
         {
+            FormatDate(DateTime.Now);
+            FormatLevel(levelName);
+            
             foreach (var entry in entries)
             {
                 FormatEntry(entry);
@@ -148,8 +149,7 @@ namespace Anlog.Formatters.CompactKeyValue
             }
             builder.Length--; // Removes the last separator.
 
-            return string.Concat(DateTime.Now.ToString(DateTimeFormat),  
-                EntrySeparator, ListOpening, levelName.Entry, ListClosing, EntrySeparator, builder.ToString());
+            return builder.ToString();
         }
     }
 }
