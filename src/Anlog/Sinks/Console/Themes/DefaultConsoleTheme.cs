@@ -9,21 +9,21 @@
         public string DefaultColor { get; } = "\x1b[38;5;250m";
         
         /// <inheritdoc />
-        public string LevelDebugColor { get; } = "\x1b[38;5;039m";
+        public string LevelDebugColor { get; } = "\x1b[38;5;014m";
         
         /// <inheritdoc />
-        public string LevelInfoColor { get; } = "\x1b[38;5;107m";
+        public string LevelInfoColor { get; } = "\x1b[38;5;034m";
         
         /// <inheritdoc />
-        public string LevelWarnColor { get; } = "\x1b[38;5;226m";
+        public string LevelWarnColor { get; } = "\x1b[38;5;228m";
         
         /// <inheritdoc />
         public string LevelErrorColor { get; } = "\x1b[38;5;196m";
         
         /// <inheritdoc />
-        public string KeyColor { get; } = "\x1b[38;5;158m";
+        public string KeyColor { get; } = "\x1b[1m\x1b[38;5;038m";
         
         /// <inheritdoc />
-        public string ValueColor { get; } = "\x1b[1m\x1b[38;5;038m";
+        public string ValueColor { get; } = "\x1b[38;5;158m";
     }
 }

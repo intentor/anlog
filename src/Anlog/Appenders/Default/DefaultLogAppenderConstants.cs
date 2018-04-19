@@ -9,11 +9,6 @@ namespace Anlog.Appenders.Default
     public static class DefaultLogAppenderConstants
     {
         /// <summary>
-        /// Caller key constant.
-        /// </summary>
-        internal const string CallerKey = "c";
-        
-        /// <summary>
         /// Unknown caller value.
         /// </summary>
         internal const string UnknownCallerValue = "unknowm";

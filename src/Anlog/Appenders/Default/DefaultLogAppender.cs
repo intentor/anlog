@@ -14,7 +14,6 @@ namespace Anlog.Appenders.Default
     /// </summary>
     public sealed class DefaultLogAppender : ILogAppender
     {
-
         /// <summary>
         /// Available Getters.
         /// </summary>
@@ -62,7 +61,7 @@ namespace Anlog.Appenders.Default
                     callerMemberName, CallerLineNumberSeparator, callerLineNumber);
             }
             
-            Append(CallerKey, caller);
+            Append(null, caller);
         }
         
         /// <inheritdoc />
