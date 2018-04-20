@@ -25,7 +25,7 @@ namespace Anlog.Tests
 
             var log = Log.GetSink<InMemorySink>()?.GetLogs();
             
-            Assert.Equal("c=TestConstructorLogModel.Constructor:13 key=value", log?.Substring(30));
+            Assert.Equal("TestConstructorLogModel.Constructor:13 key=value", log?.Substring(30));
         }
 
         [Fact]
@@ -68,7 +68,7 @@ namespace Anlog.Tests
 
             var log = logger.GetSink<InMemorySink>()?.GetLogs();
             
-            Assert.Equal("model={int=69 double=24.11 text=LogTest date=2018-03-25 23:00:00.000 shorts=[1,2,3,4,5]}", log?.Substring(40));
+            Assert.Equal("model={int=69 double=24.11 text=LogTest date=2018-03-25 23:00:00.000 shorts=[1,2,3,4,5]}", log?.Substring(38));
         }
 
         [Fact]
