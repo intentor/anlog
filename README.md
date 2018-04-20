@@ -60,7 +60,7 @@ namespace QuickStart
 }
 ```
 
-Log written: `2018-03-29 22:22:07.656 [INF] c=Program.Main:17 key=value`
+Log produced: `2018-03-29 22:22:07.656 [INF] Program.Main:17 key=value`
 
 ## Why Anlog?
 
