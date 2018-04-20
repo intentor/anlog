@@ -20,31 +20,31 @@ namespace Anlog.Appenders.Dummy
         }
 
         /// <inheritdoc />
-        public void Debug(string message = null)
+        public void Debug(string message = null, params object[] values)
         {
             // Does nothing.
         }
 
         /// <inheritdoc />
-        public void Info(string message = null)
+        public void Info(string message = null, params object[] values)
         {
             // Does nothing.
         }
 
         /// <inheritdoc />
-        public void Warn(string message = null)
+        public void Warn(string message = null, params object[] values)
         {
             // Does nothing.
         }
 
         /// <inheritdoc />
-        public void Error(string message = null)
+        public void Error(string message = null, params object[] values)
         {
             // Does nothing.
         }
 
         /// <inheritdoc />
-        public void Error(Exception e, string message = null)
+        public void Error(Exception e, string message = null, params object[] values)
         {
             // Does nothing.
         }

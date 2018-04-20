@@ -62,7 +62,80 @@ namespace Anlog.Tests.Appenders.Default
             
             appender.Append(key, value).Info();
             
-            Assert.Equal(expected, log.Substring(47));
+            Assert.Equal(expected, log.Substring(45));
+        }
+
+        [Theory]
+        [InlineData("Test {0:000}", 11, "d=Test 011", LogLevel.Debug)]
+        [InlineData("Test {0:000}", null, "d=Test {0:000}", LogLevel.Debug)]
+        [InlineData("{0}:Test", "24", "i=24:Test", LogLevel.Info)]
+        [InlineData("{0}:Test", null, "i={0}:Test", LogLevel.Info)]
+        [InlineData("Abc{0:0.0}", 1.234, "w=Abc1.2", LogLevel.Warn)]
+        [InlineData("Abc{0:0.0}", null, "w=Abc{0:0.0}", LogLevel.Warn)]
+        [InlineData("Err{0}Val", 666, "e=Err666Val", LogLevel.Error)]
+        [InlineData("Err{0}Val", null, "e=Err{0}Val", LogLevel.Error)]
+        public void WhenAppending_PerformMessageFormatting(string format, object value, string expected, 
+            LogLevel logLevel)
+        {
+            string log = null;
+            var writer = new Mock<ILogWriter>();
+            writer.Setup(m => m.Write(It.IsAny<LogLevelName>(), It.IsAny<List<ILogEntry>>()))
+                .Callback<LogLevelName, List<ILogEntry>>((level, entries) =>
+                {
+                    var formatter = new CompactKeyValueFormatter(level, entries);
+                    log = formatter.Format();
+                });
+            
+            var appender = new DefaultLogAppender(writer.Object, false, "class", "member", 0);
+
+            switch (logLevel)
+            {
+                case LogLevel.Debug:
+                    if (value == null)
+                    {
+                        appender.Debug(format);
+                    }
+                    else
+                    {
+                        appender.Debug(format, value);
+                    }
+                    break;
+                
+                case LogLevel.Info:
+                    if (value == null)
+                    {
+                        appender.Info(format);
+                    }
+                    else
+                    {
+                        appender.Info(format, value);
+                    }
+                    break;
+                
+                case LogLevel.Warn:
+                    if (value == null)
+                    {
+                        appender.Warn(format);
+                    }
+                    else
+                    {
+                        appender.Warn(format, value);
+                    }
+                    break;
+                
+                case LogLevel.Error:
+                    if (value == null)
+                    {
+                        appender.Error(format);
+                    }
+                    else
+                    {
+                        appender.Error(format, value);
+                    }
+                    break;
+            }
+            
+            Assert.Equal(expected, log.Substring(45));
         }
     }
 }

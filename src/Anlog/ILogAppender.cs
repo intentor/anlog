@@ -28,30 +28,35 @@ namespace Anlog
         /// Writes the log as debug.
         /// </summary>
         /// <param name="message">Log message.</param>
-        void Debug(string message = null);
+        /// <param name="values">Format values for the message.</param>
+        void Debug(string message = null, params object[] values);
         /// <summary>
         /// Writes the log as information.
         /// </summary>
         /// <param name="message">Log message.</param>
-        void Info(string message = null);
+        /// <param name="values">Format values for the message.</param>
+        void Info(string message = null, params object[] values);
 
         /// <summary>
         /// Writes the log as warning.
         /// </summary>
         /// <param name="message">Log message.</param>
-        void Warn(string message = null);
+        /// <param name="values">Format values for the message.</param>
+        void Warn(string message = null, params object[] values);
 
         /// <summary>
         /// Writes the log as error.
         /// </summary>
         /// <param name="message">Log message.</param>
-        void Error(string message = null);
+        /// <param name="values">Format values for the message.</param>
+        void Error(string message = null, params object[] values);
 
         /// <summary>
         /// Writes the log as error.
         /// </summary>
         /// <param name="e">Exception details.</param>
         /// <param name="message">Log message.</param>
-        void Error(Exception e, string message = null);
+        /// <param name="values">Format values for the message.</param>
+        void Error(Exception e, string message = null, params object[] values);
     }
 }

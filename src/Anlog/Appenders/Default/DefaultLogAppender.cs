@@ -80,33 +80,33 @@ namespace Anlog.Appenders.Default
         }
 
         /// <inheritdoc />
-        public void Debug(string message = null)
+        public void Debug(string message = null, params object[] values)
         {
-            Write(LogLevelNames.Debug, message);
+            Write(LogLevelNames.Debug, message, values);
         }
 
         /// <inheritdoc />
-        public void Info(string message = null)
+        public void Info(string message = null, params object[] values)
         {
-            Write(LogLevelNames.Info, message);
+            Write(LogLevelNames.Info, message, values);
         }
 
         /// <inheritdoc />
-        public void Warn(string message = null)
+        public void Warn(string message = null, params object[] values)
         {
-            Write(LogLevelNames.Warn, message);
+            Write(LogLevelNames.Warn, message, values);
         }
 
         /// <inheritdoc />
-        public void Error(string message = null)
+        public void Error(string message = null, params object[] values)
         {
-            Write(LogLevelNames.Error, message, null);
+            Write(LogLevelNames.Error, message, values);
         }
 
         /// <inheritdoc />
-        public void Error(Exception e, string message = null)
+        public void Error(Exception e, string message = null, params object[] values)
         {
-            Write(LogLevelNames.Error, message, e);
+            Write(LogLevelNames.Error, message, values, e);
         }
 
         /// <summary>
@@ -187,11 +187,17 @@ namespace Anlog.Appenders.Default
         /// </summary>
         /// <param name="level">Log level.</param>
         /// <param name="message">Log message.</param>
+        /// <param name="values">Message format values.</param>
         /// <param name="e">Log exception</param>
-        private void Write(LogLevelName level, string message, Exception e = null)
+        private void Write(LogLevelName level, string message, object[] values, Exception e = null)
         {
             if (!string.IsNullOrEmpty(message))
             {
+                if (values.Length > 0)
+                {
+                    message = string.Format(message, values);
+                }
+                
                 entries.Add(new LogEntry(level.Key, message));
             }
             
