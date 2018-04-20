@@ -12,7 +12,7 @@
         public string LevelDebugColor { get; } = "\x1b[38;5;014m";
         
         /// <inheritdoc />
-        public string LevelInfoColor { get; } = "\x1b[38;5;034m";
+        public string LevelInfoColor { get; } = "\x1b[38;5;035m";
         
         /// <inheritdoc />
         public string LevelWarnColor { get; } = "\x1b[38;5;228m";
