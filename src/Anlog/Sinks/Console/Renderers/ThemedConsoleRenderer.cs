@@ -72,10 +72,7 @@ namespace Anlog.Sinks.Console.Renderers
         /// <inheritdoc />
         public override void FormatEntry(LogEntry entry)
         {
-            if (!string.IsNullOrEmpty(entry.Key))
-            {
-                entry.Key = string.Concat(theme.KeyColor, entry.Key, ResetColor);
-            }
+            FormatKey(entry);
             
             if (!string.IsNullOrEmpty(entry.Value))
             {
@@ -83,6 +80,32 @@ namespace Anlog.Sinks.Console.Renderers
             }
 
             base.FormatEntry(entry);
+        }
+
+        /// <inheritdoc />
+        public override void FormatEntry(LogObject entry)
+        {
+            FormatKey(entry);
+            base.FormatEntry(entry);
+        }
+
+        /// <inheritdoc />
+        public override void FormatEntry(LogList entry)
+        {
+            FormatKey(entry);
+            base.FormatEntry(entry);
+        }
+
+        /// <summary>
+        /// Formats a key.
+        /// </summary>
+        /// <param name="entry">Key entry.</param>
+        private void FormatKey(ILogEntry entry)
+        {
+            if (!string.IsNullOrEmpty(entry.Key))
+            {
+                entry.Key = string.Concat(theme.KeyColor, entry.Key, ResetColor);
+            }
         }
     }
 }

@@ -15,12 +15,12 @@ namespace Anlog.Formatters.CompactKeyValue
         /// <summary>
         /// Log level name details.
         /// </summary>
-        private LogLevelName logLevelName;
+        private readonly LogLevelName logLevelName;
         
         /// <summary>
         /// Log entries.
         /// </summary>
-        private List<ILogEntry> entries;
+        private readonly List<ILogEntry> entries;
 
         /// <summary>
         /// String Builder used to write logs.
@@ -76,7 +76,7 @@ namespace Anlog.Formatters.CompactKeyValue
         /// <inheritdoc />
         public virtual void FormatEntry(LogEntry entry)
         {
-            if (entry.Key == null)
+            if (string.IsNullOrEmpty(entry.Key))
             {
                 Builder.Append(entry.Value);
             }
@@ -89,7 +89,7 @@ namespace Anlog.Formatters.CompactKeyValue
         /// <inheritdoc />
         public virtual void FormatEntry(LogObject entry)
         {
-            if (entry.Key != null)
+            if (!string.IsNullOrEmpty(entry.Key))
             {
                 Builder.Append(string.Concat(entry.Key, KeyValueSeparator));
             }
@@ -113,7 +113,7 @@ namespace Anlog.Formatters.CompactKeyValue
         /// <inheritdoc />
         public virtual void FormatEntry(LogList entry)
         {
-            if (entry.Key != null)
+            if (!string.IsNullOrEmpty(entry.Key))
             {
                 Builder.Append(string.Concat(entry.Key, KeyValueSeparator));
             }
