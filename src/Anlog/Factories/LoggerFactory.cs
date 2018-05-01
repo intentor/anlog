@@ -1,5 +1,4 @@
 ﻿using System;
-using Anlog.Formatters.CompactKeyValue;
 using Anlog.Loggers;
 
 namespace Anlog.Factories
@@ -16,11 +15,6 @@ namespace Anlog.Factories
         /// Please note that every sink can also have its own minimum level.
         /// </remarks>
         public MinimumLevelFactory MinimumLevel { get; }
-        
-        /// <summary>
-        /// Formats the logs with the given formatter.
-        /// </summary>
-        public LogFormatterFactory FormatAs { get; }
 
         /// <summary>
         /// Writes the logs to a given output.
@@ -48,7 +42,6 @@ namespace Anlog.Factories
             this.loggerType = loggerType;
 
             MinimumLevel = new MinimumLevelFactory(this);
-            FormatAs = new LogFormatterFactory(this);
             WriteTo = new LogSinksFactory(this);
         }
         

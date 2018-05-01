@@ -141,13 +141,7 @@ Formats the key/value entries using a compact approach.
 
 `2018-03-29 22:22:07.656 [INF] c=Program.Main:17 key=value`.
 
-This is the default formatter.
-
-```cs
-Log.Logger = new LoggerFactory()
-    .FormatAs.CompactKeyValue()
-    .CreateLogger();
-```
+This is the default formatter and no configuration is required for using it.
 
 #### Formats
 
