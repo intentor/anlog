@@ -67,16 +67,16 @@ namespace Anlog.Tests.Appenders.Default
         }
 
         [Theory]
-        [InlineData("Test {0:000}", 11, "d=Test 011", LogLevel.Debug)]
-        [InlineData("Test {0:000}", null, "d=Test {0:000}", LogLevel.Debug)]
-        [InlineData("{0}:Test", "24", "i=24:Test", LogLevel.Info)]
-        [InlineData("{0}:Test", null, "i={0}:Test", LogLevel.Info)]
-        [InlineData("Abc{0:0.0}", 1.234, "w=Abc1.2", LogLevel.Warn)]
-        [InlineData("Abc{0:0.0}", null, "w=Abc{0:0.0}", LogLevel.Warn)]
-        [InlineData("Err{0}Val", 666, "e=Err666Val", LogLevel.Error)]
-        [InlineData("Err{0}Val", null, "e=Err{0}Val", LogLevel.Error)]
-        public void WhenAppending_PerformMessageFormatting(string format, object value, string expected, 
-            LogLevel logLevel)
+        [InlineData("Test {0:000}", 11, "d=Test 011", "[DBG]", LogLevel.Debug)]
+        [InlineData("Test {0:000}", null, "d=Test {0:000}", "[DBG]", LogLevel.Debug)]
+        [InlineData("{0}:Test", "24", "i=24:Test", "[INF]", LogLevel.Info)]
+        [InlineData("{0}:Test", null, "i={0}:Test", "[INF]", LogLevel.Info)]
+        [InlineData("Abc{0:0.0}", 1.234, "w=Abc1.2", "[WRN]", LogLevel.Warn)]
+        [InlineData("Abc{0:0.0}", null, "w=Abc{0:0.0}", "[WRN]", LogLevel.Warn)]
+        [InlineData("Err{0}Val", 666, "e=Err666Val", "[ERR]", LogLevel.Error)]
+        [InlineData("Err{0}Val", null, "e=Err{0}Val", "[ERR]", LogLevel.Error)]
+        public void WhenAppending_PerformMessageFormatting(string format, object value, string expectedLog, 
+            string expectedLevel, LogLevel logLevel)
         {
             string log = null;
             var writer = new Mock<ILogWriter>();
@@ -136,7 +136,8 @@ namespace Anlog.Tests.Appenders.Default
                     break;
             }
             
-            Assert.Equal(expected, log.Substring(45));
+            Assert.Equal(expectedLevel, log.Substring(24, 5));
+            Assert.Equal(expectedLog, log.Substring(45));
         }
     }
 }
