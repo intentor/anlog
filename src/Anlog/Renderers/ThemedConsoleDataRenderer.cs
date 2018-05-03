@@ -98,6 +98,15 @@ namespace Anlog.Renderers
         }
 
         /// <inheritdoc />
+        public IDataRenderer RenderException(string value)
+        {
+            builder.Append(theme.ExceptionColor);
+            builder.Append(value);
+            builder.Append(ResetColor);
+            return this;
+        }
+
+        /// <inheritdoc />
         public IDataRenderer RenderInvariant(string invariant)
         {
             builder.Append(invariant);

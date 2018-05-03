@@ -41,6 +41,13 @@ namespace Anlog.Renderers
         }
 
         /// <inheritdoc />
+        public IDataRenderer RenderException(string value)
+        {
+            builder.Append(value);
+            return this;
+        }
+
+        /// <inheritdoc />
         public IDataRenderer RenderInvariant(string invariant)
         {
             builder.Append(invariant);

@@ -79,6 +79,15 @@ namespace Anlog.Tests.Renderers
         }
 
         [Fact]
+        public void WhenRenderException_RenderData()
+        {
+            var value = Guid.NewGuid().ToString();
+            var rendering = renderer.RenderException(value).Render();
+            
+            Assert.Equal(string.Concat(ConsoleTheme.ExceptionColor, value, ResetColor), rendering);
+        }
+
+        [Fact]
         public void WhenRenderInvariant_RenderData()
         {
             var invariant = Guid.NewGuid().ToString();

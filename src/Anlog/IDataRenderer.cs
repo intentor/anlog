@@ -37,6 +37,13 @@
         IDataRenderer RenderValue(string value);
 
         /// <summary>
+        /// Renders exception details.
+        /// </summary>
+        /// <param name="value">Exception details.</param>
+        /// <returns>Current renderer, for chaining.</returns>
+        IDataRenderer RenderException(string value);
+
+        /// <summary>
         /// Renders an invariant data.
         /// </summary>
         /// <param name="invariant">Invariant data.</param>

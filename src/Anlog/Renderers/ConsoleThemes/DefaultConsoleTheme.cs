@@ -25,5 +25,8 @@
         
         /// <inheritdoc />
         public string ValueColor { get; } = "\x1b[38;5;158m";
+        
+        /// <inheritdoc />
+        public string ExceptionColor { get; } = "\x1b[38;5;196m";
     }
 }

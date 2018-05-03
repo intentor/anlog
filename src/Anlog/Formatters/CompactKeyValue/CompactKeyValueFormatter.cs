@@ -70,6 +70,10 @@ namespace Anlog.Formatters.CompactKeyValue
             {
                 FormatEntry((LogList) entry, renderer);
             }
+            else if (entry is LogException)
+            {
+                FormatEntry((LogException) entry, renderer);
+            }
         }
         
         /// <summary>
@@ -161,6 +165,18 @@ namespace Anlog.Formatters.CompactKeyValue
             }
 
             renderer.RenderInvariant(ListClosing);
+        }
+
+        /// <summary>
+        /// Formats the log level in the log.
+        /// </summary>
+        /// <param name="entry">Log entry.</param>
+        /// <param name="renderer">Renderer for log data.</param>
+        private void FormatEntry(LogException entry, IDataRenderer renderer)
+        {
+            renderer.RemoveLastCharacter() // Always remove the last entry separator.
+                .RenderInvariant(Environment.NewLine)
+                .RenderException(entry.Details);
         }
     }
 }

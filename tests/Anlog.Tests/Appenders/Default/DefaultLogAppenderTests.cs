@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Anlog.Appenders.Default;
 using Anlog.Entries;
 using Anlog.Formatters.CompactKeyValue;
@@ -14,6 +15,29 @@ namespace Anlog.Tests.Appenders.Default
     /// </summary>
     public class DefaultLogAppenderTests
     {
+        /// <summary>
+        /// Object to test.
+        /// </summary>
+        private readonly DefaultLogAppender appender;
+
+        /// <summary>
+        /// Log written from the appender.
+        /// </summary>
+        private string log;
+        
+        public DefaultLogAppenderTests()
+        {
+            var writer = new Mock<ILogWriter>();
+            writer.Setup(m => m.Write(It.IsAny<LogLevelName>(), It.IsAny<List<ILogEntry>>()))
+                .Callback<LogLevelName, List<ILogEntry>>((level, entries) =>
+                {
+                    var formatter = new CompactKeyValueFormatter();
+                    log = formatter.Format(level, entries, new DefaultDataRenderer());
+                });
+            
+            appender = new DefaultLogAppender(writer.Object, false, "class", "member", 0);
+        }
+        
         /// <summary>
         /// Log append data used in tests.
         /// </summary>
@@ -50,17 +74,6 @@ namespace Anlog.Tests.Appenders.Default
         [MemberData(nameof(LogAppendData))]
         public void WhenAppending_WritesCompactKeyValue(string key, object value, string expected)
         {
-            string log = null;
-            var writer = new Mock<ILogWriter>();
-            writer.Setup(m => m.Write(It.IsAny<LogLevelName>(), It.IsAny<List<ILogEntry>>()))
-                .Callback<LogLevelName, List<ILogEntry>>((level, entries) =>
-                {
-                    var formatter = new CompactKeyValueFormatter();
-                    log = formatter.Format(level, entries, new DefaultDataRenderer());
-                });
-            
-            var appender = new DefaultLogAppender(writer.Object, false, "class", "member", 0);
-            
             appender.Append(key, value).Info();
             
             Assert.Equal(expected, log.Substring(45));
@@ -78,17 +91,6 @@ namespace Anlog.Tests.Appenders.Default
         public void WhenAppending_PerformMessageFormatting(string format, object value, string expectedLog, 
             string expectedLevel, LogLevel logLevel)
         {
-            string log = null;
-            var writer = new Mock<ILogWriter>();
-            writer.Setup(m => m.Write(It.IsAny<LogLevelName>(), It.IsAny<List<ILogEntry>>()))
-                .Callback<LogLevelName, List<ILogEntry>>((level, entries) =>
-                {
-                    var formatter = new CompactKeyValueFormatter();
-                    log = formatter.Format(level, entries, new DefaultDataRenderer());
-                });
-            
-            var appender = new DefaultLogAppender(writer.Object, false, "class", "member", 0);
-
             switch (logLevel)
             {
                 case LogLevel.Debug:
@@ -138,6 +140,57 @@ namespace Anlog.Tests.Appenders.Default
             
             Assert.Equal(expectedLevel, log.Substring(24, 5));
             Assert.Equal(expectedLog, log.Substring(45));
+        }
+        
+        [Fact]
+        public void WhenLoggingExceptionWithMessage_WritesCompactKeyValue()
+        {
+            appender.Error(new ArgumentException("Param invalid", "Param"), "Some error message");
+            
+            Assert.Equal("[ERR]", log.Substring(24, 5));
+            Assert.Equal(" e=Some error message\nSystem.ArgumentException: Param invalid\nParameter name: Param", 
+                log.Substring(44));
+        }
+        
+        [Fact]
+        public void WhenLoggingExceptionWithoutMessage_WritesCompactKeyValue()
+        {
+            appender.Error(new ArgumentException("Param invalid", "Param"));
+            
+            Assert.Equal("[ERR]", log.Substring(24, 5));
+            Assert.Equal("\nSystem.ArgumentException: Param invalid\nParameter name: Param", log.Substring(44));
+        }
+        
+        [Fact]
+        public void WhenLoggingExceptionWithStackTrace_WritesWithStacktrace()
+        {
+            try
+            {
+                // Throw an exception to generate stack trace.
+                throw new ArgumentException("Param invalid", "Param");
+            }
+            catch (Exception e)
+            {
+                appender.Error(e, "Some error message");
+            }
+            var l = " e=Some error message\nSystem.ArgumentException: Param invalid\nParameter name: Param\n   at Anlog.Tests.Formatters.CompactKeyValueFormatterTests.WhenLoggingExceptionWithStackTrace_WritesWithStacktrace()".Length;
+            
+            Assert.Equal("[ERR]", log.Substring(24, 5));
+            Assert.True(log.Length > 246);
+            Assert.Equal(" e=Some error message\nSystem.ArgumentException: Param invalid\n" 
+                + "Parameter name: Param\n   at Anlog.Tests.Appenders.Default.DefaultLogAppenderTests."
+                + "WhenLoggingExceptionWithStackTrace_WritesWithStacktrace()", 
+                log.Substring(44, 201));
+        }
+        
+        [Fact]
+        public void WhenLoggingExceptionWithNoStackTrace_WritesWithNoStacktrace()
+        {
+            appender.Error(new ArgumentException("Param invalid", "Param"), "Some error message");
+            
+            Assert.Equal("[ERR]", log.Substring(24, 5));
+            Assert.Equal(" e=Some error message\nSystem.ArgumentException: Param invalid\nParameter name: Param", 
+                log.Substring(44));
         }
     }
 }

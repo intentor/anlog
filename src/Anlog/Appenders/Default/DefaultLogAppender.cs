@@ -203,9 +203,7 @@ namespace Anlog.Appenders.Default
             
             if (e != null)
             {
-                var details = string.Concat(e.ToString(),
-                    !string.IsNullOrEmpty(e.StackTrace) ? Environment.NewLine + e.StackTrace : string.Empty);
-                entries.Add(new LogEntry(null, details));
+                entries.Add(new LogException(e));
             }
             
             writer.Write(level, entries);

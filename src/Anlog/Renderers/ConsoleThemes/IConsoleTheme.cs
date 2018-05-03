@@ -39,5 +39,10 @@
         /// Color for values on key/value pairs.
         /// </summary>
         string ValueColor { get; }
+        
+        /// <summary>
+        /// Color for exception details.
+        /// </summary>
+        string ExceptionColor { get; }
     }
 }
