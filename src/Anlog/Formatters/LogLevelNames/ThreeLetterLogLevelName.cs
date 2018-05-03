@@ -1,9 +1,9 @@
-﻿namespace Anlog.Formatters
+﻿namespace Anlog.Formatters.LogLevelNames
 {
     /// <summary>
-    /// Default log level details.
+    /// Three letter log level details.
     /// </summary>
-    public class DefaultLogLevelName : ILogLevelName
+    public class ThreeLetterLogLevelName : ILogLevelName
     {
         /// <inheritdoc />
         public LogLevelName Debug { get; }
@@ -18,9 +18,9 @@
         public LogLevelName Error { get; }
         
         /// <summary>
-        /// Initializes a new instance of <see cref="DefaultLogLevelName"/>.
+        /// Initializes a new instance of <see cref="ThreeLetterLogLevelName"/>.
         /// </summary>
-        public DefaultLogLevelName()
+        public ThreeLetterLogLevelName()
         {
             Debug = new LogLevelName()
             {

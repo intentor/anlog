@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
+using Anlog.Entries;
 
 namespace Anlog.Sinks
 {
@@ -11,14 +13,30 @@ namespace Anlog.Sinks
     public class AsyncWriter : IDisposable
     {
         /// <summary>
+        /// Data to write to the log.
+        /// </summary>
+        public class WriterData
+        {
+            /// <summary>
+            /// Log level name.
+            /// </summary>
+            public LogLevelName LevelName { get; set; }
+            
+            /// <summary>
+            /// Log entries.
+            /// </summary>
+            public List<ILogEntry> Entries { get; set; }
+        }
+        
+        /// <summary>
         /// Log queue.
         /// </summary>
-        private ConcurrentQueue<string> queue;
+        private ConcurrentQueue<WriterData> queue;
 
         /// <summary>
         /// Writing action.
         /// </summary>
-        private Action<string> writer;
+        private Action<LogLevelName, List<ILogEntry>> writer;
 
         /// <summary>
         /// Background worker thread.
@@ -29,10 +47,10 @@ namespace Anlog.Sinks
         /// Initializes a new instance of <see cref="AsyncWriter"/>.
         /// </summary>
         /// <param name="writer">Writer function.</param>
-        public AsyncWriter(Action<string> writer)
+        public AsyncWriter(Action<LogLevelName, List<ILogEntry>> writer)
         {
             this.writer = writer;
-            queue = new ConcurrentQueue<string>();
+            queue = new ConcurrentQueue<WriterData>();
             worker = new BackgroundWorker()
             {
                 WorkerSupportsCancellation = true
@@ -66,10 +84,15 @@ namespace Anlog.Sinks
         /// <summary>
         /// Enqueue the log.
         /// </summary>
-        /// <param name="log">Log to write.</param>
-        public void Enqueue(string log)
+        /// <param name="logLevelName">Log level.</param>
+        /// <param name="entries">Log entries.</param>
+        public void Enqueue(LogLevelName logLevelName, List<ILogEntry> entries)
         { 
-            queue.Enqueue(log);
+            queue.Enqueue(new WriterData()
+            {
+                LevelName = logLevelName,
+                Entries = entries
+            });
         }
 
         /// <summary>
@@ -79,9 +102,9 @@ namespace Anlog.Sinks
         {
             if (queue.Count > 0)
             {
-                while (queue.TryDequeue(out string value))
+                while (queue.TryDequeue(out WriterData data))
                 {
-                    writer(value);
+                    writer(data.LevelName, data.Entries);
                 }
             }
         }

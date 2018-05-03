@@ -37,7 +37,10 @@ namespace Anlog.Sinks.Console
             Formatter = formatter;
             this.renderer = renderer;
             
-            asyncWriter = new AsyncWriter(System.Console.WriteLine);
+            asyncWriter = new AsyncWriter((level, entries) =>
+            {
+                System.Console.WriteLine(Formatter.Format(level, entries, renderer()));
+            });
             asyncWriter.Start();
         }
 
@@ -55,7 +58,7 @@ namespace Anlog.Sinks.Console
                 return;
             }
             
-            asyncWriter.Enqueue(Formatter.Format(level, entries, renderer()));
+            asyncWriter.Enqueue(level, entries);
         }
     }
 }

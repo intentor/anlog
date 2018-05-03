@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Anlog.Entries;
+using static Anlog.Formatters.DefaultFormattingOptions;
 
 namespace Anlog.Sinks.SingleFile
 {
@@ -49,10 +50,9 @@ namespace Anlog.Sinks.SingleFile
             
             sink = new FileSink(Formatter, renderer, logFilePath, encoding, bufferSize);
             
-            asyncWriter = new AsyncWriter(log =>
+            asyncWriter = new AsyncWriter((level, entries) =>
             {
-                // Uses the maximum log level because if the log has been enqueued, it should be written.
-                //sink.Write(LogLevel.Debug, log);
+                sink.Write(level, entries);
             });
             asyncWriter.Start();
         }
@@ -72,7 +72,7 @@ namespace Anlog.Sinks.SingleFile
                 return;
             }
             
-            asyncWriter.Enqueue(Formatter.Format(level, entries, renderer()));  
+            asyncWriter.Enqueue(level, entries);  
         }
     }
 }

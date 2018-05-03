@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Anlog.Entries;
 using Anlog.Formatters;
+using Anlog.Formatters.LogLevelNames;
 using Anlog.Tests.TestObjects.Models;
 
 namespace Anlog.Tests.TestObjects
@@ -50,7 +51,7 @@ namespace Anlog.Tests.TestObjects
         /// <summary>
         /// Generic log level names.
         /// </summary>
-        public static readonly ILogLevelName GenericLogLevelName = new DefaultLogLevelName();
+        public static readonly ILogLevelName GenericLogLevelName = new ThreeLetterLogLevelName();
         
         /// <summary>
         /// Test string key/value pair.

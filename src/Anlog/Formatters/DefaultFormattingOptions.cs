@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using Anlog.Formatters.LogLevelNames;
 
 namespace Anlog.Formatters
 {
@@ -20,6 +21,6 @@ namespace Anlog.Formatters
         /// <summary>
         /// Log levels details.
         /// </summary>
-        public static readonly ILogLevelName DefaultLogLevelName = new DefaultLogLevelName();
+        public static readonly ILogLevelName DefaultLogLevelName = new ThreeLetterLogLevelName();
     }
 }
