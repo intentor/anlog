@@ -1,4 +1,4 @@
-﻿namespace Anlog.Sinks.Console.Themes
+﻿namespace Anlog.Renderers.ConsoleThemes
 {
     /// <summary>
     /// Default console theme.

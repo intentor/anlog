@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Anlog.Entries;
-using Anlog.Formatters.CompactKeyValue;
-using Anlog.Sinks.Console.Renderers;
-using Anlog.Sinks.Console.Themes;
 
 namespace Anlog.Sinks.Console
 {
@@ -15,19 +13,24 @@ namespace Anlog.Sinks.Console
     {
         /// <inheritdoc />
         public LogLevel? MinimumLevel { get; set; }
+        
+        /// <inheritdoc />
+        public ILogFormatter Formatter { get; }
 
         /// <summary>
-        /// Output theme.
+        /// Renderer factory method.
         /// </summary>
-        private IConsoleTheme theme;
+        private Func<IDataRenderer> renderer;
 
         /// <summary>
         /// Initiliazes a new instance of <see cref="ConsoleSink"/>.
         /// </summary>
-        /// <param name="theme">Output theme.</param>
-        public ConsoleSink(IConsoleTheme theme)
+        /// <param name="formatter">Log formatter.</param>
+        /// <param name="renderer">Renderer factory method.</param>
+        public ConsoleSink(ILogFormatter formatter, Func<IDataRenderer> renderer)
         {
-            this.theme = theme;
+            Formatter = formatter;
+            this.renderer = renderer;
         }
         
         /// <inheritdoc />
@@ -38,8 +41,7 @@ namespace Anlog.Sinks.Console
                 return;
             }
             
-            var formatter = new ThemedConsoleRenderer(theme, level, entries);
-            System.Console.WriteLine(formatter.Format());
+            System.Console.WriteLine(Formatter.Format(level, entries, renderer()));
         }
     }
 }

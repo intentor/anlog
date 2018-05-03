@@ -1,4 +1,6 @@
 ﻿using System.IO;
+using Anlog.Formatters.CompactKeyValue;
+using Anlog.Renderers;
 using Anlog.Sinks;
 using Anlog.Tests.TestObjects;
 using Xunit;
@@ -18,13 +20,13 @@ namespace Anlog.Tests.Sinks
             {
                 var path = temp.GetLogFilePath();
 
-                using (var sink = new FileSink(path))
+                using (var sink = CreateSink(path))
                 {
-                    //sink.Write(LogLevel.Debug, GenericLog);
+                    sink.Write(GenericLogLevelName.Debug, GenericLogEntries);
                 }
 
                 var contents = File.ReadAllLines(path);
-                Assert.Equal(GenericLog, contents[0]);
+                Assert.Equal(GenericLogText, contents[0].Substring(30));
             }
         }
         
@@ -35,20 +37,30 @@ namespace Anlog.Tests.Sinks
             {
                 var path = temp.GetLogFilePath();
 
-                using (var sink = new FileSink(path))
+                using (var sink = CreateSink(path))
                 {
-                    //sink.Write(LogLevel.Debug, GenericLog + "1");
+                    sink.Write(GenericLogLevelName.Debug, GenericLogEntries);
                 }
 
-                using (var sink = new FileSink(path))
+                using (var sink = CreateSink(path))
                 {
-                    //sink.Write(LogLevel.Debug, GenericLog + "2");
+                    sink.Write(GenericLogLevelName.Debug, GenericLogEntries);
                 }
 
                 var contents = File.ReadAllLines(path);
-                Assert.Equal(GenericLog + "1", contents[0]);
-                Assert.Equal(GenericLog + "2", contents[1]);
+                Assert.Equal(GenericLogText, contents[0].Substring(30));
+                Assert.Equal(GenericLogText, contents[1].Substring(30));
             }
+        }
+
+        /// <summary>
+        /// Creates a file sink for tests.
+        /// </summary>
+        /// <param name="path">Log path.</param>
+        /// <returns>Created sink.</returns>
+        private FileSink CreateSink(string path)
+        {
+            return new FileSink(new CompactKeyValueFormatter(), () => new DefaultDataRenderer(), path);
         }
     }
 }

@@ -10,16 +10,16 @@ namespace Anlog.Formatters
         /// <summary>
         /// Date/time format.
         /// </summary>
-        public static string DateTimeFormat { get; set; } = "yyyy-MM-dd HH:mm:ss.fff";
+        public static string DefaultDateTimeFormat { get; set; } = "yyyy-MM-dd HH:mm:ss.fff";
         
         /// <summary>
-        /// Culture details.
+        /// DefaultCulture details.
         /// </summary>
-        public static CultureInfo Culture { get; set; } = CultureInfo.InvariantCulture;
+        public static CultureInfo DefaultCulture { get; set; } = CultureInfo.InvariantCulture;
 
         /// <summary>
         /// Log levels details.
         /// </summary>
-        public static readonly ILogLevelName LogLevelNames = new DefaultLogLevelName();
+        public static readonly ILogLevelName DefaultLogLevelName = new DefaultLogLevelName();
     }
 }

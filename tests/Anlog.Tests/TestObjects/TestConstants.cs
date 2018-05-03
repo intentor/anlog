@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Anlog.Entries;
+using Anlog.Formatters;
 using Anlog.Tests.TestObjects.Models;
 
 namespace Anlog.Tests.TestObjects
@@ -9,11 +11,6 @@ namespace Anlog.Tests.TestObjects
     /// </summary>
     public static class TestConstants
     {
-        /// <summary>
-        /// Test model type.
-        /// </summary>
-        public static readonly Type TestModelType = typeof(TestDataContractModel);
-
         /// <summary>
         /// Test model instance with data contract attribute.
         /// </summary>
@@ -39,7 +36,21 @@ namespace Anlog.Tests.TestObjects
         /// <summary>
         /// Generic log text.
         /// </summary>
-        public const string GenericLog = "2018-03-28 00:13 [INF] key=value";
+        public const string GenericLogText = "key1=value1 key2=value2";
+
+        /// <summary>
+        /// Generic log entries.
+        /// </summary>
+        public static readonly List<ILogEntry> GenericLogEntries = new List<ILogEntry>()
+        {
+            new LogEntry("key1", "value1"),
+            new LogEntry("key2", "value2")
+        };
+        
+        /// <summary>
+        /// Generic log level names.
+        /// </summary>
+        public static readonly ILogLevelName GenericLogLevelName = new DefaultLogLevelName();
         
         /// <summary>
         /// Test string key/value pair.

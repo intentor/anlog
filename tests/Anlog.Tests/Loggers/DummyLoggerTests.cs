@@ -1,7 +1,7 @@
 ﻿using Anlog.Loggers;
 using Xunit;
 
-namespace Anlog.Tests
+namespace Anlog.Tests.Loggers
 {
     /// <summary>
     /// Tests for the dummy logger.

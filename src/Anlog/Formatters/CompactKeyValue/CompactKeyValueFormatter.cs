@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using Anlog.Entries;
 using static Anlog.Formatters.CompactKeyValue.CompactKeyValueFormatterConstants;
 using static Anlog.Formatters.DefaultFormattingOptions;
@@ -10,115 +9,137 @@ namespace Anlog.Formatters.CompactKeyValue
     /// <summary>
     /// Formats a list of log entries.
     /// </summary>
-    public class CompactKeyValueFormatter : ILogFormatter
+    public sealed class CompactKeyValueFormatter : ILogFormatter
     {
-        /// <summary>
-        /// Log level name details.
-        /// </summary>
-        private readonly LogLevelName logLevelName;
-        
-        /// <summary>
-        /// Log entries.
-        /// </summary>
-        private readonly List<ILogEntry> entries;
-
-        /// <summary>
-        /// String Builder used to write logs.
-        /// </summary>
-        public StringBuilder Builder { get; } = new StringBuilder();
-        
-        /// <summary>
-        /// Initializes a new instance of <see cref="CompactKeyValueFormatter"/>.
-        /// </summary>
-        /// <param name="level">Log level name details.</param>
-        /// <param name="entries">Entries to format.</param>
-        public CompactKeyValueFormatter(LogLevelName level, List<ILogEntry> entries)
+        /// <inheritdoc />
+        public string Format(LogLevelName level, List<ILogEntry> entries, IDataRenderer renderer)
         {
-            logLevelName = level;
-            this.entries = entries;
-        }
+            FormatDate(DateTime.Now, renderer);
+            FormatLevel(level, renderer);
+            
+            foreach (var entry in entries)
+            {
+                FormatEntry(entry, renderer);
+                renderer.RenderInvariant(EntrySeparator);
+            }
+            renderer.RemoveLastCharacter(); // Removes the last separator.
 
+            return renderer.Render();
+        }
+        
         /// <summary>
         /// Formats the date/time in the log.
         /// </summary>
         /// <param name="date">Date/time to write to the log.</param>
-        public virtual void FormatDate(DateTime date)
+        /// <param name="renderer">Renderer for log data.</param>
+        public void FormatDate(DateTime date, IDataRenderer renderer)
         {
-            Builder.Append(string.Concat(date.ToString(DateTimeFormat), EntrySeparator));
+            renderer.RenderDate(date.ToString(DefaultDateTimeFormat))
+                .RenderInvariant(EntrySeparator);
         }
 
         /// <summary>
         /// Formats the log level in the log.
         /// </summary>
         /// <param name="level">Log level name details.</param>
-        public virtual void FormatLevel(LogLevelName level)
+        /// <param name="renderer">Renderer for log data.</param>
+        private void FormatLevel(LogLevelName level, IDataRenderer renderer)
         {
-            Builder.Append(string.Concat(ListOpening, level.Entry, ListClosing, EntrySeparator));
+            renderer.RenderLevel(level.Level, string.Concat(ListOpening, level.Entry, ListClosing))
+                .RenderInvariant(EntrySeparator);
         }
         
-        /// <inheritdoc />
-        public virtual void FormatEntry(ILogEntry entry)
+        /// <summary>
+        /// Formats a basic keylog entry.
+        /// <para/>
+        /// If the key is null, writes just the value.
+        /// </summary>
+        /// <param name="entry">Log entry.</param>
+        /// <param name="renderer">Renderer for log data.</param>
+        private void FormatEntry(ILogEntry entry, IDataRenderer renderer)
         {
             if (entry is LogEntry)
             {
-                FormatEntry((LogEntry) entry);
+                FormatEntry((LogEntry) entry, renderer);
             }
             else if (entry is LogObject)
             {
-                FormatEntry((LogObject) entry);
+                FormatEntry((LogObject) entry, renderer);
             }
             else if (entry is LogList)
             {
-                FormatEntry((LogList) entry);
+                FormatEntry((LogList) entry, renderer);
             }
         }
         
-        /// <inheritdoc />
-        public virtual void FormatEntry(LogEntry entry)
+        /// <summary>
+        /// Formats a basic key/value log entry.
+        /// <para/>
+        /// If the key is null, writes just the value.
+        /// </summary>
+        /// <param name="entry">Log entry.</param>
+        /// <param name="renderer">Renderer for log data.</param>
+        private void FormatEntry(LogEntry entry, IDataRenderer renderer)
         {
             if (string.IsNullOrEmpty(entry.Key))
             {
-                Builder.Append(entry.Value);
+                renderer.RenderValue(entry.Value);
             }
             else
             {
-                Builder.Append(string.Concat(entry.Key, KeyValueSeparator, entry.Value));
+                renderer.RenderKey(entry.Key)
+                    .RenderInvariant(KeyValueSeparator)
+                    .RenderValue(entry.Value);
             }
         }
 
-        /// <inheritdoc />
-        public virtual void FormatEntry(LogObject entry)
+        /// <summary>
+        /// Formats a log object entry.
+        /// </summary>
+        /// <para/>
+        /// If the key is null, writes just the values.
+        /// <param name="entry">Log entry.</param>
+        /// <param name="renderer">Renderer for log data.</param>
+        private void FormatEntry(LogObject entry, IDataRenderer renderer)
         {
             if (!string.IsNullOrEmpty(entry.Key))
             {
-                Builder.Append(string.Concat(entry.Key, KeyValueSeparator));
+                renderer.RenderKey(entry.Key)
+                    .RenderInvariant(KeyValueSeparator);
             }
             
-            Builder.Append(ObjectOpening);
+            renderer.RenderInvariant(ObjectOpening);
 
             if (entry.Entries.Count > 0)
             {
                 foreach (var value in entry.Entries)
                 {
-                    FormatEntry(value);
-                    Builder.Append(EntrySeparator);
+                    FormatEntry(value, renderer);
+                    renderer.RenderInvariant(EntrySeparator);
                 }
             
-                Builder.Length--; // Removes the last separator.
+                renderer.RemoveLastCharacter(); // Removes the last separator.
             }
 
-            Builder.Append(ObjectClosing);
+            renderer.RenderInvariant(ObjectClosing);
         }
 
-        /// <inheritdoc />
-        public virtual void FormatEntry(LogList entry)
+        /// <summary>
+        /// Formats a log list entry.
+        /// </summary>
+        /// <para/>
+        /// If the key is null, writes just the values.
+        /// <param name="entry">Log entry.</param>
+        /// <param name="renderer">Renderer for log data.</param>
+        private void FormatEntry(LogList entry, IDataRenderer renderer)
         {
             if (!string.IsNullOrEmpty(entry.Key))
             {
-                Builder.Append(string.Concat(entry.Key, KeyValueSeparator));
+                renderer.RenderKey(entry.Key)
+                    .RenderInvariant(KeyValueSeparator);
             }
             
-            Builder.Append(ListOpening);
+            renderer.RenderInvariant(ListOpening);
 
             if (entry.Entries.Count > 0)
             {
@@ -126,37 +147,20 @@ namespace Anlog.Formatters.CompactKeyValue
                 {
                     if (value is ILogEntry)
                     {
-                        FormatEntry((ILogEntry) value);
+                        FormatEntry((ILogEntry) value, renderer);
                     }
                     else
                     {
-                        Builder.Append(value);
+                        renderer.RenderValue(value.ToString());
                     }
 
-                    Builder.Append(ListItemSeparator);
+                    renderer.RenderInvariant(ListItemSeparator);
                 }
 
-                Builder.Length--; // Removes the last separator.
+                renderer.RemoveLastCharacter(); // Removes the last separator.
             }
 
-            Builder.Append(ListClosing);
-        }
-        
-        /// <inheritdoc />
-        public virtual string Format()
-        {
-            FormatDate(DateTime.Now);
-            FormatLevel(logLevelName);
-            
-            foreach (var entry in entries)
-            {
-                FormatEntry(entry);
-
-                Builder.Append(EntrySeparator);
-            }
-            Builder.Length--; // Removes the last separator.
-
-            return Builder.ToString();
+            renderer.RenderInvariant(ListClosing);
         }
     }
 }

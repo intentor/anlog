@@ -91,6 +91,7 @@ Log.Logger = new LoggerFactory()
 - *async*: True if write to the console should be asynchronous, otherwise false. Provides fast writing to console, however due to run in a separated thread, the last log(s) in case of a crash may not be written. The default is false.
 - *theme: Output color theme. The default is none.</param>
 - *minimumLevel*: Minimum log level. The default is the logger minimum level.
+- *formatter*: Log formatter to be used. The default is `CompactKeyValueFormatter`.
 
 ### SingleFile
 
@@ -109,6 +110,7 @@ Log.Logger = new LoggerFactory()
 - *encoding*: file encoding. The default is UTF8.
 - *bufferSize*: buffer size to be used. The default is 4096.
 - *minimumLevel*: Minimum log level. The default is the logger minimum level.
+- *formatter*: Log formatter to be used. The default is `CompactKeyValueFormatter`.
 
 ### InMemory
 
@@ -123,6 +125,7 @@ Log.Logger = new LoggerFactory()
 ```
 
 To get the written logs, use `Log.GetSink()`:
+
 ```cs
 var logs = Log.GetSink<InMemorySink>()?.GetLogs();
 ```
@@ -130,6 +133,7 @@ var logs = Log.GetSink<InMemorySink>()?.GetLogs();
 
 - *appendNewLine*: Indicates whether a new line should be appended at the end of each log. The default is true.
 - *minimumLevel*: Minimum log level. The default is the logger minimum level.
+- *formatter*: Log formatter to be used. The default is `CompactKeyValueFormatter`.
 
 ## Formatters
 
@@ -141,7 +145,7 @@ Formats the key/value entries using a compact approach.
 
 `2018-03-29 22:22:07.656 [INF] c=Program.Main:17 key=value`.
 
-This is the default formatter and no configuration is required for using it.
+This is the default formatter for all sinks.
 
 #### Formats
 
@@ -151,11 +155,6 @@ This is the default formatter and no configuration is required for using it.
 - *Enums*: use `ToString()`. E.g.: `key=Value`
 - *Arrays* and *IEnumerable*: writes the items between `[]` separated by comma. E.g.: `key=[11.1,24.2,69.3,666.4]`
 - *Classes* with fields and/or properties: writes the fields/properties as key/value pairs between `{}`. E.g.: `{field=24 property=666.11}`
-
-#### Settings
-
-- *culture*: culture to be used. The default is `CultureInfo.InvariantCulture`.
-- *dateTimeFormat*: date/time log format. The default format is "yyyy-MM-dd HH:mm:ss.fff".
 
 ## Minimum log level
 

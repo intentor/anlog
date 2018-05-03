@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Anlog.Entries;
-using Anlog.Formatters.CompactKeyValue;
 
 namespace Anlog.Sinks
 {
@@ -14,6 +13,14 @@ namespace Anlog.Sinks
     {
         /// <inheritdoc />
         public LogLevel? MinimumLevel { get; set; }
+        
+        /// <inheritdoc />
+        public ILogFormatter Formatter { get; }
+
+        /// <summary>
+        /// Renderer factory method.
+        /// </summary>
+        private Func<IDataRenderer> renderer;
         
         /// <summary>
         /// Internal output stream.
@@ -32,12 +39,18 @@ namespace Anlog.Sinks
         
         /// <summary>
         /// Initializes a new instance of <see cref="FileSink"/>.
-        /// </summary>ØØ
+        /// </summary>
+        /// <param name="formatter">Log formatter.</param>
+        /// <param name="renderer">Renderer factory method.</param>
         /// <param name="logFilePath">Log file path.</param>
         /// <param name="encoding">File encoding. The default is UTF8.</param>
         /// <param name="bufferSize">Buffer size to be used. The default is 4096.</param>
-        public FileSink(string logFilePath, Encoding encoding = null, int bufferSize = 4096)
+        public FileSink(ILogFormatter formatter, Func<IDataRenderer> renderer, string logFilePath, 
+            Encoding encoding = null, int bufferSize = 4096)
         {
+            Formatter = formatter;
+            this.renderer = renderer;
+            
             var directory = Path.GetDirectoryName(logFilePath);
             if (!Directory.Exists(directory))
             {
@@ -63,11 +76,9 @@ namespace Anlog.Sinks
                 return;
             }
             
-            
             lock (locker)
             {
-                var formatter = new CompactKeyValueFormatter(level, entries);
-                writer.WriteLine(formatter.Format());
+                writer.WriteLine(Formatter.Format(level, entries, renderer()));
                 writer.Flush();
             }
         }

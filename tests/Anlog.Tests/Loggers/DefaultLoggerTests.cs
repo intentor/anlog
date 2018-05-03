@@ -3,11 +3,11 @@ using Anlog.Sinks;
 using Anlog.Sinks.Console;
 using Anlog.Sinks.InMemory;
 using Anlog.Sinks.SingleFile;
+using Anlog.Tests.TestObjects;
 using Anlog.Tests.TestObjects.Models;
 using Xunit;
-using static Anlog.Tests.TestObjects.TestConstants;
 
-namespace Anlog.Tests
+namespace Anlog.Tests.Loggers
 {
     /// <summary>
     /// Tests for the default logger.
@@ -64,7 +64,7 @@ namespace Anlog.Tests
         {
             var logger = CreateDefaultLogger();
             
-            logger.Append("model", TestNonDataContractModelInstance).Info();
+            logger.Append("model", TestConstants.TestNonDataContractModelInstance).Info();
 
             var log = logger.GetSink<InMemorySink>()?.GetLogs();
             

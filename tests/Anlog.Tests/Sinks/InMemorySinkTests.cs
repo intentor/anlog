@@ -1,4 +1,6 @@
-﻿using Anlog.Sinks.InMemory;
+﻿using Anlog.Formatters.CompactKeyValue;
+using Anlog.Renderers;
+using Anlog.Sinks.InMemory;
 using Xunit;
 using static Anlog.Tests.TestObjects.TestConstants;
 
@@ -9,20 +11,17 @@ namespace Anlog.Tests.Sinks
     /// </summary>
     public sealed class InMemorySinkTests
     {
-        /// <summary>
-        /// Object to test.
-        /// </summary>
-        private InMemorySink sink = new InMemorySink()
-        {
-            AppendNewLine = false
-        };
-
         [Fact]
         public void WhenWriting_WriteToMemory()
         {
-            //sink.Write(LogLevel.Debug, GenericLog);
+            var sink = new InMemorySink(new CompactKeyValueFormatter(), () => new DefaultDataRenderer())
+            {
+                AppendNewLine = false
+            };
             
-            Assert.Equal(GenericLog, sink.GetLogs());
+            sink.Write(GenericLogLevelName.Debug, GenericLogEntries);
+            
+            Assert.Equal(GenericLogText, sink.GetLogs().Substring(30));
         }
     }
 }

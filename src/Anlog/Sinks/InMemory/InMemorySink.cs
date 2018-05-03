@@ -16,6 +16,9 @@ namespace Anlog.Sinks.InMemory
         /// <inheritdoc />
         public LogLevel? MinimumLevel { get; set; }
         
+        /// <inheritdoc />
+        public ILogFormatter Formatter { get; }
+        
         /// <summary>
         /// Indicates whether a new line should be appended at the end of each log. The default is true.
         /// </summary>
@@ -27,10 +30,19 @@ namespace Anlog.Sinks.InMemory
         private StringBuilder buffer;
 
         /// <summary>
+        /// Renderer factory method.
+        /// </summary>
+        private Func<IDataRenderer> renderer;
+
+        /// <summary>
         /// Initializes a new instance of <see cref="InMemorySink"/>.
         /// </summary>
-        public InMemorySink()
+        /// <param name="formatter">Log formatter.</param>
+        /// <param name="renderer">Renderer factory method.</param>
+        public InMemorySink(ILogFormatter formatter, Func<IDataRenderer> renderer)
         {
+            Formatter = formatter;
+            this.renderer = renderer;
             buffer = new StringBuilder();
         }
         
@@ -42,8 +54,7 @@ namespace Anlog.Sinks.InMemory
                 return;
             }
             
-            var formatter = new CompactKeyValueFormatter(level, entries);
-            buffer.Append(formatter.Format());
+            buffer.Append(Formatter.Format(level, entries, renderer()));
 
             if (AppendNewLine)
             {

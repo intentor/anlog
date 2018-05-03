@@ -26,7 +26,7 @@ namespace Anlog.Tests
             
             WriteLogs();
 
-            AssertLogs(3, LogLevelNames.Info, LogLevelNames.Warn, LogLevelNames.Error);
+            AssertLogs(3, DefaultLogLevelName.Info, DefaultLogLevelName.Warn, DefaultLogLevelName.Error);
         }
             
         [Fact]
@@ -36,7 +36,7 @@ namespace Anlog.Tests
             
             WriteLogs();
 
-            AssertLogs(4, LogLevelNames.Debug, LogLevelNames.Info, LogLevelNames.Warn, LogLevelNames.Error);
+            AssertLogs(4, DefaultLogLevelName.Debug, DefaultLogLevelName.Info, DefaultLogLevelName.Warn, DefaultLogLevelName.Error);
         }
         
         [Fact]
@@ -46,7 +46,7 @@ namespace Anlog.Tests
             
             WriteLogs();
 
-            AssertLogs(3, LogLevelNames.Info, LogLevelNames.Warn, LogLevelNames.Error);
+            AssertLogs(3, DefaultLogLevelName.Info, DefaultLogLevelName.Warn, DefaultLogLevelName.Error);
         }
         
         [Fact]
@@ -56,7 +56,7 @@ namespace Anlog.Tests
             
             WriteLogs();
 
-            AssertLogs(2, LogLevelNames.Warn, LogLevelNames.Error);
+            AssertLogs(2, DefaultLogLevelName.Warn, DefaultLogLevelName.Error);
         }
         
         [Fact]
@@ -66,7 +66,7 @@ namespace Anlog.Tests
             
             WriteLogs();
 
-            AssertLogs(1, LogLevelNames.Error);
+            AssertLogs(1, DefaultLogLevelName.Error);
         }
 
         /// <summary>

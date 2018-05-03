@@ -1,4 +1,6 @@
 ﻿using Anlog.Factories;
+using Anlog.Formatters.CompactKeyValue;
+using Anlog.Renderers;
 
 namespace Anlog.Sinks.InMemory
 {
@@ -16,14 +18,17 @@ namespace Anlog.Sinks.InMemory
         /// <param name="appendNewLine">Indicates whether a new line should be appended at the end of each log.
         /// The default is true.</param>
         /// <param name="minimumLevel">Minimum log level. The default is the logger minimum level.</param>
+        /// <param name="formatter">Log formatter to be used. The default is
+        /// <see cref="CompactKeyValueFormatter"/>.</param>
         /// <returns>Logger factory.</returns>
         public static LoggerFactory InMemory(this LogSinksFactory sinksFactory, bool appendNewLine = true, 
-            LogLevel? minimumLevel = null)
+            LogLevel? minimumLevel = null, ILogFormatter formatter = null)
         {
-            sinksFactory.Sinks.Add(new InMemorySink()
+            formatter = formatter ?? new CompactKeyValueFormatter();
+            sinksFactory.Sinks.Add(new InMemorySink(formatter, () => new DefaultDataRenderer())
             {
-                MinimumLevel =  minimumLevel,
-                AppendNewLine = appendNewLine
+                AppendNewLine = appendNewLine,
+                MinimumLevel =  minimumLevel
             });
             return sinksFactory.Factory;
         }

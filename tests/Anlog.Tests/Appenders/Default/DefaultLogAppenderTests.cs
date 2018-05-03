@@ -2,6 +2,7 @@
 using Anlog.Appenders.Default;
 using Anlog.Entries;
 using Anlog.Formatters.CompactKeyValue;
+using Anlog.Renderers;
 using Moq;
 using Xunit;
 using static Anlog.Tests.TestObjects.TestConstants;
@@ -54,8 +55,8 @@ namespace Anlog.Tests.Appenders.Default
             writer.Setup(m => m.Write(It.IsAny<LogLevelName>(), It.IsAny<List<ILogEntry>>()))
                 .Callback<LogLevelName, List<ILogEntry>>((level, entries) =>
                 {
-                    var formatter = new CompactKeyValueFormatter(level, entries);
-                    log = formatter.Format();
+                    var formatter = new CompactKeyValueFormatter();
+                    log = formatter.Format(level, entries, new DefaultDataRenderer());
                 });
             
             var appender = new DefaultLogAppender(writer.Object, false, "class", "member", 0);
@@ -82,8 +83,8 @@ namespace Anlog.Tests.Appenders.Default
             writer.Setup(m => m.Write(It.IsAny<LogLevelName>(), It.IsAny<List<ILogEntry>>()))
                 .Callback<LogLevelName, List<ILogEntry>>((level, entries) =>
                 {
-                    var formatter = new CompactKeyValueFormatter(level, entries);
-                    log = formatter.Format();
+                    var formatter = new CompactKeyValueFormatter();
+                    log = formatter.Format(level, entries, new DefaultDataRenderer());
                 });
             
             var appender = new DefaultLogAppender(writer.Object, false, "class", "member", 0);

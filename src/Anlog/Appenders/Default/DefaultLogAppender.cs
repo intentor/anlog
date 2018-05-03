@@ -82,31 +82,31 @@ namespace Anlog.Appenders.Default
         /// <inheritdoc />
         public void Debug(string message = null, params object[] values)
         {
-            Write(LogLevelNames.Debug, message, values);
+            Write(DefaultFormattingOptions.DefaultLogLevelName.Debug, message, values);
         }
 
         /// <inheritdoc />
         public void Info(string message = null, params object[] values)
         {
-            Write(LogLevelNames.Info, message, values);
+            Write(DefaultFormattingOptions.DefaultLogLevelName.Info, message, values);
         }
 
         /// <inheritdoc />
         public void Warn(string message = null, params object[] values)
         {
-            Write(LogLevelNames.Warn, message, values);
+            Write(DefaultFormattingOptions.DefaultLogLevelName.Warn, message, values);
         }
 
         /// <inheritdoc />
         public void Error(string message = null, params object[] values)
         {
-            Write(LogLevelNames.Error, message, values);
+            Write(DefaultFormattingOptions.DefaultLogLevelName.Error, message, values);
         }
 
         /// <inheritdoc />
         public void Error(Exception e, string message = null, params object[] values)
         {
-            Write(LogLevelNames.Error, message, values, e);
+            Write(DefaultFormattingOptions.DefaultLogLevelName.Error, message, values, e);
         }
 
         /// <summary>
@@ -127,11 +127,11 @@ namespace Anlog.Appenders.Default
             {
                 if (value is DateTime)
                 {
-                    entry = new LogEntry(key, ((DateTime) value).ToString(DateTimeFormat));
+                    entry = new LogEntry(key, ((DateTime) value).ToString(DefaultDateTimeFormat));
                 } 
                 else if (value is IConvertible)
                 {
-                    entry = new LogEntry(key, ((IConvertible) value).ToString(Culture));
+                    entry = new LogEntry(key, ((IConvertible) value).ToString(DefaultCulture));
                 }
                 else if (value is IEnumerable)
                 {

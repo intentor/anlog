@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Anlog.Entries;
-using Anlog.Formatters.CompactKeyValue;
-using Anlog.Sinks.Console.Renderers;
-using Anlog.Sinks.Console.Themes;
 
 namespace Anlog.Sinks.Console
 {
@@ -17,28 +14,30 @@ namespace Anlog.Sinks.Console
         /// <inheritdoc />
         public LogLevel? MinimumLevel { get; set; }
         
+        /// <inheritdoc />
+        public ILogFormatter Formatter { get; }
+
+        /// <summary>
+        /// Renderer factory method.
+        /// </summary>
+        private Func<IDataRenderer> renderer;
+        
         /// <summary>
         /// Log async writer.
         /// </summary>
         private AsyncWriter asyncWriter;
-
-        /// <summary>
-        /// Output theme.
-        /// </summary>
-        private IConsoleTheme theme;
         
         /// <summary>
         /// Initializes a new instance of <see cref="AsyncConsoleSink"/>.
         /// </summary>
-        /// <param name="theme">Output theme.</param>
-        public AsyncConsoleSink(IConsoleTheme theme)
+        /// <param name="formatter">Log formatter.</param>
+        /// <param name="renderer">Renderer factory method.</param>
+        public AsyncConsoleSink(ILogFormatter formatter, Func<IDataRenderer> renderer)
         {
-            this.theme = theme;
+            Formatter = formatter;
+            this.renderer = renderer;
             
-            asyncWriter = new AsyncWriter(log =>
-            {
-                System.Console.WriteLine(log);
-            });
+            asyncWriter = new AsyncWriter(System.Console.WriteLine);
             asyncWriter.Start();
         }
 
@@ -56,8 +55,7 @@ namespace Anlog.Sinks.Console
                 return;
             }
             
-            var formatter = new ThemedConsoleRenderer(theme, level, entries);
-            asyncWriter.Enqueue(formatter.Format());
+            asyncWriter.Enqueue(Formatter.Format(level, entries, renderer()));
         }
     }
 }
