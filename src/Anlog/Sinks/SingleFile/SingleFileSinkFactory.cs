@@ -17,7 +17,8 @@ namespace Anlog.Sinks.SingleFile
         /// Writes the output to a single file, without any kind of limits.
         /// </summary>
         /// <param name="sinksFactory">Sinks factory.</param>
-        /// <param name="logFilePath">Log file path.</param>
+        /// <param name="logFilePath">Log path, including file name and extension. The default is a log.txt file in
+        /// the application running folder.</param>
         /// <param name="async">True if write to the console should be asynchronous, otherwise false.
         /// The default is false.</param>
         /// <param name="encoding">File encoding. The default is UTF8.</param>

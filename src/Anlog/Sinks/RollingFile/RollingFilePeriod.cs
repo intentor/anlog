@@ -50,7 +50,7 @@ namespace Anlog.Sinks.RollingFile
         }
 
         /// <summary>
-        /// Generates a new file each day,
+        /// Generates a new file each day.
         /// </summary>
         public static readonly RollingFilePeriod Day = new RollingFilePeriod()
         {
@@ -61,7 +61,7 @@ namespace Anlog.Sinks.RollingFile
         };
         
         /// <summary>
-        /// Generates a new file each hour,
+        /// Generates a new file each hour.
         /// </summary>
         public static readonly RollingFilePeriod Hour = new RollingFilePeriod()
         {

@@ -9,7 +9,9 @@ namespace Anlog.Sinks.RollingFile
     /// <summary>
     /// Writes the output to files by period and size limit.
     /// <para/>
-    /// Files are created using the format log-{date}-{sequence}.txt (log-YYYYMMDD-0001.txt).
+    /// Each time a period is reached, a new file is created.
+    /// <para/>
+    /// Files are created using the format log-{date}.txt.
     /// </summary>
     public class RollingFileSink : ILogSink, IDisposable
     {
