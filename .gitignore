@@ -37,3 +37,4 @@ TestResults/
 # Logging
 logs
 log.txt
+log*.txt

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using Anlog.Entries;
 
 namespace Anlog.Sinks.RollingFile

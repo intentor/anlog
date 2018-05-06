@@ -43,17 +43,19 @@ namespace Anlog.Tests.Sinks
         public static IEnumerable<object[]> DifferentPeriodData  =>
             new List<object[]>
             {
-                new object[] { Day, new int[] { 0, 1440, 2880, 43200 } },
-                new object[] { Hour, new int[] { 0, 60, 120, 1440, 2880, 43200 } }
+                new object[] { true, Day, new int[] { 0, 1440, 2880, 43200 } },
+                new object[] { false, Day, new int[] { 0, 1440, 2880, 43200 } },
+                new object[] { true, Hour, new int[] { 0, 60, 120, 1440, 2880, 43200 } },
+                new object[] { false, Hour, new int[] { 0, 60, 120, 1440, 2880, 43200 } }
             };
 
         [Theory]
         [MemberData(nameof(DifferentPeriodData))]
-        public void WhenWritingInDifferentPeriod_CreateNewFile(RollingFilePeriod period, int[] minutesToAdd)
+        public void WhenWritingInDifferentPeriod_CreateNewFile(bool async, RollingFilePeriod period, int[] minutesToAdd)
         {
             using (var temp = TempFolder.Create())
             {
-                WriteLogs(temp.FolderPath, period, minutesToAdd);
+                WriteLogs(async, temp.FolderPath, period, minutesToAdd);
                 
                 foreach (var minutes in minutesToAdd)
                 {
@@ -73,17 +75,19 @@ namespace Anlog.Tests.Sinks
         public static IEnumerable<object[]> SamePeriodData  =>
             new List<object[]>
             {
-                new object[] { Day, new int[] { 0, 60, 120, 240, 480, 1439 } },
-                new object[] { Hour, new int[] { 0, 5, 10, 20, 40, 59 } }
+                new object[] { true, Day, new int[] { 0, 60, 120, 240, 480, 1439 } },
+                new object[] { false, Day, new int[] { 0, 60, 120, 240, 480, 1439 } },
+                new object[] { true, Hour, new int[] { 0, 5, 10, 20, 40, 59 } },
+                new object[] { false, Hour, new int[] { 0, 5, 10, 20, 40, 59 } }
             };
 
         [Theory]
         [MemberData(nameof(SamePeriodData))]
-        public void WhenWritingInSamePeriod_DontCreateNewFile(RollingFilePeriod period, int[] minutesToAdd)
+        public void WhenWritingInSamePeriod_DontCreateNewFile(bool async, RollingFilePeriod period, int[] minutesToAdd)
         {
             using (var temp = TempFolder.Create())
             {
-                WriteLogs(temp.FolderPath, period, minutesToAdd);
+                WriteLogs(async, temp.FolderPath, period, minutesToAdd);
 
                 var files = Directory.GetFiles(temp.FolderPath);
                 Assert.Single(files);
@@ -96,37 +100,45 @@ namespace Anlog.Tests.Sinks
         /// <summary>
         /// Writes logs using a sink.
         /// </summary>
+        /// <param name="async">Indicates whether the asynchronous sink should be created.</param>
         /// <param name="logFolderPath">Log files folder path.</param>
         /// <param name="period">Rolling file period.</param>
         /// <param name="minutesToAdd">Minutes to add for each writing.</param>
-        private void WriteLogs(string logFolderPath, RollingFilePeriod period, int[] minutesToAdd)
+        private void WriteLogs(bool async, string logFolderPath, RollingFilePeriod period, int[] minutesToAdd)
         {
             foreach (var minutes in minutesToAdd)
             {
                 var date = BaseDate.AddMinutes(minutes);
                 timeProviderMock.Setup(m => m.CurrentDateTime).Returns(date);
-                using (var sink = CreateSink(logFolderPath, period))
+                
+                var sink = CreateSink(async, logFolderPath, period);
+                var entries = new List<ILogEntry>()
                 {
-                    var entries = new List<ILogEntry>()
-                    {
-                        new LogEntry("date", date.ToString(period.DateFormat))
-                    };
-                        
-                    sink.Write(GenericLogLevelName.Debug, entries);
-                }
+                    new LogEntry("date", date.ToString(period.DateFormat))
+                };
+                    
+                sink.Write(GenericLogLevelName.Debug, entries);
+                
+                ((IDisposable) sink).Dispose();
             }
         }
 
         /// <summary>
         /// Creates a file sink for tests.
         /// </summary>
-        /// <param name="logFolderPath">Log files folder path.</param>
+        /// <param name="async">Indicates whether the asynchronous sink should be created.</param>
+        /// <param name="logFileFolder">Log files folder path.</param>
         /// <param name="period">Rolling file period.</param>
         /// <returns>Created sink.</returns>
-        private RollingFileSink CreateSink(string logFolderPath, RollingFilePeriod period)
+        private ILogSink CreateSink(bool async, string logFileFolder, RollingFilePeriod period)
         {
-            var namer = new RollingFileNamer(logFolderPath, period);
-            return new RollingFileSink(new CompactKeyValueFormatter(), () => new DefaultDataRenderer(), namer);
+            var formatter = new CompactKeyValueFormatter();
+            Func<IDataRenderer> renderer = () => new DefaultDataRenderer();
+            var namer = new RollingFileNamer(logFileFolder, period);
+            
+            return async
+                ? (ILogSink) new AsyncRollingFileSink(formatter, renderer, namer)
+                : new RollingFileSink(formatter, renderer, namer);
         }
     }
 }

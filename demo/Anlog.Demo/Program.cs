@@ -1,5 +1,6 @@
 ﻿using Anlog.Factories;
 using Anlog.Sinks.Console;
+using Anlog.Sinks.RollingFile;
 using Anlog.Sinks.SingleFile;
 
 namespace Anlog.Demo
@@ -11,7 +12,7 @@ namespace Anlog.Demo
             // Creates the logger.
             Log.Logger = new LoggerFactory()
                 .WriteTo.Console(async: true)
-                .WriteTo.SingleFile(async: true)
+                .WriteTo.RollingFile(async: true)
                 .CreateLogger();
             
             // Writes a log.
