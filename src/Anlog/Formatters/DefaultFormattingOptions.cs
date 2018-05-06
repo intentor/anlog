@@ -4,7 +4,7 @@ using Anlog.Formatters.LogLevelNames;
 namespace Anlog.Formatters
 {
     /// <summary>
-    /// Default formatting options.
+    /// Default options for formatters.
     /// </summary>
     public static class DefaultFormattingOptions
     {

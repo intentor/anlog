@@ -28,7 +28,7 @@ namespace Anlog.Tests.TestObjects
         {
             if (string.IsNullOrEmpty(fileName))
             {
-                fileName = Guid.NewGuid() + ".txt";
+                fileName = string.Concat(Guid.NewGuid().ToString(), ".txt");
             }
             return Path.Combine(FolderPath, fileName);
         }
@@ -36,13 +36,17 @@ namespace Anlog.Tests.TestObjects
         /// <summary>
         /// Creates a new temporary folder.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Temporary folder data.</returns>
         public static TempFolder Create()
         {
-            return new TempFolder()
+            var folder = new TempFolder()
             {
                 FolderPath = Path.Combine(Directory.GetCurrentDirectory(), Guid.NewGuid().ToString())
             };
+
+            Directory.CreateDirectory(folder.FolderPath);
+
+            return folder;
         }
     }
 }

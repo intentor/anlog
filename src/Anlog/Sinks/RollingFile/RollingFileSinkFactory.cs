@@ -1,20 +1,19 @@
 ﻿using System;
-using System.IO;
 using System.Text;
 using Anlog.Factories;
 using Anlog.Formatters.CompactKeyValue;
 using Anlog.Renderers;
 using static Anlog.Sinks.DefaultSinkOptions;
 
-namespace Anlog.Sinks.SingleFile
+namespace Anlog.Sinks.RollingFile
 {
     /// <summary>
-    /// Factory for the Single File Sink.
+    /// Factory for the Rolling File Sink.
     /// </summary>
-    public static class SingleFileSinkFactory
+    public static class RollingFileSinkFactory
     {
         /// <summary>
-        /// Writes the output to a single file, without any kind of limits.
+        /// Writes the output to files by period and size limit.
         /// </summary>
         /// <param name="sinksFactory">Sinks factory.</param>
         /// <param name="logFilePath">Log file path.</param>
@@ -26,24 +25,11 @@ namespace Anlog.Sinks.SingleFile
         /// <param name="formatter">Log formatter to be used. The default is
         /// <see cref="CompactKeyValueFormatter"/>.</param>
         /// <returns>Logger factory.</returns>
-        public static LoggerFactory SingleFile(this LogSinksFactory sinksFactory, string logFilePath = null, 
+        public static LoggerFactory RollingFile(this LogSinksFactory sinksFactory, string logFilePath = null, 
             bool async = false, Encoding encoding = null, int bufferSize = 4096, LogLevel? minimumLevel = null, 
             ILogFormatter formatter = null)
         {
-            if (string.IsNullOrEmpty(logFilePath))
-            {
-                logFilePath = Path.Combine(DefaultLogFilePath, "log.txt");
-            }
-            formatter = formatter ?? new CompactKeyValueFormatter();
-            Func<IDataRenderer> renderer = () => new DefaultDataRenderer();
-
-            var sink = async
-                ? (ILogSink) new AsyncSingleFileSync(formatter, renderer, logFilePath, encoding, bufferSize)
-                : new FileSink(formatter, renderer, logFilePath, encoding, bufferSize);
-            sink.MinimumLevel = minimumLevel;
-            
-            sinksFactory.Sinks.Add(sink);
             return sinksFactory.Factory;
         }
     }
- }
+}
