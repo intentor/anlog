@@ -5,6 +5,7 @@ using Anlog.Sinks.RollingFile;
 using Anlog.Tests.TestObjects;
 using Xunit;
 using static Anlog.Sinks.RollingFile.RollingFilePeriod;
+using static Anlog.Tests.TestObjects.TestConstants;
 
 namespace Anlog.Tests.Sinks
 {
@@ -13,11 +14,6 @@ namespace Anlog.Tests.Sinks
     /// </summary>
     public sealed class RollingFileNamerTests : IDisposable
     {
-        /// <summary>
-        /// Base date for tests.
-        /// </summary>
-        private static readonly DateTime BaseDate = new DateTime(2018, 5, 6, 0, 0, 0);
-
         /// <summary>
         /// Logs saving folder.
         /// </summary>

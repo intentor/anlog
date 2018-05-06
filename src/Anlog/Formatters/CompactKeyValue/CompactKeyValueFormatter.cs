@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Anlog.Entries;
+using Anlog.Time;
 using static Anlog.Formatters.CompactKeyValue.CompactKeyValueFormatterConstants;
 using static Anlog.Formatters.DefaultFormattingOptions;
 
@@ -14,7 +15,7 @@ namespace Anlog.Formatters.CompactKeyValue
         /// <inheritdoc />
         public string Format(LogLevelName level, List<ILogEntry> entries, IDataRenderer renderer)
         {
-            FormatDate(DateTime.Now, renderer);
+            FormatDate(TimeProvider.Now, renderer);
             FormatLevel(level, renderer);
             
             foreach (var entry in entries)

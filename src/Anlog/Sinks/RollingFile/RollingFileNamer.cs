@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Anlog.Time;
 
 namespace Anlog.Sinks.RollingFile
 {
@@ -12,9 +13,9 @@ namespace Anlog.Sinks.RollingFile
     public class RollingFileNamer
     {
         /// <summary>
-        /// Log file file.
+        /// Log files folder path.
         /// </summary>
-        private readonly string logFilePath;
+        private readonly string logFolderPath;
         
         /// <summary>
         /// Period for creating a new file.
@@ -29,11 +30,11 @@ namespace Anlog.Sinks.RollingFile
         /// <summary>
         /// Initializes a new instance of <see cref="RollingFileNamer"/>.
         /// </summary>
-        /// <param name="logFilePath">Log file path.</param>
+        /// <param name="logFolderPath">Log files folder path.</param>
         /// <param name="period">Period for creating a new file.</param>
-        public RollingFileNamer(string logFilePath, RollingFilePeriod period)
+        public RollingFileNamer(string logFolderPath, RollingFilePeriod period)
         {
-            this.logFilePath = logFilePath;
+            this.logFolderPath = logFolderPath;
             this.period = period;
             
             FillLastDate();
@@ -57,23 +58,23 @@ namespace Anlog.Sinks.RollingFile
         public string GetFilePath(DateTime date)
         {
             var fileName = period.GetFileName(date);
-            return Path.Combine(logFilePath, fileName);
+            return Path.Combine(logFolderPath, fileName);
         }
 
         /// <summary>
-        /// Fills the last date based on files available in the <see cref="logFilePath"/>.
+        /// Fills the last date based on files available in the <see cref="logFolderPath"/>.
         /// </summary>
         private void FillLastDate()
         {
             var regex = new Regex(period.FileNamePattern);
-            var mostRecentFilePath = Directory.GetFiles(logFilePath)
+            var mostRecentFilePath = Directory.GetFiles(logFolderPath)
                 .Where(path => regex.IsMatch(path))
                 .OrderByDescending(path => path)
                 .FirstOrDefault();
 
             if (mostRecentFilePath == null)
             {
-                lastDate = DateTime.Now;
+                lastDate = TimeProvider.Now;
             }
             else
             {

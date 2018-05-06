@@ -8,8 +8,13 @@ namespace Anlog.Sinks
     public static class DefaultSinkOptions
     {
         /// <summary>
-        /// Default log file path.
+        /// Default log files folder path.
         /// </summary>
-        public static readonly string DefaultLogFilePath = Directory.GetCurrentDirectory();
+        public static readonly string DefaultLogFolderPath = Directory.GetCurrentDirectory();
+
+        /// <summary>
+        /// Default log file name.
+        /// </summary>
+        public const string DefaultLogFileName = "log.txt";
     }
 }

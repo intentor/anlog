@@ -32,7 +32,7 @@ namespace Anlog.Sinks.SingleFile
         {
             if (string.IsNullOrEmpty(logFilePath))
             {
-                logFilePath = Path.Combine(DefaultLogFilePath, "log.txt");
+                logFilePath = Path.Combine(DefaultLogFolderPath, DefaultLogFileName);
             }
             formatter = formatter ?? new CompactKeyValueFormatter();
             Func<IDataRenderer> renderer = () => new DefaultDataRenderer();

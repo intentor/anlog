@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Anlog.Entries;
+using Anlog.Time;
 
 namespace Anlog.Sinks.RollingFile
 {
@@ -19,14 +20,24 @@ namespace Anlog.Sinks.RollingFile
         public ILogFormatter Formatter { get; }
 
         /// <summary>
-        /// Maximum size of a file before creating a new one.
+        /// Rolling filer namer.
         /// </summary>
-        private int maxSize;
+        private RollingFileNamer namer;
 
         /// <summary>
         /// Renderer factory method.
         /// </summary>
         private Func<IDataRenderer> renderer;
+
+        /// <summary>
+        /// File encoding.
+        /// </summary>
+        private Encoding encoding;
+        
+        /// <summary>
+        /// Buffer size to be used.
+        /// </summary>
+        private int bufferSize;
 
         /// <summary>
         /// Internal file sink.
@@ -38,19 +49,19 @@ namespace Anlog.Sinks.RollingFile
         /// </summary>
         /// <param name="formatter">Log formatter.</param>
         /// <param name="renderer">Renderer factory method.</param>
-        /// <param name="logFilePath">Log file path.</param>
-        /// <param name="maxSize">Maximum size of a file before creating a new one.</param>
+        /// <param name="namer">Rolling filer namer.</param>
         /// <param name="encoding">File encoding. The default is UTF8.</param>
         /// <param name="bufferSize">Buffer size to be used. The default is 4096.</param>
-        public RollingFileSink(ILogFormatter formatter, Func<IDataRenderer> renderer, string logFilePath,
-            int maxSize = int.MaxValue, Encoding encoding = null,
-            int bufferSize = 4096)
+        public RollingFileSink(ILogFormatter formatter, Func<IDataRenderer> renderer, RollingFileNamer namer,
+            Encoding encoding = null, int bufferSize = 4096)
         {
             Formatter = formatter;
-            this.maxSize = maxSize;
             this.renderer = renderer;
-
-            sink = new FileSink(Formatter, renderer, logFilePath, encoding, bufferSize);
+            this.namer = namer;
+            this.encoding = encoding;
+            this.bufferSize = bufferSize;
+            
+            CreateSink(TimeProvider.Now);
         }
 
         /// <inheritdoc />
@@ -62,7 +73,25 @@ namespace Anlog.Sinks.RollingFile
         /// <inheritdoc />
         public void Write(LogLevelName level, List<ILogEntry> entries)
         {
+            var date = TimeProvider.Now;
+            if (namer.ShouldUpdateFile(date))
+            {
+                CreateSink(date);
+            }
+            
+            sink.Write(level, entries);
+        }
 
+        /// <summary>
+        /// Creates the sink.
+        /// <para/>
+        /// If a sink already exists, disposes it.
+        /// </summary>
+        /// <param name="date">Date to create the sink.</param>
+        private void CreateSink(DateTime date)
+        {
+            sink?.Dispose();
+            sink = new FileSink(Formatter, renderer, namer.GetFilePath(date), encoding, bufferSize);
         }
     }
 }

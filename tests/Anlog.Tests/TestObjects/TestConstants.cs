@@ -13,6 +13,11 @@ namespace Anlog.Tests.TestObjects
     public static class TestConstants
     {
         /// <summary>
+        /// Base date for tests.
+        /// </summary>
+        public static readonly DateTime BaseDate = new DateTime(2018, 5, 6, 0, 0, 0);
+        
+        /// <summary>
         /// Test model instance with data contract attribute.
         /// </summary>
         public static readonly TestDataContractModel TestDataContractModelInstance = new TestDataContractModel()
