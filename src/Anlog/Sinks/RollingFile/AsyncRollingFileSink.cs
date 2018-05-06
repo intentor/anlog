@@ -25,12 +25,12 @@ namespace Anlog.Sinks.RollingFile
         /// <summary>
         /// Internal file sink.
         /// </summary>
-        private RollingFileSink sink;
+        private readonly RollingFileSink sink;
         
         /// <summary>
         /// Async writer.
         /// </summary>
-        private AsyncWriter asyncWriter;
+        private readonly AsyncWriter asyncWriter;
 
         /// <summary>
         /// Initializes a new instance of <see cref="AsyncRollingFileSink"/>.
@@ -43,7 +43,7 @@ namespace Anlog.Sinks.RollingFile
         public AsyncRollingFileSink(ILogFormatter formatter, Func<IDataRenderer> renderer, RollingFileNamer namer,
             Encoding encoding = null, int bufferSize = 4096)
         {
-            sink = new RollingFileSink(Formatter, renderer, namer, encoding, bufferSize);
+            sink = new RollingFileSink(formatter, renderer, namer, encoding, bufferSize);
             
             asyncWriter = new AsyncWriter((level, entries) =>
             {

@@ -20,7 +20,7 @@ namespace Anlog.Sinks.Console
         /// <summary>
         /// Renderer factory method.
         /// </summary>
-        private Func<IDataRenderer> renderer;
+        private readonly Func<IDataRenderer> renderer;
 
         /// <summary>
         /// Initiliazes a new instance of <see cref="ConsoleSink"/>.

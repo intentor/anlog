@@ -20,17 +20,17 @@ namespace Anlog.Sinks
         /// <summary>
         /// Renderer factory method.
         /// </summary>
-        private Func<IDataRenderer> renderer;
+        private readonly Func<IDataRenderer> renderer;
         
         /// <summary>
         /// Internal output stream.
         /// </summary>
-        private Stream outputStream;
+        private readonly Stream outputStream;
 
         /// <summary>
         /// Text writer.
         /// </summary>
-        private TextWriter writer;
+        private readonly TextWriter writer;
 
         /// <summary>
         /// Allows blocking of actions in a thread.

@@ -27,12 +27,12 @@ namespace Anlog.Sinks.InMemory
         /// <summary>
         /// Log buffer.
         /// </summary>
-        private StringBuilder buffer;
+        private readonly StringBuilder buffer;
 
         /// <summary>
         /// Renderer factory method.
         /// </summary>
-        private Func<IDataRenderer> renderer;
+        private readonly Func<IDataRenderer> renderer;
 
         /// <summary>
         /// Initializes a new instance of <see cref="InMemorySink"/>.

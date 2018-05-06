@@ -31,17 +31,17 @@ namespace Anlog.Sinks
         /// <summary>
         /// Log queue.
         /// </summary>
-        private ConcurrentQueue<WriterData> queue;
+        private readonly ConcurrentQueue<WriterData> queue;
 
         /// <summary>
         /// Writing action.
         /// </summary>
-        private Action<LogLevelName, List<ILogEntry>> writer;
+        private readonly Action<LogLevelName, List<ILogEntry>> writer;
 
         /// <summary>
         /// Background worker thread.
         /// </summary>
-        private BackgroundWorker worker;
+        private readonly BackgroundWorker worker;
         
         /// <summary>
         /// Initializes a new instance of <see cref="AsyncWriter"/>.

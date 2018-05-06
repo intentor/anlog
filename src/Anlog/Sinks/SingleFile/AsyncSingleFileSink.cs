@@ -22,17 +22,17 @@ namespace Anlog.Sinks.SingleFile
         /// <summary>
         /// Renderer factory method.
         /// </summary>
-        private Func<IDataRenderer> renderer;
+        private readonly Func<IDataRenderer> renderer;
         
         /// <summary>
         /// Internal file sink.
         /// </summary>
-        private FileSink sink;
+        private readonly FileSink sink;
         
         /// <summary>
         /// Async writer.
         /// </summary>
-        private AsyncWriter asyncWriter;
+        private readonly AsyncWriter asyncWriter;
         
         /// <summary>
         /// Initializes a new instance of <see cref="AsyncSingleFileSink"/>.
