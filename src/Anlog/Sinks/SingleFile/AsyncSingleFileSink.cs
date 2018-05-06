@@ -11,7 +11,7 @@ namespace Anlog.Sinks.SingleFile
     /// <para/>
     /// The last log(s) may be lost it the program crashes or stops before the write task is executed.
     /// </summary>
-    public class AsyncSingleFileSync : ILogSink, IDisposable
+    public class AsyncSingleFileSink : ILogSink, IDisposable
     {
         /// <inheritdoc />
         public LogLevel? MinimumLevel { get; set; }
@@ -35,14 +35,14 @@ namespace Anlog.Sinks.SingleFile
         private AsyncWriter asyncWriter;
         
         /// <summary>
-        /// Initializes a new instance of <see cref="AsyncSingleFileSync"/>.
+        /// Initializes a new instance of <see cref="AsyncSingleFileSink"/>.
         /// </summary>
         /// <param name="formatter">Log formatter.</param>
         /// <param name="renderer">Renderer factory method.</param>
         /// <param name="logFilePath">Log file path.</param>
         /// <param name="encoding">File encoding. The default is UTF8.</param>
         /// <param name="bufferSize">Buffer size to be used. The default is 4096.</param>
-        public AsyncSingleFileSync(ILogFormatter formatter, Func<IDataRenderer> renderer, string logFilePath, 
+        public AsyncSingleFileSink(ILogFormatter formatter, Func<IDataRenderer> renderer, string logFilePath, 
             Encoding encoding = null, int bufferSize = 4096)
         {
             Formatter = formatter;

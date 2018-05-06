@@ -38,7 +38,7 @@ namespace Anlog.Sinks.SingleFile
             Func<IDataRenderer> renderer = () => new DefaultDataRenderer();
 
             var sink = async
-                ? (ILogSink) new AsyncSingleFileSync(formatter, renderer, logFilePath, encoding, bufferSize)
+                ? (ILogSink) new AsyncSingleFileSink(formatter, renderer, logFilePath, encoding, bufferSize)
                 : new FileSink(formatter, renderer, logFilePath, encoding, bufferSize);
             sink.MinimumLevel = minimumLevel;
             
