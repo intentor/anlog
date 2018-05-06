@@ -89,11 +89,38 @@ Log.Logger = new LoggerFactory()
 #### Settings
 
 - *async*: True if write to the console should be asynchronous, otherwise false. Provides fast writing to console, however due to run in a separated thread, the last log(s) in case of a crash may not be written. The default is false.
-- *theme: Output color theme. The default is none.</param>
+- *theme: Output color theme. The default is none.
 - *minimumLevel*: Minimum log level. The default is the logger minimum level.
 - *formatter*: Log formatter to be used. The default is `CompactKeyValueFormatter`.
 
-### SingleFile
+### Rolling File
+
+Writes the output to files by period. Each time a period is reached, a new file is created.
+
+```cs
+Log.Logger = new LoggerFactory()
+    .WriteTo.RollingFile()
+    .CreateLogger();
+```
+
+#### Periods
+
+Periods are defined by constants in the class `Anlog.Sinks.RollingFile.RollingFilePeriod`.
+
+- *Day*: Generates a new file each day. File name format: `log-yyyyMMdd.txt`.
+- *Hour*: Generates a new file each hour. File name format: `log-yyyyMMddHH.txt`.
+
+#### Settings
+
+- *logFileFolder*: Log files folder path. The default is the application running folder.
+- *period*: Period for rolling the files. The default is `RollingFilePeriod.Day`.
+- *async*: True if write to the console should be asynchronous, otherwise false. Provides fast writing to console, however due to run in a separated thread, the last log(s) in case of a crash may not be written. The default is false.
+- *encoding*: file encoding. The default is UTF8.
+- *bufferSize*: buffer size to be used. The default is 4096.
+- *minimumLevel*: Minimum log level. The default is the logger minimum level.
+- *formatter*: Log formatter to be used. The default is `CompactKeyValueFormatter`.
+
+### Single File
 
 Writes the log to a single file with unlimited size.
 
@@ -105,14 +132,14 @@ Log.Logger = new LoggerFactory()
 
 #### Settings
 
-- *logFilePath*: log file path.
+- *logFilePath*: Log path, including file name and extension. The default is a `log.txt` file in the application running folder.
 - *async*: True if write to the console should be asynchronous, otherwise false. Provides fast writing to console, however due to run in a separated thread, the last log(s) in case of a crash may not be written. The default is false.
 - *encoding*: file encoding. The default is UTF8.
 - *bufferSize*: buffer size to be used. The default is 4096.
 - *minimumLevel*: Minimum log level. The default is the logger minimum level.
 - *formatter*: Log formatter to be used. The default is `CompactKeyValueFormatter`.
 
-### InMemory
+### In Memory
 
 Writes the log to a memory buffer. 
 
