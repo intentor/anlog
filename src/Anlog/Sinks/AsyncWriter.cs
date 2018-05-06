@@ -76,9 +76,12 @@ namespace Anlog.Sinks
         /// <inheritdoc />
         public void Dispose()
         {
+            WriteQueue();
             worker.CancelAsync();
             worker.Dispose();
-            WriteQueue();
+            
+            // Wait to ensure writing.
+            Thread.Sleep(50);
         }
         
         /// <summary>
