@@ -16,10 +16,10 @@
         /// <summary>
         /// Warning level.
         /// </summary>
-        Warn = 3,
+        Warn = 2,
         /// <summary>
         /// Error level.
         /// </summary>
-        Error = 4
+        Error = 3
     }
 }
