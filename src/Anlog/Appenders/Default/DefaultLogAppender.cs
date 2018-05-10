@@ -195,7 +195,7 @@ namespace Anlog.Appenders.Default
             {
                 if (values.Length > 0)
                 {
-                    message = string.Format(message, values);
+                    message = string.Format(DefaultCulture, message, values);
                 }
                 
                 entries.Add(new LogEntry(level.Key, message));
