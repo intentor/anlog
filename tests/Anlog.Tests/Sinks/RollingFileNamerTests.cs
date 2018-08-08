@@ -25,6 +25,15 @@ namespace Anlog.Tests.Sinks
             tempFolder.Dispose();
         }
 
+        [Fact]
+        public void WhenCreatingWithNonexistentPath_CreatesSuccessfully()
+        {
+            var nonexistentPath = Path.Combine(Directory.GetCurrentDirectory(), Guid.NewGuid().ToString());
+            var namer = new RollingFileNamer(nonexistentPath, Day);
+            
+            Assert.NotNull(namer);
+        }
+
         /// <summary>
         /// Test data for checking file update.
         /// </summary>
