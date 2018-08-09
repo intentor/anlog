@@ -96,7 +96,7 @@ namespace Anlog.Sinks
         }
 
         /// <summary>
-        /// Creates writer and directory if neeed.
+        /// Creates writer and directory if needed.
         /// </summary>
         private void CheckAndCreateWriter()
         {
