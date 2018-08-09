@@ -16,7 +16,7 @@ namespace Anlog.Sinks.RollingFile
         /// Log files folder path.
         /// </summary>
         private readonly string logFolderPath;
-        
+
         /// <summary>
         /// Period for creating a new file.
         /// </summary>
@@ -36,7 +36,7 @@ namespace Anlog.Sinks.RollingFile
         {
             this.logFolderPath = logFolderPath;
             this.period = period;
-            
+
             FillLastDate();
         }
 
@@ -67,10 +67,12 @@ namespace Anlog.Sinks.RollingFile
         private void FillLastDate()
         {
             var regex = new Regex(period.FileNamePattern);
-            var mostRecentFilePath = Directory.GetFiles(logFolderPath)
-                .Where(path => regex.IsMatch(path))
-                .OrderByDescending(path => path)
-                .FirstOrDefault();
+            var mostRecentFilePath = Directory.Exists(logFolderPath)
+                ? Directory.GetFiles(logFolderPath)
+                    .Where(path => regex.IsMatch(path))
+                    .OrderByDescending(path => path)
+                    .FirstOrDefault()
+                : null;
 
             if (mostRecentFilePath == null)
             {
