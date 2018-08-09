@@ -13,7 +13,7 @@ namespace Anlog.Sinks
     {
         /// <inheritdoc />
         public LogLevel? MinimumLevel { get; set; }
-        
+
         /// <inheritdoc />
         public ILogFormatter Formatter { get; }
 
@@ -21,22 +21,37 @@ namespace Anlog.Sinks
         /// Renderer factory method.
         /// </summary>
         private readonly Func<IDataRenderer> renderer;
-        
+
+        /// <summary>
+        /// Log file path.
+        /// </summary>
+        private readonly string logFilePath;
+
+        /// <summary>
+        /// File encoding. The default is UTF8.
+        /// </summary>
+        private readonly Encoding encoding;
+
+        /// <summary>
+        /// Buffer size to be used. The default is 4096.
+        /// </summary>
+        private readonly int bufferSize;
+
         /// <summary>
         /// Internal output stream.
         /// </summary>
-        private readonly Stream outputStream;
+        private Stream outputStream;
 
         /// <summary>
         /// Text writer.
         /// </summary>
-        private readonly TextWriter writer;
+        private TextWriter writer;
 
         /// <summary>
         /// Allows blocking of actions in a thread.
         /// </summary>
         private readonly object locker = new object();
-        
+
         /// <summary>
         /// Initializes a new instance of <see cref="FileSink"/>.
         /// </summary>
@@ -45,20 +60,16 @@ namespace Anlog.Sinks
         /// <param name="logFilePath">Log file path.</param>
         /// <param name="encoding">File encoding. The default is UTF8.</param>
         /// <param name="bufferSize">Buffer size to be used. The default is 4096.</param>
-        public FileSink(ILogFormatter formatter, Func<IDataRenderer> renderer, string logFilePath, 
+        public FileSink(ILogFormatter formatter, Func<IDataRenderer> renderer, string logFilePath,
             Encoding encoding = null, int bufferSize = 4096)
         {
             Formatter = formatter;
             this.renderer = renderer;
-            
-            var directory = Path.GetDirectoryName(logFilePath);
-            if (!Directory.Exists(directory))
-            {
-                Directory.CreateDirectory(directory);
-            }
-            
-            outputStream = new FileStream(logFilePath, FileMode.Append, FileAccess.Write, FileShare.Read, bufferSize);
-            writer = new StreamWriter(outputStream, encoding ?? new UTF8Encoding());
+            this.logFilePath = logFilePath;
+            this.encoding = encoding;
+            this.bufferSize = bufferSize;
+
+            CheckAndCreateWriter();
         }
 
         /// <inheritdoc />
@@ -75,11 +86,31 @@ namespace Anlog.Sinks
             {
                 return;
             }
-            
+
             lock (locker)
             {
+                CheckAndCreateWriter();
                 writer.WriteLine(Formatter.Format(level, entries, renderer()));
                 writer.Flush();
+            }
+        }
+
+        /// <summary>
+        /// Creates writer and directory if neeed.
+        /// </summary>
+        private void CheckAndCreateWriter()
+        {
+            var directory = Path.GetDirectoryName(logFilePath);
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
+            if (!File.Exists(logFilePath) || outputStream == null || writer == null)
+            {
+                outputStream = new FileStream(logFilePath, FileMode.Append, FileAccess.Write, FileShare.Read,
+                    bufferSize);
+                writer = new StreamWriter(outputStream, encoding ?? new UTF8Encoding());
             }
         }
     }
