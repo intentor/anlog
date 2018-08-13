@@ -11,14 +11,14 @@ namespace Anlog.Sinks.RollingFile
         /// Format of the file name.
         /// </summary>
         public string DateFormat { get; private set; }
-        
+
         /// <summary>
         /// Format of the file name.
         /// <para/>
         /// There should be a "{0}" in the place where the <see cref="DateFormat"/> will be replaced.
         /// </summary>
         public string FileNameFormat { get; private set; }
-        
+
         /// <summary>
         /// File name regex pattern.
         /// <para/>
@@ -57,9 +57,14 @@ namespace Anlog.Sinks.RollingFile
             DateFormat = "yyyyMMdd",
             FileNameFormat = "log-{0}.txt",
             FileNamePattern = "log-(\\d{8}).txt",
-            IsPeriodExceeded = (lastDate, currentDate) => (currentDate - lastDate).TotalDays >= 1
+            IsPeriodExceeded = (lastDate, currentDate) =>
+            {
+                var last = new DateTime(lastDate.Year, lastDate.Month, lastDate.Day, 0, 0, 0);
+                var curent = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, 0, 0, 0);
+                return (curent - last).TotalDays >= 1;
+            }
         };
-        
+
         /// <summary>
         /// Generates a new file each hour.
         /// </summary>
@@ -68,7 +73,12 @@ namespace Anlog.Sinks.RollingFile
             DateFormat = "yyyyMMddHH",
             FileNameFormat = "log-{0}.txt",
             FileNamePattern = "log-(\\d{10}).txt",
-            IsPeriodExceeded = (lastDate, currentDate) => (currentDate - lastDate).TotalHours >= 1
+            IsPeriodExceeded = (lastDate, currentDate) =>
+            {
+                var last = new DateTime(lastDate.Year, lastDate.Month, lastDate.Day, lastDate.Hour, 0, 0);
+                var curent = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, currentDate.Hour, 0, 0);
+                return (curent - last).TotalHours >= 1;
+            }
         };
     }
 }
