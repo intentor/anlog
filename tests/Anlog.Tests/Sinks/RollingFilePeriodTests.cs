@@ -21,25 +21,29 @@ namespace Anlog.Tests.Sinks
             new List<object[]>
             {
                 new object[] { Day, 0, false },
-                new object[] { Day, 60, false },
-                new object[] { Day, 1439, false },
+                new object[] { Day, 95, false },
+                new object[] { Day, 135, true },
+                new object[] { Day, 1439, true },
                 new object[] { Day, 1440, true },
-                new object[] { Day, 1441, true },
                 new object[] { Day, 2880, true },
                 new object[] { Day, 43200, true },
+                new object[] { Day, 518400, true },
                 new object[] { Hour, 0, false },
-                new object[] { Hour, 59, false },
-                new object[] { Hour, 60, true },
-                new object[] { Hour, 61, true },
-                new object[] { Hour, 120, true }
+                new object[] { Hour, 30, false },
+                new object[] { Hour, 44, false },
+                new object[] { Hour, 45, true },
+                new object[] { Hour, 48, true },
+                new object[] { Hour, 55, true },
+                new object[] { Hour, 95, true },
+                new object[] { Hour, 135, true },
             };
 
         [Theory]
         [MemberData(nameof(RollingPeriodCheckData))]
         public void WhenRolling_CheckPeriodExceeded(RollingFilePeriod period, int minutesToAdd, bool expected)
         {
-            var last = DateTime.Now;
-            var current = DateTime.Now.AddMinutes(minutesToAdd);
+            var last = new DateTime(2018, 10, 5, 22, 15, 0);
+            var current = last.AddMinutes(minutesToAdd);
 
             var isExceeded = period.IsPeriodExceeded(last, current);
             
