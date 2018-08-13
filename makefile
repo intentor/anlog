@@ -10,7 +10,7 @@ build:
 	dotnet build
 
 test:
-	dotnet test
+	find tests/**/*.csproj -exec dotnet test '{}' \;
 	
 local:
 	dotnet msbuild "$(MAIN_PROJECT_FOLDER)" -t:PublishLocal
