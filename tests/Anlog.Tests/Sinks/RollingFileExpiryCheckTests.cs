@@ -22,7 +22,7 @@ namespace Anlog.Tests.Sinks
         /// <inheritdoc />
         public void Dispose()
         {
-            //tempFolder.Dispose();
+            tempFolder.Dispose();
         }
         
         [Theory]
