@@ -15,7 +15,7 @@ namespace Anlog.Sinks.RollingFile
         /// <summary>
         /// Default max file size in bytes. The default is 100mb.
         /// </summary>
-        private const long DefaultMaxFileSilze = 104857600;
+        public const long DefaultMaxFileSize = 104857600;
 
         /// <summary>
         /// Log files folder path.
@@ -48,7 +48,7 @@ namespace Anlog.Sinks.RollingFile
         /// <param name="logFolderPath">Log files folder path.</param>
         /// <param name="period">Period for creating a new file.</param>
         /// <param name="maxFileSize">Max file size in bytes. The default is 100mb.</param>
-        public RollingFileNamer(string logFolderPath, RollingFilePeriod period, long maxFileSize = DefaultMaxFileSilze)
+        public RollingFileNamer(string logFolderPath, RollingFilePeriod period, long maxFileSize = DefaultMaxFileSize)
         {
             this.logFolderPath = logFolderPath;
             this.period = period;
