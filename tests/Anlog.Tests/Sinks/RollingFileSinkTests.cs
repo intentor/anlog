@@ -21,6 +21,11 @@ namespace Anlog.Tests.Sinks
     public sealed class RollingFileSinkTests : IDisposable
     {
         /// <summary>
+        /// Approximately log entry size.
+        /// </summary>
+        private const int ApproximatelyLogEntrySize = 45;
+        
+        /// <summary>
         /// Mock for the time provider.
         /// </summary>
         private readonly Mock<TimeProvider> timeProviderMock;
@@ -60,7 +65,7 @@ namespace Anlog.Tests.Sinks
                 foreach (var minutes in minutesToAdd)
                 {
                     var date = BaseDate.AddMinutes(minutes);
-                    var contentsFile = File.ReadAllLines(Path.Combine(temp.FolderPath, period.GetFileName(date)));
+                    var contentsFile = File.ReadAllLines(Path.Combine(temp.FolderPath, period.GetFileName(date, 1)));
                     var log = string.Format("{0} [DBG] date={1}", date.ToString(DefaultDateTimeFormat),
                         date.ToString(period.DateFormat));
                     
@@ -96,6 +101,32 @@ namespace Anlog.Tests.Sinks
                 Assert.Equal(minutesToAdd.Length, contents.Length);
             }
         }
+        
+        /// <summary>
+        /// Data for same period tests.
+        /// </summary>
+        public static IEnumerable<object[]> Test  =>
+            new List<object[]>
+            {
+                new object[] { true, Day },
+                new object[] { false, Day },
+                new object[] { true, Hour },
+                new object[] { false, Hour }
+            };
+        
+        [Theory]
+        [MemberData(nameof(Test))]
+        public void WhenWritingAndExceedsMaxSize_CreateNewFileCount(bool async, RollingFilePeriod period)
+        {
+            using (var temp = TempFolder.Create())
+            {
+                WriteLogs(async, temp.FolderPath, period, 3584);
+
+                var files = Directory.GetFiles(temp.FolderPath);
+                Assert.NotEmpty(files);
+                Assert.True(files.Length == 4);
+            }
+        }
 
         /// <summary>
         /// Writes logs using a sink.
@@ -124,6 +155,35 @@ namespace Anlog.Tests.Sinks
         }
 
         /// <summary>
+        /// Writes logs using a sink.
+        /// </summary>
+        /// <param name="async">Indicates whether the asynchronous sink should be created.</param>
+        /// <param name="logFolderPath">Log files folder path.</param>
+        /// <param name="period">Rolling file period.</param>
+        /// <param name="logSize">Size in bytes to be written.</param>
+        private void WriteLogs(bool async, string logFolderPath, RollingFilePeriod period, int logSize)
+        {
+            var count = logSize / ApproximatelyLogEntrySize;
+            var date = BaseDate;
+            
+            for (var fileContent = 0; fileContent < count; fileContent++)
+            {
+                date = date.AddSeconds(1);
+                timeProviderMock.Setup(m => m.CurrentDateTime).Returns(date);
+            
+                var sink = CreateSink(async, logFolderPath, period);
+                var entries = new List<ILogEntry>()
+                {
+                    new LogEntry("date", date.ToString(period.DateFormat))
+                };
+                    
+                sink.Write(GenericLogLevelName.Info, entries);
+                
+                ((IDisposable) sink).Dispose();
+            }
+        }
+
+        /// <summary>
         /// Creates a file sink for tests.
         /// </summary>
         /// <param name="async">Indicates whether the asynchronous sink should be created.</param>
@@ -134,7 +194,7 @@ namespace Anlog.Tests.Sinks
         {
             var formatter = new CompactKeyValueFormatter();
             Func<IDataRenderer> renderer = () => new DefaultDataRenderer();
-            var namer = new RollingFileNamer(logFileFolder, period);
+            var namer = new RollingFileNamer(logFileFolder, period, 1024);
             
             return async
                 ? (ILogSink) new AsyncRollingFileSink(formatter, renderer, namer)

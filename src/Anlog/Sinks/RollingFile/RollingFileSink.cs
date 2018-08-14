@@ -63,7 +63,7 @@ namespace Anlog.Sinks.RollingFile
             this.encoding = encoding;
             this.bufferSize = bufferSize;
             
-            CreateSink(TimeProvider.Now);
+            CreateSink(namer.EvaluateFileUpdate(TimeProvider.Now).FilePath);
         }
 
         /// <inheritdoc />
@@ -75,10 +75,10 @@ namespace Anlog.Sinks.RollingFile
         /// <inheritdoc />
         public void Write(LogLevelName level, List<ILogEntry> entries)
         {
-            var date = TimeProvider.Now;
-            if (namer.ShouldUpdateFile(date))
+            var (shouldUpdate, filePath) = namer.EvaluateFileUpdate(TimeProvider.Now);
+            if (shouldUpdate)
             {
-                CreateSink(date);
+                CreateSink(filePath);
             }
             
             sink.Write(level, entries);
@@ -89,11 +89,11 @@ namespace Anlog.Sinks.RollingFile
         /// <para/>
         /// If a sink already exists, disposes it.
         /// </summary>
-        /// <param name="date">Date to create the sink.</param>
-        private void CreateSink(DateTime date)
+        /// <param name="filePath">New file path.</param>
+        private void CreateSink(string filePath)
         {
             sink?.Dispose();
-            sink = new FileSink(Formatter, renderer, namer.GetFilePath(date), encoding, bufferSize);
+            sink = new FileSink(Formatter, renderer, filePath, encoding, bufferSize);
         }
     }
 }

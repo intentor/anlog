@@ -63,7 +63,7 @@ namespace Anlog.Tests.Sinks
             using (var tempFolder = TempFolder.Create())
             {
                 var date = DateTime.Now;
-                File.Create(Path.Combine(tempFolder.FolderPath, period.GetFileName(date)));
+                File.Create(Path.Combine(tempFolder.FolderPath, period.GetFileName(date, 1)));
 
                 var files = Directory.GetFiles(tempFolder.FolderPath);
             
