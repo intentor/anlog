@@ -23,14 +23,14 @@ namespace Anlog.Sinks.RollingFile
         private readonly RollingFilePeriod period;
 
         /// <summary>
-        /// File expiry day count.
+        /// File expiry period in days.
         /// </summary>
-        private readonly int expiryDayCount = 0;
+        private readonly int fileExpiryPeriod = 0;
 
         /// <summary>
-        /// Default file expiry day count. The default is 0 (never).
+        /// Default file expiry period in days. The default is 0 (never).
         /// </summary>
-        public const int DefaultExpiryDayCount = 0;
+        public const int DefaultFileExpiryPeriod = 0;
 
         /// <summary>
         /// Default expiry check timer interval in milliseconds. The default is 1000 milliseconds.
@@ -38,7 +38,7 @@ namespace Anlog.Sinks.RollingFile
         public const int DefaultExpiryCheckInterval = 1000;
 
         /// <summary>
-        /// Database garbase collector timer.
+        /// File expiry check timer.
         /// </summary>
         private readonly Timer fileExpiryCheckTimer;
 
@@ -47,13 +47,13 @@ namespace Anlog.Sinks.RollingFile
         /// </summary>
         /// <param name="logFolderPath">Log files folder path.</param>
         /// <param name="period">Rolling file period.</param>
-        /// <param name="expiryDayCount">File expiry day count. The default is 0 (never).</param>
+        /// <param name="fileExpiryPeriod">File expiry period in days. The default is 0 (never).</param>
         /// <param name="expiryCheckInterval">File expiry check timer interval in milliseconds. The default is 1000 milliseconds.</param>
         public RollingFileExpiryCheck(string logFolderPath, RollingFilePeriod period,
-            int expiryDayCount = DefaultExpiryDayCount, int expiryCheckInterval = DefaultExpiryCheckInterval)
+            int fileExpiryPeriod = DefaultFileExpiryPeriod, int expiryCheckInterval = DefaultExpiryCheckInterval)
         {
             this.logFolderPath = logFolderPath;
-            this.expiryDayCount = expiryDayCount;
+            this.fileExpiryPeriod = fileExpiryPeriod;
             this.period = period;
 
             fileExpiryCheckTimer = new Timer {Interval = expiryCheckInterval};
@@ -85,7 +85,7 @@ namespace Anlog.Sinks.RollingFile
                 var fileDate = DateTime.ParseExact(match.Groups[1].Value, period.DateFormat,
                     CultureInfo.InvariantCulture);
 
-                if ((curentData - fileDate).TotalDays >= expiryDayCount)
+                if ((curentData - fileDate).TotalDays >= fileExpiryPeriod)
                 {
                     File.Delete(files[fileIndex]);
                 }

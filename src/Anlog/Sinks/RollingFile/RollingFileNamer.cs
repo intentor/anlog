@@ -54,9 +54,9 @@ namespace Anlog.Sinks.RollingFile
         /// <param name="logFolderPath">Log files folder path.</param>
         /// <param name="period">Period for creating a new file.</param>
         /// <param name="maxFileSize">Max file size in bytes. The default is 100mb.</param>
-        /// <param name="expiryDayCount">File expiry day count. The default is 0 (never).</param>
+        /// <param name="fileExpiryPeriod">File expiry period in days. The default is 0 (never).</param>
         public RollingFileNamer(string logFolderPath, RollingFilePeriod period, long maxFileSize = DefaultMaxFileSize,
-            int expiryDayCount = DefaultExpiryDayCount)
+            int fileExpiryPeriod = DefaultFileExpiryPeriod)
         {
             this.logFolderPath = logFolderPath;
             this.period = period;
@@ -64,9 +64,9 @@ namespace Anlog.Sinks.RollingFile
 
             FillLastDateAndLogFileCount();
 
-            if (expiryDayCount > 0)
+            if (fileExpiryPeriod > 0)
             {
-                expiryCheck = new RollingFileExpiryCheck(logFolderPath, period, expiryDayCount);
+                expiryCheck = new RollingFileExpiryCheck(logFolderPath, period, fileExpiryPeriod);
             }
         }
 
