@@ -118,6 +118,7 @@ Periods are defined by constants in the class `Anlog.Sinks.RollingFile.RollingFi
 - *period*: Period for rolling the files. The default is `RollingFilePeriod.Day`.
 - *async*: True if write to the console should be asynchronous, otherwise false. Provides fast writing to console, however due to run in a separated thread, the last log(s) in case of a crash may not be written. The default is false.
 - *maxFileSize*: Max file size in bytes. The default is 100mb (104,857,600 bytes).
+- *expiryDayCount*: File expiry day count. The default is 0 (never).
 - *encoding*: File encoding. The default is UTF8.
 - *bufferSize*: Buffer size to be used. The default is 4096.
 - *minimumLevel*: Minimum log level. The default is the logger minimum level.
