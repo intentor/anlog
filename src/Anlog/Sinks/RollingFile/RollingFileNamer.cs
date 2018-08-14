@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Anlog.Time;
+using static Anlog.Sinks.RollingFile.RollingFileExpiryCheck;
 
 namespace Anlog.Sinks.RollingFile
 {
@@ -33,6 +34,11 @@ namespace Anlog.Sinks.RollingFile
         private readonly long maxFileSize;
 
         /// <summary>
+        /// Period for creating a new file.
+        /// </summary>
+        private readonly RollingFileExpiryCheck expiryCheck;
+
+        /// <summary>
         /// Date of the last file.
         /// </summary>
         private DateTime lastDate;
@@ -48,13 +54,20 @@ namespace Anlog.Sinks.RollingFile
         /// <param name="logFolderPath">Log files folder path.</param>
         /// <param name="period">Period for creating a new file.</param>
         /// <param name="maxFileSize">Max file size in bytes. The default is 100mb.</param>
-        public RollingFileNamer(string logFolderPath, RollingFilePeriod period, long maxFileSize = DefaultMaxFileSize)
+        /// <param name="expiryDayCount">File expiry day count. The default is 0 (never).</param>
+        public RollingFileNamer(string logFolderPath, RollingFilePeriod period, long maxFileSize = DefaultMaxFileSize,
+            int expiryDayCount = DefaultExpiryDayCount)
         {
             this.logFolderPath = logFolderPath;
             this.period = period;
             this.maxFileSize = maxFileSize;
 
             FillLastDateAndLogFileCount();
+
+            if (expiryDayCount > 0)
+            {
+                expiryCheck = new RollingFileExpiryCheck(logFolderPath, period, expiryDayCount);
+            }
         }
 
         /// <summary>
