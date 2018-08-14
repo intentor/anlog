@@ -58,7 +58,12 @@ namespace Anlog.Sinks.RollingFile
             DateFormat = "yyyyMMdd",
             FileNameFormat = "log-{0}-{1}.txt",
             FileNamePattern = "log-(\\d{8})(-\\d{1,})?\\.txt",
-            IsPeriodExceeded = (lastDate, currentDate) => (currentDate - lastDate).TotalDays >= 1
+            IsPeriodExceeded = (lastDate, currentDate) =>
+            {
+                var last = new DateTime(lastDate.Year, lastDate.Month, lastDate.Day, 0, 0, 0);
+                var curent = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, 0, 0, 0);
+                return (curent - last).TotalDays >= 1;
+            }
         };
 
         /// <summary>
@@ -69,7 +74,12 @@ namespace Anlog.Sinks.RollingFile
             DateFormat = "yyyyMMddHH",
             FileNameFormat = "log-{0}-{1}.txt",
             FileNamePattern = "log-(\\d{10})(-\\d{1,})?\\.txt",
-            IsPeriodExceeded = (lastDate, currentDate) => (currentDate - lastDate).TotalHours >= 1
+            IsPeriodExceeded = (lastDate, currentDate) =>
+            {
+                var last = new DateTime(lastDate.Year, lastDate.Month, lastDate.Day, lastDate.Hour, 0, 0);
+                var curent = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, currentDate.Hour, 0, 0);
+                return (curent - last).TotalHours >= 1;
+            }
         };
     }
 }
