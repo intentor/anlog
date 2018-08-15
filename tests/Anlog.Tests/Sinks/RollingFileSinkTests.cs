@@ -12,6 +12,7 @@ using Xunit;
 using static Anlog.Formatters.DefaultFormattingOptions;
 using static Anlog.Tests.TestObjects.TestConstants;
 using static Anlog.Sinks.RollingFile.RollingFilePeriod;
+using static Anlog.Sinks.RollingFile.RollingFileNamer;
 
 namespace Anlog.Tests.Sinks
 {
@@ -23,13 +24,13 @@ namespace Anlog.Tests.Sinks
         /// <summary>
         /// Approximately log entry size.
         /// </summary>
-        private const int ApproximatelyLogEntrySize = 45;
-        
+        private const int ApproximatelyLogEntrySize = 46;
+
         /// <summary>
         /// Mock for the time provider.
         /// </summary>
         private readonly Mock<TimeProvider> timeProviderMock;
-        
+
         public RollingFileSinkTests()
         {
             timeProviderMock = new Mock<TimeProvider>();
@@ -41,17 +42,17 @@ namespace Anlog.Tests.Sinks
         {
             TimeProvider.ResetToDefault();
         }
-        
+
         /// <summary>
         /// Data for different period tests.
         /// </summary>
-        public static IEnumerable<object[]> DifferentPeriodData  =>
+        public static IEnumerable<object[]> DifferentPeriodData =>
             new List<object[]>
             {
-                new object[] { true, Day, new int[] { 0, 1440, 2880, 43200 } },
-                new object[] { false, Day, new int[] { 0, 1440, 2880, 43200 } },
-                new object[] { true, Hour, new int[] { 0, 60, 120, 1440, 2880, 43200 } },
-                new object[] { false, Hour, new int[] { 0, 60, 120, 1440, 2880, 43200 } }
+                new object[] {true, Day, new int[] {0, 1440, 2880, 43200}},
+                new object[] {false, Day, new int[] {0, 1440, 2880, 43200}},
+                new object[] {true, Hour, new int[] {0, 60, 120, 1440, 2880, 43200}},
+                new object[] {false, Hour, new int[] {0, 60, 120, 1440, 2880, 43200}}
             };
 
         [Theory]
@@ -61,29 +62,29 @@ namespace Anlog.Tests.Sinks
             using (var temp = TempFolder.Create())
             {
                 WriteLogs(async, temp.FolderPath, period, minutesToAdd);
-                
+
                 foreach (var minutes in minutesToAdd)
                 {
                     var date = BaseDate.AddMinutes(minutes);
                     var contentsFile = File.ReadAllLines(Path.Combine(temp.FolderPath, period.GetFileName(date, 1)));
                     var log = string.Format("{0} [DBG] date={1}", date.ToString(DefaultDateTimeFormat),
                         date.ToString(period.DateFormat));
-                    
+
                     Assert.Equal(log, contentsFile[0]);
                 }
             }
         }
-        
+
         /// <summary>
         /// Data for same period tests.
         /// </summary>
-        public static IEnumerable<object[]> SamePeriodData  =>
+        public static IEnumerable<object[]> SamePeriodData =>
             new List<object[]>
             {
-                new object[] { true, Day, new int[] { 0, 60, 120, 240, 480, 1439 } },
-                new object[] { false, Day, new int[] { 0, 60, 120, 240, 480, 1439 } },
-                new object[] { true, Hour, new int[] { 0, 5, 10, 20, 40, 59 } },
-                new object[] { false, Hour, new int[] { 0, 5, 10, 20, 40, 59 } }
+                new object[] {true, Day, new int[] {0, 60, 120, 240, 480, 1439}},
+                new object[] {false, Day, new int[] {0, 60, 120, 240, 480, 1439}},
+                new object[] {true, Hour, new int[] {0, 5, 10, 20, 40, 59}},
+                new object[] {false, Hour, new int[] {0, 5, 10, 20, 40, 59}}
             };
 
         [Theory]
@@ -101,30 +102,36 @@ namespace Anlog.Tests.Sinks
                 Assert.Equal(minutesToAdd.Length, contents.Length);
             }
         }
-        
+
         /// <summary>
         /// Data for same period tests.
         /// </summary>
-        public static IEnumerable<object[]> Test  =>
+        public static IEnumerable<object[]> RollingFileMaxSizeTestData =>
             new List<object[]>
             {
-                new object[] { true, Day },
-                new object[] { false, Day },
-                new object[] { true, Hour },
-                new object[] { false, Hour }
+                new object[] {true, Day, 3},
+                new object[] {false, Day, 3},
+                new object[] {true, Day, 25},
+                new object[] {false, Day, 25},
+                new object[] {true, Hour, 3},
+                new object[] {false, Hour, 3},
+                new object[] {true, Hour, 25},
+                new object[] {false, Hour, 25}
             };
-        
+
         [Theory]
-        [MemberData(nameof(Test))]
-        public void WhenWritingAndExceedsMaxSize_CreateNewFileCount(bool async, RollingFilePeriod period)
+        [MemberData(nameof(RollingFileMaxSizeTestData))]
+        public void WhenWritingAndExceedsMaxSize_CreateNewFileCount(bool async, RollingFilePeriod period, int numberOfFiles)
         {
             using (var temp = TempFolder.Create())
             {
-                WriteLogs(async, temp.FolderPath, period, 3584);
+                var maxFileSize = ApproximatelyLogEntrySize * 2;
+                var totalLogSize = maxFileSize * numberOfFiles;
+                WriteLogs(async, temp.FolderPath, period, totalLogSize, maxFileSize);
 
                 var files = Directory.GetFiles(temp.FolderPath);
                 Assert.NotEmpty(files);
-                Assert.True(files.Length == 4);
+                Assert.True(files.Length == numberOfFiles);
             }
         }
 
@@ -141,15 +148,15 @@ namespace Anlog.Tests.Sinks
             {
                 var date = BaseDate.AddMinutes(minutes);
                 timeProviderMock.Setup(m => m.CurrentDateTime).Returns(date);
-                
+
                 var sink = CreateSink(async, logFolderPath, period);
                 var entries = new List<ILogEntry>()
                 {
                     new LogEntry("date", date.ToString(period.DateFormat))
                 };
-                    
+
                 sink.Write(GenericLogLevelName.Debug, entries);
-                
+
                 ((IDisposable) sink).Dispose();
             }
         }
@@ -161,24 +168,26 @@ namespace Anlog.Tests.Sinks
         /// <param name="logFolderPath">Log files folder path.</param>
         /// <param name="period">Rolling file period.</param>
         /// <param name="logSize">Size in bytes to be written.</param>
-        private void WriteLogs(bool async, string logFolderPath, RollingFilePeriod period, int logSize)
+        /// <param name="maxFileSize">Max file size in bytes. The default is 100mb.</param>
+        private void WriteLogs(bool async, string logFolderPath, RollingFilePeriod period, int logSize,
+            long maxFileSize = DefaultMaxFileSize)
         {
             var count = logSize / ApproximatelyLogEntrySize;
             var date = BaseDate;
-            
+
             for (var fileContent = 0; fileContent < count; fileContent++)
             {
                 date = date.AddSeconds(1);
                 timeProviderMock.Setup(m => m.CurrentDateTime).Returns(date);
-            
-                var sink = CreateSink(async, logFolderPath, period);
+
+                var sink = CreateSink(async, logFolderPath, period, maxFileSize);
                 var entries = new List<ILogEntry>()
                 {
-                    new LogEntry("date", date.ToString(period.DateFormat))
+                    new LogEntry("date", date.ToString("yyyyMMddHH"))
                 };
-                    
+
                 sink.Write(GenericLogLevelName.Info, entries);
-                
+
                 ((IDisposable) sink).Dispose();
             }
         }
@@ -189,13 +198,15 @@ namespace Anlog.Tests.Sinks
         /// <param name="async">Indicates whether the asynchronous sink should be created.</param>
         /// <param name="logFileFolder">Log files folder path.</param>
         /// <param name="period">Rolling file period.</param>
+        /// <param name="maxFileSize">Max file size in bytes. The default is 100mb.</param>
         /// <returns>Created sink.</returns>
-        private ILogSink CreateSink(bool async, string logFileFolder, RollingFilePeriod period)
+        private ILogSink CreateSink(bool async, string logFileFolder, RollingFilePeriod period,
+            long maxFileSize = DefaultMaxFileSize)
         {
             var formatter = new CompactKeyValueFormatter();
             Func<IDataRenderer> renderer = () => new DefaultDataRenderer();
-            var namer = new RollingFileNamer(logFileFolder, period, 1024);
-            
+            var namer = new RollingFileNamer(logFileFolder, period, maxFileSize);
+
             return async
                 ? (ILogSink) new AsyncRollingFileSink(formatter, renderer, namer)
                 : new RollingFileSink(formatter, renderer, namer);

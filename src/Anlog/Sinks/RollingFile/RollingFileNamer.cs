@@ -92,8 +92,7 @@ namespace Anlog.Sinks.RollingFile
                 logFileCount++;
             }
 
-            var filePath = Path.Combine(logFolderPath, period.GetFileName(dateTime, logFileCount));
-            return (shouldUpdate, Path.Combine(logFolderPath, filePath));
+            return (shouldUpdate, Path.Combine(logFolderPath, period.GetFileName(dateTime, logFileCount)));
         }
 
         /// <summary>
@@ -106,7 +105,8 @@ namespace Anlog.Sinks.RollingFile
             return Directory.Exists(logFolderPath)
                 ? Directory.GetFiles(logFolderPath)
                     .Where(path => regex.IsMatch(path))
-                    .OrderByDescending(path => path)
+                    .OrderByDescending(path => path.Length)
+                    .ThenByDescending(path => path)
                     .FirstOrDefault()
                 : null;
         }
