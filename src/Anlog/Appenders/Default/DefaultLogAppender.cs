@@ -82,31 +82,31 @@ namespace Anlog.Appenders.Default
         /// <inheritdoc />
         public void Debug(string message = null, params object[] values)
         {
-            Write(DefaultFormattingOptions.DefaultLogLevelName.Debug, message, values);
+            Write(DefaultLogLevelName.Debug, message, values);
         }
 
         /// <inheritdoc />
         public void Info(string message = null, params object[] values)
         {
-            Write(DefaultFormattingOptions.DefaultLogLevelName.Info, message, values);
+            Write(DefaultLogLevelName.Info, message, values);
         }
 
         /// <inheritdoc />
         public void Warn(string message = null, params object[] values)
         {
-            Write(DefaultFormattingOptions.DefaultLogLevelName.Warn, message, values);
+            Write(DefaultLogLevelName.Warn, message, values);
         }
 
         /// <inheritdoc />
         public void Error(string message = null, params object[] values)
         {
-            Write(DefaultFormattingOptions.DefaultLogLevelName.Error, message, values);
+            Write(DefaultLogLevelName.Error, message, values);
         }
 
         /// <inheritdoc />
         public void Error(Exception e, string message = null, params object[] values)
         {
-            Write(DefaultFormattingOptions.DefaultLogLevelName.Error, message, values, e);
+            Write(DefaultLogLevelName.Error, message, values, e);
         }
 
         /// <summary>

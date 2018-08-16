@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Anlog.Appenders.Default;
 using Anlog.Entries;
-using Anlog.Formatters.CompactKeyValue;
 
 namespace Anlog.Loggers
 {

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Anlog.Entries;
-using Anlog.Formatters;
 using Anlog.Formatters.LogLevelNames;
 using Anlog.Tests.TestObjects.Models;
 

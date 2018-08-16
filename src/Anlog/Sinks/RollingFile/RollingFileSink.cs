@@ -35,7 +35,7 @@ namespace Anlog.Sinks.RollingFile
         /// File encoding.
         /// </summary>
         private Encoding encoding;
-        
+
         /// <summary>
         /// Buffer size to be used.
         /// </summary>
@@ -45,6 +45,11 @@ namespace Anlog.Sinks.RollingFile
         /// Internal file sink.
         /// </summary>
         private FileSink sink;
+
+        /// <summary>
+        /// Allows blocking of actions in a thread.
+        /// </summary>
+        private readonly object locker = new object();
 
         /// <summary>
         /// Initializes a new instance of <see cref="RollingFileSink"/>.
@@ -62,8 +67,8 @@ namespace Anlog.Sinks.RollingFile
             this.namer = namer;
             this.encoding = encoding;
             this.bufferSize = bufferSize;
-            
-            CreateSink(TimeProvider.Now);
+
+            CreateSink(namer.EvaluateFileUpdate(TimeProvider.Now).FilePath);
         }
 
         /// <inheritdoc />
@@ -75,13 +80,16 @@ namespace Anlog.Sinks.RollingFile
         /// <inheritdoc />
         public void Write(LogLevelName level, List<ILogEntry> entries)
         {
-            var date = TimeProvider.Now;
-            if (namer.ShouldUpdateFile(date))
+            lock (locker)
             {
-                CreateSink(date);
+                var (shouldUpdate, filePath) = namer.EvaluateFileUpdate(TimeProvider.Now);
+                if (shouldUpdate)
+                {
+                    CreateSink(filePath);
+                }
+
+                sink.Write(level, entries);
             }
-            
-            sink.Write(level, entries);
         }
 
         /// <summary>
@@ -89,11 +97,11 @@ namespace Anlog.Sinks.RollingFile
         /// <para/>
         /// If a sink already exists, disposes it.
         /// </summary>
-        /// <param name="date">Date to create the sink.</param>
-        private void CreateSink(DateTime date)
+        /// <param name="filePath">New file path.</param>
+        private void CreateSink(string filePath)
         {
             sink?.Dispose();
-            sink = new FileSink(Formatter, renderer, namer.GetFilePath(date), encoding, bufferSize);
+            sink = new FileSink(Formatter, renderer, filePath, encoding, bufferSize);
         }
     }
 }

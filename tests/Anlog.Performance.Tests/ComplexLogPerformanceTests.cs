@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using System.Runtime.CompilerServices;
 using Anlog.Performance.Tests.TestObjects;
-using Anlog.Tests.TestObjects;
 using Xunit.Abstractions;
 using static Anlog.Tests.TestObjects.TestConstants;
 

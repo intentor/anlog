@@ -37,10 +37,11 @@ namespace Anlog.Sinks.RollingFile
         /// Gets the file name for the given period.
         /// </summary>
         /// <param name="date">Date to get the file name from.</param>
+        /// <param name="fileCount">File number.</param>
         /// <returns>File name.</returns>
-        public string GetFileName(DateTime date)
+        public string GetFileName(DateTime date, long fileCount)
         {
-            return string.Format(FileNameFormat, date.ToString(DateFormat));
+            return string.Format(FileNameFormat, date.ToString(DateFormat), fileCount);
         }
 
         /// <inheritdoc />
@@ -55,8 +56,8 @@ namespace Anlog.Sinks.RollingFile
         public static readonly RollingFilePeriod Day = new RollingFilePeriod()
         {
             DateFormat = "yyyyMMdd",
-            FileNameFormat = "log-{0}.txt",
-            FileNamePattern = "log-(\\d{8}).txt",
+            FileNameFormat = "log-{0}-{1}.txt",
+            FileNamePattern = "log-(\\d{8})(-\\d{1,})?\\.txt",
             IsPeriodExceeded = (lastDate, currentDate) =>
             {
                 var last = new DateTime(lastDate.Year, lastDate.Month, lastDate.Day, 0, 0, 0);
@@ -71,8 +72,8 @@ namespace Anlog.Sinks.RollingFile
         public static readonly RollingFilePeriod Hour = new RollingFilePeriod()
         {
             DateFormat = "yyyyMMddHH",
-            FileNameFormat = "log-{0}.txt",
-            FileNamePattern = "log-(\\d{10}).txt",
+            FileNameFormat = "log-{0}-{1}.txt",
+            FileNamePattern = "log-(\\d{10})(-\\d{1,})?\\.txt",
             IsPeriodExceeded = (lastDate, currentDate) =>
             {
                 var last = new DateTime(lastDate.Year, lastDate.Month, lastDate.Day, lastDate.Hour, 0, 0);

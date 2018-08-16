@@ -95,7 +95,7 @@ Log.Logger = new LoggerFactory()
 
 ### Rolling File
 
-Writes the output to files by period. Each time a period is reached, a new file is created.
+Writes the output to files by period and max file size. Each time a period or a max file size is reached, a new file is created.
 
 ```cs
 Log.Logger = new LoggerFactory()
@@ -107,16 +107,20 @@ Log.Logger = new LoggerFactory()
 
 Periods are defined by constants in the class `Anlog.Sinks.RollingFile.RollingFilePeriod`.
 
-- *Day*: Generates a new file each day. File name format: `log-yyyyMMdd.txt`.
-- *Hour*: Generates a new file each hour. File name format: `log-yyyyMMddHH.txt`.
+- *Day*: Generates a new file each day. File name format: `log-yyyyMMdd-{fileNumber}.txt`.
+- *Hour*: Generates a new file each hour. File name format: `log-yyyyMMddHH-{fileNumber}.txt`.
+
+\* `fileNumber` default value is `1` and raises automatically creating a new log file every time log reaches the maximum size value configured.  
 
 #### Settings
 
 - *logFileFolder*: Log files folder path. The default is the application running folder.
 - *period*: Period for rolling the files. The default is `RollingFilePeriod.Day`.
 - *async*: True if write to the console should be asynchronous, otherwise false. Provides fast writing to console, however due to run in a separated thread, the last log(s) in case of a crash may not be written. The default is false.
-- *encoding*: file encoding. The default is UTF8.
-- *bufferSize*: buffer size to be used. The default is 4096.
+- *maxFileSize*: Max file size in bytes. The default is 100mb (104,857,600 bytes).
+- *fileExpiryPeriod*: File expiry period in days. The default is 0 (never).
+- *encoding*: File encoding. The default is UTF8.
+- *bufferSize*: Buffer size to be used. The default is 4096.
 - *minimumLevel*: Minimum log level. The default is the logger minimum level.
 - *formatter*: Log formatter to be used. The default is `CompactKeyValueFormatter`.
 

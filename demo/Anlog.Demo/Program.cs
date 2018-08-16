@@ -1,7 +1,6 @@
 ﻿using Anlog.Factories;
 using Anlog.Sinks.Console;
 using Anlog.Sinks.RollingFile;
-using Anlog.Sinks.SingleFile;
 
 namespace Anlog.Demo
 {
