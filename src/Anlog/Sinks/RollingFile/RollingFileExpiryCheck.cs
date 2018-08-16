@@ -66,16 +66,13 @@ namespace Anlog.Sinks.RollingFile
         /// </summary>
         private void RollingFileExpiryCheckTimerEvent(object sender, ElapsedEventArgs e)
         {
-            var regex = new Regex(period.FileNamePattern);
-            var files = Directory.Exists(logFolderPath)
-                ? Directory.GetFiles(logFolderPath)
-                    .Where(path => regex.IsMatch(path))
-                    .OrderByDescending(path => path)
-                    .ToArray()
-                : null;
-
-            if (files == null)
+            if (!Directory.Exists(logFolderPath))
                 return;
+            
+            var regex = new Regex(period.FileNamePattern);
+            var files = Directory.GetFiles(logFolderPath)
+                .Where(path => regex.IsMatch(path))
+                .ToArray();
 
             var curentData = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0);
             for (var fileIndex = files.Length - 1; fileIndex >= 0; fileIndex--)

@@ -88,7 +88,6 @@ namespace Anlog.Sinks.RollingFile
                 if (shouldUpdate)
                 {
                     CreateSink(filePath);
-//                    Thread.Sleep(50);
                 }
 
                 sink.Write(level, entries);

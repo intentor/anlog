@@ -95,7 +95,7 @@ Log.Logger = new LoggerFactory()
 
 ### Rolling File
 
-Writes the output to files by period and max file size (default is 100mb). Each time a period or a max file size is reached, a new file is created.
+Writes the output to files by period and max file size. Each time a period or a max file size is reached, a new file is created.
 
 ```cs
 Log.Logger = new LoggerFactory()
@@ -107,10 +107,10 @@ Log.Logger = new LoggerFactory()
 
 Periods are defined by constants in the class `Anlog.Sinks.RollingFile.RollingFilePeriod`.
 
-- *Day*: Generates a new file each day. File name format: `log-yyyyMMdd-{fileCount}.txt`.
-- *Hour*: Generates a new file each hour. File name format: `log-yyyyMMddHH-{fileCount}.txt`.
+- *Day*: Generates a new file each day. File name format: `log-yyyyMMdd-{fileNumber}.txt`.
+- *Hour*: Generates a new file each hour. File name format: `log-yyyyMMddHH-{fileNumber}.txt`.
 
-\* `fileCount` default value is `1` and raises automatically creating a new log file every time log reaches the maximum size value configured.  
+\* `fileNumber` default value is `1` and raises automatically creating a new log file every time log reaches the maximum size value configured.  
 
 #### Settings
 
