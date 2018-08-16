@@ -39,7 +39,7 @@ namespace Anlog.Tests.Sinks
         [InlineData(15, 10)]
         public void WhenCheckingForUpdate_ReturnBool(int expiryDate, int expectedFileCount)
         {
-            CreateDummyFiles(Day);
+            CreateDummyFiles();
             var expiryCheck = new RollingFileExpiryCheck(tempFolder.FolderPath, Day, expiryDate, 100);
 
             Thread.Sleep(200);
@@ -51,8 +51,7 @@ namespace Anlog.Tests.Sinks
         /// <summary>
         /// Creates some dummy files with different previous dates, including the <see cref="BaseDate"/>.
         /// </summary>
-        /// <param name="period">Rolling file period to consider.</param>
-        private void CreateDummyFiles(RollingFilePeriod period)
+        private void CreateDummyFiles()
         {
             for (var days = 0; days < 10; days++)
             {
