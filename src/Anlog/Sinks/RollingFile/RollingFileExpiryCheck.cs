@@ -13,6 +13,16 @@ namespace Anlog.Sinks.RollingFile
     public class RollingFileExpiryCheck : IDisposable
     {
         /// <summary>
+        /// Default file expiry period in days. The default is 0 (never).
+        /// </summary>
+        public const int DefaultFileExpiryPeriod = 0;
+
+        /// <summary>
+        /// Default expiry check timer interval in milliseconds. The default is 1000 milliseconds.
+        /// </summary>
+        public const int DefaultExpiryCheckInterval = 1000;
+        
+        /// <summary>
         /// Log files folder path.
         /// </summary>
         private readonly string logFolderPath;
@@ -26,16 +36,6 @@ namespace Anlog.Sinks.RollingFile
         /// File expiry period in days.
         /// </summary>
         private readonly int fileExpiryPeriod = 0;
-
-        /// <summary>
-        /// Default file expiry period in days. The default is 0 (never).
-        /// </summary>
-        public const int DefaultFileExpiryPeriod = 0;
-
-        /// <summary>
-        /// Default expiry check timer interval in milliseconds. The default is 1000 milliseconds.
-        /// </summary>
-        public const int DefaultExpiryCheckInterval = 1000;
 
         /// <summary>
         /// File expiry check timer.
@@ -67,7 +67,9 @@ namespace Anlog.Sinks.RollingFile
         private void RollingFileExpiryCheckTimerEvent(object sender, ElapsedEventArgs e)
         {
             if (!Directory.Exists(logFolderPath))
+            {
                 return;
+            }
             
             var regex = new Regex(period.FileNamePattern);
             var files = Directory.GetFiles(logFolderPath)
