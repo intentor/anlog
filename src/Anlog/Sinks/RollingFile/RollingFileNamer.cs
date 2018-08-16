@@ -122,12 +122,11 @@ namespace Anlog.Sinks.RollingFile
             }
 
             var regex = new Regex(period.FileNamePattern);
-            var fullPath = Directory.GetFiles(logFolderPath)
+            return Directory.GetFiles(logFolderPath)
                 .Where(path => regex.IsMatch(path))
                 .OrderByDescending(path => GetDateAndNumberFromLogFileName(path).LogDate)
                 .ThenByDescending(path => GetDateAndNumberFromLogFileName(path).LogNumber)
                 .FirstOrDefault();
-            return fullPath;
         }
 
         /// <summary>
