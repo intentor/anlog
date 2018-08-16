@@ -14,7 +14,7 @@ namespace Anlog.Sinks.RollingFile
     public class RollingFileNamer
     {
         /// <summary>
-        /// Default max file size in bytes. The default is 100mb.
+        /// Default max file size in bytes. The default is 100 MB.
         /// </summary>
         public const long DefaultMaxFileSize = 104857600;
 
