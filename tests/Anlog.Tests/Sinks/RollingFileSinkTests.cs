@@ -106,7 +106,7 @@ namespace Anlog.Tests.Sinks
         }
 
         /// <summary>
-        /// Data for same period tests.
+        /// Data for max size tests.
         /// </summary>
         public static IEnumerable<object[]> RollingFileMaxSizeTestData =>
             new List<object[]>
@@ -135,11 +135,60 @@ namespace Anlog.Tests.Sinks
                 {
                     var date = BaseDate.AddHours(period.DateFormat.Contains("HH") ? periodToJump : 24 * periodToJump);
                     WriteLogs(async, temp.FolderPath, period, totalLogSize, date, maxFileSize);
+
+                    var regex = new Regex(period.FileNamePattern);
+                    var periodFiles = new DirectoryInfo(temp.FolderPath)
+                        .GetFiles()
+                        .Where(f => regex.IsMatch(f.FullName) && f.FullName.Contains(date.ToString(period.DateFormat)))
+                        .ToArray();
+                    Assert.NotEmpty(periodFiles);
+                    Assert.True(periodFiles.Length == numberOfFiles);
+                    foreach (var periodFile in periodFiles)
+                    {
+                        Assert.True(periodFile.Length >= maxFileSize * 0.90f && periodFile.Length <= maxFileSize * 1.10f);
+                    }
                 }
 
                 var files = Directory.GetFiles(temp.FolderPath);
                 Assert.NotEmpty(files);
                 Assert.True(files.Length == numberOfFiles * totalPeriodToJump);
+            }
+        }
+
+        /// <summary>
+        /// Data for writing and delete tests.
+        /// </summary>
+        public static IEnumerable<object[]> RollingFileWritingAndDeleteTestData =>
+            new List<object[]>
+            {
+                new object[] {true, Day,},
+                new object[] {false, Day},
+                new object[] {true, Hour},
+                new object[] {false, Hour},
+            };
+
+        [Theory]
+        [MemberData(nameof(RollingFileWritingAndDeleteTestData))]
+        public void WhenWritingAndDeleteFolder_CreateDirectoryFileAndKeepWriting(bool async, RollingFilePeriod period)
+        {
+            using (var temp = TempFolder.Create())
+            {
+                var maxFileSize = ApproximatelyLogEntrySize * 2;
+                var totalLogSize = maxFileSize * 3;
+
+                WriteLogs(async, temp.FolderPath, period, totalLogSize, BaseDate, maxFileSize);
+                Directory.Delete(temp.FolderPath, true);
+                WriteLogs(async, temp.FolderPath, period, totalLogSize, BaseDate, maxFileSize);
+
+                var files = new DirectoryInfo(temp.FolderPath)
+                    .GetFiles()
+                    .ToArray();
+                Assert.NotEmpty(files);
+                Assert.True(files.Length == 3);
+                foreach (var periodFile in files)
+                {
+                    Assert.True(periodFile.Length >= maxFileSize * 0.90f && periodFile.Length <= maxFileSize * 1.10f);
+                }
             }
         }
 
