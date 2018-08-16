@@ -14,7 +14,7 @@ namespace Anlog.Sinks.RollingFile
     public class RollingFileNamer
     {
         /// <summary>
-        /// Default max file size in bytes. The default is 100mb.
+        /// Default max file size in bytes. The default is 100 MB.
         /// </summary>
         public const long DefaultMaxFileSize = 104857600;
 
@@ -122,12 +122,11 @@ namespace Anlog.Sinks.RollingFile
             }
 
             var regex = new Regex(period.FileNamePattern);
-            var fullPath = Directory.GetFiles(logFolderPath)
+            return Directory.GetFiles(logFolderPath)
                 .Where(path => regex.IsMatch(path))
                 .OrderByDescending(path => GetDateAndNumberFromLogFileName(path).LogDate)
                 .ThenByDescending(path => GetDateAndNumberFromLogFileName(path).LogNumber)
                 .FirstOrDefault();
-            return fullPath;
         }
 
         /// <summary>
