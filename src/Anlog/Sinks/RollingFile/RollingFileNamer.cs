@@ -117,7 +117,9 @@ namespace Anlog.Sinks.RollingFile
         private string GetMostRecentFilePath()
         {
             if (!Directory.Exists(logFolderPath))
+            {
                 return null;
+            }
 
             var regex = new Regex(period.FileNamePattern);
             var fullPath = Directory.GetFiles(logFolderPath)
