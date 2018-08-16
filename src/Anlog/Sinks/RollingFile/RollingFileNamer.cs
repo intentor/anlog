@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using Anlog.Time;
 using static Anlog.Sinks.RollingFile.RollingFileExpiryCheck;
 
@@ -39,14 +40,19 @@ namespace Anlog.Sinks.RollingFile
         private readonly RollingFileExpiryCheck expiryCheck;
 
         /// <summary>
-        /// Date of the last file.
+        /// Date of the last log file.
         /// </summary>
         private DateTime lastDate;
 
         /// <summary>
-        /// Log file count.
+        /// Count of the last log file.
         /// </summary>
-        private int logFileCount = 0;
+        private int lastLogCount;
+
+        /// <summary>
+        /// Path of the last log file.
+        /// </summary>
+        private string lastLogPath;
 
         /// <summary>
         /// Initializes a new instance of <see cref="RollingFileNamer"/>.
@@ -78,57 +84,22 @@ namespace Anlog.Sinks.RollingFile
         public (bool ShouldUpdate, string FilePath) EvaluateFileUpdate(DateTime date)
         {
             var shouldUpdate = false;
-            var dateTime = lastDate;
 
             if (period.IsPeriodExceeded(lastDate, date))
             {
                 shouldUpdate = true;
-                dateTime = date;
-                logFileCount = 1;
+                lastDate = date;
+                lastLogCount = 1;
+                lastLogPath = Path.Combine(logFolderPath, period.GetFileName(lastDate, lastLogCount));
             }
             else if (IsSizeLimitExceeded())
             {
                 shouldUpdate = true;
-                logFileCount++;
+                lastLogCount++;
+                lastLogPath = Path.Combine(logFolderPath, period.GetFileName(lastDate, lastLogCount));
             }
 
-            return (shouldUpdate, Path.Combine(logFolderPath, period.GetFileName(dateTime, logFileCount)));
-        }
-
-        /// <summary>
-        /// Gets the most recent file.
-        /// </summary>
-        /// <returns>File path of the most recent file.</returns>
-        private string GetMostRecentFile()
-        {
-            var regex = new Regex(period.FileNamePattern);
-            return Directory.Exists(logFolderPath)
-                ? Directory.GetFiles(logFolderPath)
-                    .Where(path => regex.IsMatch(path))
-                    .OrderByDescending(path => path.Length)
-                    .ThenByDescending(path => path)
-                    .FirstOrDefault()
-                : null;
-        }
-
-        /// <summary>
-        /// Fills the last date and log file count based on files available in the <see cref="logFolderPath"/>.
-        /// </summary>
-        private void FillLastDateAndLogFileCount()
-        {
-            var mostRecentFilePath = GetMostRecentFile();
-            if (mostRecentFilePath == null)
-            {
-                lastDate = TimeProvider.Now;
-                logFileCount = 1;
-            }
-            else
-            {
-                var fileName = Path.GetFileName(mostRecentFilePath);
-                var match = Regex.Match(fileName, period.FileNamePattern);
-                lastDate = DateTime.ParseExact(match.Groups[1].Value, period.DateFormat, CultureInfo.InvariantCulture);
-                logFileCount = Math.Abs(int.Parse(match.Groups[2].Value));
-            }
+            return (shouldUpdate, lastLogPath);
         }
 
         /// <summary>
@@ -136,8 +107,59 @@ namespace Anlog.Sinks.RollingFile
         /// </summary>
         private bool IsSizeLimitExceeded()
         {
-            var mosRecentFile = GetMostRecentFile();
-            return mosRecentFile != null && new FileInfo(mosRecentFile).Length >= maxFileSize;
+            return !string.IsNullOrWhiteSpace(lastLogPath) && File.Exists(lastLogPath) &&
+                   new FileInfo(lastLogPath).Length >= maxFileSize;
+        }
+
+        /// <summary>
+        /// Gets the most recent file path.
+        /// </summary>
+        /// <returns>File path of the most recent file.</returns>
+        private string GetMostRecentFilePath()
+        {
+            if (!Directory.Exists(logFolderPath))
+                return null;
+
+            var regex = new Regex(period.FileNamePattern);
+            var fullPath = Directory.GetFiles(logFolderPath)
+                .Where(path => regex.IsMatch(path))
+                .OrderByDescending(path => GetDateAndCountFromLogFileName(path).LogDate)
+                .ThenByDescending(path => GetDateAndCountFromLogFileName(path).LogCount)
+                .FirstOrDefault();
+            return fullPath;
+        }
+
+        /// <summary>
+        /// Fills the last date and log file count based on files available in the <see cref="logFolderPath"/>.
+        /// </summary>
+        private void FillLastDateAndLogFileCount()
+        {
+            var mostRecentFilePath = GetMostRecentFilePath();
+            if (string.IsNullOrWhiteSpace(mostRecentFilePath))
+            {
+                lastDate = TimeProvider.Now;
+                lastLogCount = 1;
+                lastLogPath = Path.Combine(logFolderPath, period.GetFileName(lastDate, lastLogCount));
+            }
+            else
+            {
+                var fileName = Path.GetFileName(mostRecentFilePath);
+                lastLogPath = mostRecentFilePath;
+                (lastDate, lastLogCount) = GetDateAndCountFromLogFileName(fileName);
+            }
+        }
+
+        /// <summary>
+        /// Reutrn 
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns>Tuple with </returns>
+        private (DateTime LogDate, int LogCount) GetDateAndCountFromLogFileName(string fileName)
+        {
+            var match = Regex.Match(fileName, period.FileNamePattern);
+            var logDate = DateTime.ParseExact(match.Groups[1].Value, period.DateFormat, CultureInfo.InvariantCulture);
+            var logCount = Math.Abs(int.Parse(match.Groups[2].Value));
+            return (logDate, logCount);
         }
     }
 }

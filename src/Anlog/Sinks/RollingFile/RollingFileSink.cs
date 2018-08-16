@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
+using System.Threading;
 using Anlog.Entries;
 using Anlog.Time;
 
@@ -35,7 +37,7 @@ namespace Anlog.Sinks.RollingFile
         /// File encoding.
         /// </summary>
         private Encoding encoding;
-        
+
         /// <summary>
         /// Buffer size to be used.
         /// </summary>
@@ -45,6 +47,11 @@ namespace Anlog.Sinks.RollingFile
         /// Internal file sink.
         /// </summary>
         private FileSink sink;
+
+        /// <summary>
+        /// Allows blocking of actions in a thread.
+        /// </summary>
+        private readonly object locker = new object();
 
         /// <summary>
         /// Initializes a new instance of <see cref="RollingFileSink"/>.
@@ -62,7 +69,7 @@ namespace Anlog.Sinks.RollingFile
             this.namer = namer;
             this.encoding = encoding;
             this.bufferSize = bufferSize;
-            
+
             CreateSink(namer.EvaluateFileUpdate(TimeProvider.Now).FilePath);
         }
 
@@ -75,13 +82,17 @@ namespace Anlog.Sinks.RollingFile
         /// <inheritdoc />
         public void Write(LogLevelName level, List<ILogEntry> entries)
         {
-            var (shouldUpdate, filePath) = namer.EvaluateFileUpdate(TimeProvider.Now);
-            if (shouldUpdate)
+            lock (locker)
             {
-                CreateSink(filePath);
+                var (shouldUpdate, filePath) = namer.EvaluateFileUpdate(TimeProvider.Now);
+                if (shouldUpdate)
+                {
+                    CreateSink(filePath);
+//                    Thread.Sleep(50);
+                }
+
+                sink.Write(level, entries);
             }
-            
-            sink.Write(level, entries);
         }
 
         /// <summary>

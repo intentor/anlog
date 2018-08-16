@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using Anlog.Sinks.RollingFile;
 using Anlog.Tests.TestObjects;
 using Xunit;
@@ -104,23 +105,25 @@ namespace Anlog.Tests.Sinks
         [Fact]
         public void WhenGettingFilePathLastFileNotExceedsMaxSize_ReturnCorrectName()
         {
-            CreateDummy1MbLogFiles(3, false);
-            var namer = new RollingFileNamer(tempFolder.FolderPath, Day, 943718);
+            const int maxLogSize = 10240;
+            CreateDummyFiles(maxLogSize, 3, true);
+            var namer = new RollingFileNamer(tempFolder.FolderPath, Day, maxLogSize);
 
             var fileName = Path.GetFileName(namer.EvaluateFileUpdate(BaseDate).FilePath);
 
-            Assert.Equal("log-20180506-4.txt", fileName);
+            Assert.Equal("log-20180506-3.txt", fileName);
         }
 
         [Fact]
         public void WhenGettingFilePathAllExceedsMaxSize_ReturnCorrectName()
         {
-            CreateDummy1MbLogFiles(3, true);
-            var namer = new RollingFileNamer(tempFolder.FolderPath, Day, 943718);
+            const int maxLogSize = 46;
+            CreateDummyFiles(maxLogSize, 3, false);
+            var namer = new RollingFileNamer(tempFolder.FolderPath, Day, maxLogSize);
 
             var fileName = Path.GetFileName(namer.EvaluateFileUpdate(BaseDate).FilePath);
 
-            Assert.Equal("log-20180506-3.txt", fileName);
+            Assert.Equal("log-20180506-4.txt", fileName);
         }
 
         /// <summary>
@@ -129,21 +132,23 @@ namespace Anlog.Tests.Sinks
         /// <param name="period">Rolling file period to consider.</param>
         private void CreateDummyFiles(RollingFilePeriod period)
         {
-            for (var days = 0; days < 10; days++)
+            for (var days = 10 - 1; days >= 0; days--)
             {
                 var date = BaseDate.AddDays(-days);
-                File.Create(Path.Combine(tempFolder.FolderPath, period.GetFileName(date, 1)));
+                var filePath = Path.Combine(tempFolder.FolderPath, period.GetFileName(date, 1));
+                File.Create(filePath);
             }
         }
 
         /// <summary>
-        /// Crates some dummy files with 1mb size.
+        /// Creates some dummy files with a pre-determined log size.
         /// </summary>
+        /// <param name="logSize">Size in bytes to be written.</param>
         /// <param name="numberOfFiles">Number of files to be crated.</param>
         /// <param name="lastFileHalfSize">Creates last file with half of the size limit.</param>
-        private void CreateDummy1MbLogFiles(int numberOfFiles, bool lastFileHalfSize)
+        private void CreateDummyFiles(int logSize, int numberOfFiles, bool lastFileHalfSize)
         {
-            var count = 1048576 / GenericLogText.Length;
+            var count = Math.Ceiling(logSize / (double) GenericLogText.Length);
             for (var filesCount = 1; filesCount <= numberOfFiles; filesCount++)
             {
                 var filePath = Path.Combine(tempFolder.FolderPath, Day.GetFileName(BaseDate, filesCount));
@@ -151,7 +156,8 @@ namespace Anlog.Tests.Sinks
 
                 for (var fileContent = 0; fileContent < count; fileContent++)
                 {
-                    logFile.Write(GenericLogText);
+                    logFile.WriteLine(GenericLogText);
+                    logFile.Flush();
 
                     if (lastFileHalfSize && filesCount == numberOfFiles && (fileContent * 2) >= count)
                         break;

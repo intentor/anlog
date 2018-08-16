@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 using Anlog.Entries;
 using Anlog.Formatters.CompactKeyValue;
 using Anlog.Renderers;
@@ -109,29 +111,35 @@ namespace Anlog.Tests.Sinks
         public static IEnumerable<object[]> RollingFileMaxSizeTestData =>
             new List<object[]>
             {
-                new object[] {true, Day, 3},
-                new object[] {false, Day, 3},
-                new object[] {true, Day, 25},
-                new object[] {false, Day, 25},
-                new object[] {true, Hour, 3},
-                new object[] {false, Hour, 3},
-                new object[] {true, Hour, 25},
-                new object[] {false, Hour, 25}
+                new object[] {true, Day, 3, 3},
+                new object[] {false, Day, 3, 3},
+                new object[] {true, Day, 22, 3},
+                new object[] {false, Day, 22, 3},
+                new object[] {true, Hour, 3, 26},
+                new object[] {false, Hour, 3, 26},
+                new object[] {true, Hour, 22, 26},
+                new object[] {false, Hour, 22, 26}
             };
 
         [Theory]
         [MemberData(nameof(RollingFileMaxSizeTestData))]
-        public void WhenWritingAndExceedsMaxSize_CreateNewFileCount(bool async, RollingFilePeriod period, int numberOfFiles)
+        public void WhenWritingAndExceedsMaxSize_CreateNewFileCount(bool async, RollingFilePeriod period,
+            int numberOfFiles, int totalPeriodToJump)
         {
             using (var temp = TempFolder.Create())
             {
                 var maxFileSize = ApproximatelyLogEntrySize * 2;
                 var totalLogSize = maxFileSize * numberOfFiles;
-                WriteLogs(async, temp.FolderPath, period, totalLogSize, maxFileSize);
+
+                for (var periodToJump = 0; periodToJump < totalPeriodToJump; periodToJump++)
+                {
+                    var date = BaseDate.AddHours(period.DateFormat.Contains("HH") ? periodToJump : 24 * periodToJump);
+                    WriteLogs(async, temp.FolderPath, period, totalLogSize, date, maxFileSize);
+                }
 
                 var files = Directory.GetFiles(temp.FolderPath);
                 Assert.NotEmpty(files);
-                Assert.True(files.Length == numberOfFiles);
+                Assert.True(files.Length == numberOfFiles * totalPeriodToJump);
             }
         }
 
@@ -168,12 +176,13 @@ namespace Anlog.Tests.Sinks
         /// <param name="logFolderPath">Log files folder path.</param>
         /// <param name="period">Rolling file period.</param>
         /// <param name="logSize">Size in bytes to be written.</param>
+        /// <param name="baseDate">Base datetime to be used.</param>
         /// <param name="maxFileSize">Max file size in bytes. The default is 100mb.</param>
         private void WriteLogs(bool async, string logFolderPath, RollingFilePeriod period, int logSize,
-            long maxFileSize = DefaultMaxFileSize)
+            DateTime baseDate, long maxFileSize = DefaultMaxFileSize)
         {
             var count = logSize / ApproximatelyLogEntrySize;
-            var date = BaseDate;
+            var date = baseDate;
 
             for (var fileContent = 0; fileContent < count; fileContent++)
             {
