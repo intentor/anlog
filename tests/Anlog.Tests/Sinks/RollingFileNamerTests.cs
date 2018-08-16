@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading;
 using Anlog.Sinks.RollingFile;
 using Anlog.Tests.TestObjects;
 using Xunit;

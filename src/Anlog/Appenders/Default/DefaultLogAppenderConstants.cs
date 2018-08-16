@@ -1,7 +1,4 @@
-﻿using Anlog.Formatters;
-using Anlog.Formatters.CompactKeyValue;
-
-namespace Anlog.Appenders.Default
+﻿namespace Anlog.Appenders.Default
 {
     /// <summary>
     /// Constants for the <see cref="DefaultLogAppender"/>.

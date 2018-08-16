@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Anlog.Sinks.SingleFile;
 
 namespace Anlog.Factories
 {

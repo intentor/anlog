@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using Anlog.Entries;
-using static Anlog.Formatters.DefaultFormattingOptions;
 
 namespace Anlog.Sinks.SingleFile
 {

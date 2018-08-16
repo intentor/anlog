@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using Anlog.Entries;
-using Anlog.Formatters.CompactKeyValue;
 
 namespace Anlog.Sinks.InMemory
 {
