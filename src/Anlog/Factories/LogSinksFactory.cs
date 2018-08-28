@@ -12,12 +12,12 @@ namespace Anlog.Factories
         /// <summary>
         /// Logger factory.
         /// </summary>
-        internal LoggerFactory Factory { get; }
+        public LoggerFactory Factory { get; }
         
         /// <summary>
         /// Available sinks.
         /// </summary>
-        internal List<ILogSink> Sinks { get; }
+        public List<ILogSink> Sinks { get; }
 
         /// <summary>
         /// Initializes a new instance of <see cref="LogSinksFactory"/>.
