@@ -13,7 +13,7 @@ namespace Anlog.Tests.Appenders.Default
     /// <summary>
     /// Tests for <see cref="DefaultLogAppender"/>
     /// </summary>
-    public class DefaultLogAppenderTests
+    public sealed class DefaultLogAppenderTests
     {
         /// <summary>
         /// Object to test.

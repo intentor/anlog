@@ -8,7 +8,7 @@ namespace Anlog.Tests.Renderers
     /// <summary>
     /// Tests for <see cref="DefaultDataRenderer"/>
     /// </summary>
-    public class DefaultDataRendererTests
+    public sealed class DefaultDataRendererTests
     {
         /// <summary>
         /// Object to test.

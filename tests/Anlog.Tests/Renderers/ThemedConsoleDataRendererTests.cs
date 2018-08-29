@@ -11,7 +11,7 @@ namespace Anlog.Tests.Renderers
     /// <summary>
     /// Tests for <see cref="ThemedConsoleDataRenderer"/>
     /// </summary>
-    public class ThemedConsoleDataRendererTests
+    public sealed class ThemedConsoleDataRendererTests
     {
         /// <summary>
         /// Console theme used in tests.

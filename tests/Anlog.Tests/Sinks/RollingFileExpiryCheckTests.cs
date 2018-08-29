@@ -12,7 +12,7 @@ namespace Anlog.Tests.Sinks
     /// <summary>
     /// Tests for <see cref="RollingFileExpiryCheck"/>.
     /// </summary>
-    public class RollingFileExpiryCheckTests : IDisposable
+    public sealed class RollingFileExpiryCheckTests : IDisposable
     {
         /// <summary>
         /// Logs saving folder.
