@@ -6,7 +6,7 @@
     <AssemblyName>Anlog</AssemblyName>
     <RootNamespace>Anlog</RootNamespace>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <Authors>André "Intentor" Martins</Authors>
     <Description>Fast and lightweight key/value pair logger for .NET Core projects.</Description>
     <PackageId>Anlog</PackageId>

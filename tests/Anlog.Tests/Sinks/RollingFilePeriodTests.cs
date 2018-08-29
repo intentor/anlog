@@ -72,7 +72,7 @@ namespace Anlog.Tests.Sinks
                 var files = Directory.GetFiles(tempFolder.FolderPath);
             
                 Assert.Single(files);
-                Assert.True(Regex.IsMatch(Path.GetFileName(files[0]), period.FileNamePattern));
+                Assert.Matches(new Regex(period.FileNamePattern), Path.GetFileName(files[0]));
 
                 var match = Regex.Match(Path.GetFileName(files[0]), period.FileNamePattern);
                 Assert.Equal(date.ToString(period.DateFormat), match.Groups[1].Value);
