@@ -7,6 +7,7 @@
 Fast and lightweight key/value pair logger for .NET Core projects.
 
 ## Contents
+
 1. [Features](#features)
 1. [Quick start](#quick-start)
 1. [Why Anlog?](#why-anlog)
@@ -160,6 +161,13 @@ To get the written logs, use `Log.GetSink()`:
 ```cs
 var logs = Log.GetSink<InMemorySink>()?.GetLogs();
 ```
+
+### xUnit
+
+Allows writing of logs to the xUnit test console using *Anlog*.
+
+Please refer to the [project repository](https://github.com/intentor/anlog-sinks-xunit).
+
 #### Settings
 
 - *appendNewLine*: Indicates whether a new line should be appended at the end of each log. The default is true.
