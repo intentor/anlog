@@ -7,7 +7,7 @@ using Anlog.Tests.TestObjects.Models;
 namespace Anlog.Tests.TestObjects
 {
     /// <summary>
-    /// Test constants.
+    /// Constants used in tests.
     /// </summary>
     public static class TestConstants
     {
