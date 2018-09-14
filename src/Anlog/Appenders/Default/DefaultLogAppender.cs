@@ -17,7 +17,7 @@ namespace Anlog.Appenders.Default
         /// <summary>
         /// Available Getters.
         /// </summary>
-        internal static Dictionary<Type, TypeGettersInfo> Getters { get; set; } = new Dictionary<Type, TypeGettersInfo>();
+        internal static Dictionary<Type, TypeGettersInfo> Getters { get; } = new Dictionary<Type, TypeGettersInfo>();
         
         /// <summary>
         /// Log entries.
@@ -33,6 +33,11 @@ namespace Anlog.Appenders.Default
         /// Indicates whether appending should only occur with cached objects.
         /// </summary>
         private readonly bool useOnlyCachedObjects;
+
+        /// <summary>
+        /// Object used for locking.
+        /// </summary>
+        private readonly object locker = new object();
         
         /// <summary>
         /// Initializes a new instance of <see cref="DefaultLogAppender"/>.
@@ -150,7 +155,10 @@ namespace Anlog.Appenders.Default
                     var valueType = value.GetType();
                     if (!Getters.ContainsKey(valueType) && !useOnlyCachedObjects)
                     {
-                        Getters.Add(valueType, new TypeGettersInfo(valueType));
+                        lock (locker)
+                        {
+                            Getters.Add(valueType, new TypeGettersInfo(valueType));
+                        }
                     }
                     
                     var gettersInfo = Getters[valueType];
@@ -173,8 +181,10 @@ namespace Anlog.Appenders.Default
                         {
                             entry = new LogEntry(key, EmptyValue);
                         }
-                    
-                        entry = new LogEntry(key, stringValue);
+                        else
+                        {
+                            entry = new LogEntry(key, stringValue);
+                        }
                     }
                 }
             }
