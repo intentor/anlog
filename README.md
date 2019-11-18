@@ -2,6 +2,8 @@
 
 **(Yet) Another .NET Logger**
 
+Currently the project is **DISCONTINUED**. However, feel free to fork it and continue its development!
+
 [![NuGet Version](http://img.shields.io/nuget/v/Anlog.svg?style=flat)](https://www.nuget.org/packages/Anlog/)
 
 Fast and lightweight key/value pair logger for .NET Core projects.
